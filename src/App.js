@@ -1,9 +1,12 @@
 import { Route, Routes } from "react-router-dom";
 import { useEffect, useState } from "react";
+import axios from "axios";
 import liff from "@line/liff";
 import "./App.css";
+
 import ItemInformation from "./pages/ItemInformation";
-import axios from "axios";
+import FriendWishlist from "./pages/friendWishlist";
+import WishListDetail from "./pages/wishListDetail";
 
 const LiffId = process.env.REACT_APP_LIFF_ID;
 
@@ -31,6 +34,8 @@ function App() {
   return (
     <>
       <Routes>
+        <Route path="/wishlist-detail" element={<WishListDetail />} />
+        <Route path="/friend-wishlist" element={<FriendWishlist />} />
         <Route path="*" element={<ItemInformation />} />
       </Routes>
     </>

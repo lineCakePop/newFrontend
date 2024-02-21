@@ -1,21 +1,7 @@
-import React from "react";
+import React, { useState } from "react";
 import { ReactComponent as ArrowHead } from "../../icons/ItemInformation/Vector.svg";
-import Button from "../../components/Button";
 
-// product
-// {
-//   product_name : String,
-//   product_picture_uri : String,
-//   product_price : Number,
-//   seller : String,
-//   seller_picture_uri : String,
-//   link_to_product : String,
-//   link_to_seller : String (now still null),
-//   variant : {
-//             variant_name1 : [String],
-//             variant_name2 : [String]
-//             }
-// }
+import Button from "../../components/Button";
 
 const ItemInformation = () => {
   const product = {
@@ -33,6 +19,10 @@ const ItemInformation = () => {
       variant_name2: ["s", "m"],
     },
   };
+
+  const [variantArray, setVariantArray] = useState(
+    new Array(Object.keys(product.variant).length).fill("")
+  );
 
   return (
     <div className="">
@@ -75,11 +65,34 @@ const ItemInformation = () => {
         </div>
       </div>
       <div className="h-[8px] bg-[#DFDFDF]" />
+      <div className="px-[24px] pt-[24px] pb-[8px] flex-col gap-[16px]">
+        {Object.entries(product.variant).map(([key, value], index) => (
+          <div>
+            <span className="text-[14px] font-semibold mb-[12px]">{key}</span>
+            <div className="flex gap-[8px] mt-[12px] flex-wrap mb-[16px]">
+              {value.map((item) => (
+                <div
+                  className={`${
+                    variantArray[index] === item ? "text-[#06C755]" : ""
+                  } px-[12px] py-[8px] flex justify-center items-center rounded border border-[#DFDFDF] text-[10px] h-[26px] font-semibold`}
+                  onClick={() => {
+                    const updateArray = [...variantArray];
+                    updateArray[index] = item;
+
+                    setVariantArray(updateArray);
+                  }}
+                >
+                  {item}
+                </div>
+              ))}
+            </div>
+          </div>
+        ))}
+      </div>
       {/* footer */}
       <div className="h-[97px] flex justify-center items-center">
         <Button title="Confirm" />
       </div>
-      <a href="https://lin.ee/sLoenA2h">link</a>
     </div>
   );
 };
