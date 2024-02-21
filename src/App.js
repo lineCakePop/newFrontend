@@ -1,24 +1,39 @@
-import logo from './logo.svg';
-import './App.css';
+import { Route, Routes } from "react-router-dom";
+import { useEffect, useState } from "react";
+import liff from "@line/liff";
+import "./App.css";
+import ItemInformation from "./pages/ItemInformation";
+import axios from "axios";
+
+const LiffId = process.env.REACT_APP_LIFF_ID;
 
 function App() {
+  useEffect(() => {
+    // liffCheck();
+  }, []);
+
+  // auth
+  const liffCheck = async () => {
+    // const isInClient = await liff.isInClient();
+    await liff.init({
+      liffId: LiffId,
+      withLoginOnExternalBrowser: true,
+    });
+    const idToken = await liff.getIDToken();
+    console.log(idToken);
+    const response = await axios.post(
+      "https://api.line.me/oauth2/v2.1/verify",
+      { id_token: idToken, client_id: 2003293436 }
+    );
+    console.log(response);
+  };
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <>
+      <Routes>
+        <Route path="*" element={<ItemInformation />} />
+      </Routes>
+    </>
   );
 }
 
