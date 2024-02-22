@@ -11,46 +11,8 @@ import WishlistCard from "../../components/friendWishlist/wishlistCard";
 
 import axios from "axios";
 
-const testData = [
-  {
-    _id: "textId",
-    displayName: "ไม้แก่น",
-    pictureUrl:
-      "https://media.wired.com/photos/598e35fb99d76447c4eb1f28/master/pass/phonepicutres-TA.jpg",
-    birthDay: new Date("2022-03-25"),
-    wishlist: [
-      {
-        productName: "ปลากระป๋อง",
-        productPrice: 1900,
-        productPicture:
-          "https://static.toiimg.com/photo/msid-53891743,width-96,height-65.cms",
-        variant_text: "",
-      },
-      {
-        productName: "ปลากระป๋อง2",
-        productPrice: 1900,
-        productPicture:
-          "https://pictures-nigeria.jijistatic.com/125306347_NjIwLTYyMC0zMGQ4NTU1ZDNm.webp",
-        variant_text: "",
-      },
-    ],
-  },
-  {
-    displayName: "นน",
-    pictureUrl:
-      "https://media.sproutsocial.com/uploads/2022/06/profile-picture.jpeg",
-    birthDay: null,
-    wishlist: [
-      {
-        productName: "ปลากระป๋อง",
-        productPrice: 1900,
-        productPicture:
-          "https://pictures-nigeria.jijistatic.com/129837368_NjIwLTYyMC02YmEyY2UwMmNk.webp",
-        variant_text: "",
-      },
-    ],
-  },
-];
+const LiffId = process.env.REACT_APP_LIFF_ID;
+
 
 function FriendWishlist() {
   useEffect(() => {
@@ -69,6 +31,10 @@ function FriendWishlist() {
 
   const getFrinedWisList = async () => {
     try {
+      await liff.init({
+        liffId: LiffId,
+        withLoginOnExternalBrowser: true,
+      });
       const idToken = await liff.getIDToken();
 
       const respones = await axios.get(

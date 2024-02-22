@@ -1,123 +1,135 @@
-import React, { useState } from "react"
+import React, { useState } from "react";
 
-import { ConfigProvider, Select } from "antd"
+import { ConfigProvider, Select } from "antd";
 
-import axios from "axios"
+import axios from "axios";
+
+import liff from "@line/liff";
 
 // =============== Image ===============
-import { ReactComponent as Cross } from "../../icons/Cross.svg"
+import { ReactComponent as Cross } from "../../icons/Cross.svg";
 
 // =============== Components ===============
-import ButtonCustom from "../../components/Button"
-import SwitchCustom from "../../components/Switch"
+import ButtonCustom from "../../components/Button";
+import SwitchCustom from "../../components/Switch";
 
 const AddBirthday = () => {
-    // =============== setState ===============
-    const [checked, setChecked] = useState(true)
-    const [year, setYear] = useState(new Date().getFullYear())
-    const [month, setMonth] = useState("")
-    const [day, setDay] = useState("")
-    const [disable, setDisable] = useState(true)
+  const LiffId = process.env.REACT_APP_LIFF_ID;
 
-    // =============== Const ===============
-    const tokenId =
-        "eyJraWQiOiI5NWU5MTE5ZjY1M2VhZTA5NWJiM2Q4NzFkNmJhOGZmNDY0NjdhYTMxNDU3NWE0NTQzNjE1ZjA1MWQ0YjczNWE2IiwidHlwIjoiSldUIiwiYWxnIjoiRVMyNTYifQ.eyJpc3MiOiJodHRwczovL2FjY2Vzcy5saW5lLm1lIiwic3ViIjoiVWQ3YmMxNDUxOGZiZjgzMjdmNzFhY2NiNWQ2MDcwNDgwIiwiYXVkIjoiMjAwMzYxOTE2NSIsImV4cCI6MTcwODU4Mjg0NCwiaWF0IjoxNzA4NTc5MjQ0LCJhbXIiOlsibGluZXFyIl0sIm5hbWUiOiJXaW50ZXIiLCJwaWN0dXJlIjoiaHR0cHM6Ly9wcm9maWxlLmxpbmUtc2Nkbi5uZXQvMGhXalYwX3FjOUNFVnJTUjB0N1JsM0VsY01CaWdjWnc0TkV5OURKVWRPWDNGT0t4c1FBbmhBZGt3YlVuWkZMaHNRVVh4SEpSd2NWQ0FWIn0.VxJlw6doVM074CgfdXR_bBSVUtNgW-55DVdefIZWwbAAbufTxcqXVwL8_IQpy4sChe1SnyNUIDC6AH_UEvtHMA"
+  // =============== setState ===============
+  const [checked, setChecked] = useState(true);
+  const [year, setYear] = useState(new Date().getFullYear());
+  const [month, setMonth] = useState("");
+  const [day, setDay] = useState("");
+  const [disable, setDisable] = useState(true);
 
-    const monthOptions = [
-        { value: "01", label: "January" },
-        { value: "02", label: "February" },
-        { value: "03", label: "March" },
-        { value: "04", label: "April" },
-        { value: "05", label: "May" },
-        { value: "06", label: "June" },
-        { value: "07", label: "July" },
-        { value: "08", label: "August" },
-        { value: "09", label: "September" },
-        { value: "10", label: "October" },
-        { value: "11", label: "November" },
-        { value: "12", label: "December" },
-    ]
+  // =============== Const ===============
 
-    const dayOptions = Array.from({ length: 31 }, (_, index) => ({
-        value: (index + 1).toString().padStart(2, "0"),
-        label: `${index + 1}`,
-    }))
+  const monthOptions = [
+    { value: "01", label: "January" },
+    { value: "02", label: "February" },
+    { value: "03", label: "March" },
+    { value: "04", label: "April" },
+    { value: "05", label: "May" },
+    { value: "06", label: "June" },
+    { value: "07", label: "July" },
+    { value: "08", label: "August" },
+    { value: "09", label: "September" },
+    { value: "10", label: "October" },
+    { value: "11", label: "November" },
+    { value: "12", label: "December" },
+  ];
 
-    // =============== Axios ===============
-    const putChangeBirthday = async () => {
-        const birthday = `${year}-${month}-${day}`
-        try {
-            const response = await axios.put(
-                "https://immensely-delicate-kingfish.ngrok-free.app/user/changeBd",
-                {
-                    id: tokenId,
-                    birthday: birthday,
-                },
-                {
-                    headers: {
-                        "ngrok-skip-browser-warning": "69420",
-                    },
-                }
-            )
-            // console.log(response)
-        } catch (error) {
-            console.log(error.response.data)
+  const dayOptions = Array.from({ length: 31 }, (_, index) => ({
+    value: (index + 1).toString().padStart(2, "0"),
+    label: `${index + 1}`,
+  }));
+
+  // =============== Axios ===============
+  const putChangeBirthday = async () => {
+    const birthday = `${year}-${month}-${day}`;
+    try {
+      await liff.init({
+        liffId: LiffId,
+        withLoginOnExternalBrowser: true,
+      });
+      const idToken = await liff.getIDToken();
+      const response = await axios.put(
+        "https://immensely-delicate-kingfish.ngrok-free.app/user/changeBd",
+        {
+          id: idToken,
+          birthday: birthday,
+        },
+        {
+          headers: {
+            "ngrok-skip-browser-warning": "69420",
+          },
         }
+      );
+      // console.log(response)
+    } catch (error) {
+      console.log(error.response.data);
     }
+  };
 
-    const putChangeNotify = async () => {
-        try {
-            const response = await axios.put(
-                "https://immensely-delicate-kingfish.ngrok-free.app/user/changeNotify",
-                {
-                    id: tokenId,
-                    notify: checked,
-                },
-                {
-                    headers: {
-                        "ngrok-skip-browser-warning": "69420",
-                    },
-                }
-            )
-            // console.log(response)
-        } catch (error) {
-            console.log(error.response.data)
+  const putChangeNotify = async () => {
+    try {
+      await liff.init({
+        liffId: LiffId,
+        withLoginOnExternalBrowser: true,
+      });
+      const idToken = await liff.getIDToken();
+      const response = await axios.put(
+        "https://immensely-delicate-kingfish.ngrok-free.app/user/changeNotify",
+        {
+          id: idToken,
+          notify: checked,
+        },
+        {
+          headers: {
+            "ngrok-skip-browser-warning": "69420",
+          },
         }
+      );
+      // console.log(response)
+    } catch (error) {
+      console.log(error.response.data);
     }
+  };
 
-    // =============== Handler ===============
-    const handleChangeSwitch = (event) => {
-        setChecked(event.target.checked)
+  // =============== Handler ===============
+  const handleChangeSwitch = (event) => {
+    setChecked(event.target.checked);
+  };
+
+  const handleChangeMonth = (value) => {
+    setMonth(value ? value : "");
+    setDisable(handleDisable());
+  };
+
+  const handleChangeDay = (value) => {
+    setDay(value ? value : "");
+    setDisable(handleDisable());
+  };
+
+  const handleConfirm = () => {
+    putChangeBirthday();
+    putChangeNotify();
+  };
+
+  const handleDisable = () => {
+    console.log("day", day, "month", month);
+    if (day !== "" && month !== "") {
+      console.log("disable");
+      return false;
     }
+    return true;
+  };
 
-    const handleChangeMonth = (value) => {
-        setMonth(value ? value : "")
-        setDisable(handleDisable())
-    }
-
-    const handleChangeDay = (value) => {
-        setDay(value ? value : "")
-        setDisable(handleDisable())
-    }
-
-    const handleConfirm = () => {
-        putChangeBirthday()
-        putChangeNotify()
-    }
-
-    const handleDisable = () => {
-        console.log("day", day, "month", month)
-        if (day !== "" && month !== "") {
-            console.log("disable")
-            return false
-        }
-        return true
-    }
-
-    return (
-        <>
-            <style>
-                {`
+  return (
+    <>
+      <style>
+        {`
                 .rc-virtual-list-scrollbar {
                     // padding: 10px 0 !important;
                 }
@@ -132,88 +144,88 @@ const AddBirthday = () => {
                     border: 1px solid #DFDFDF !important;
                 }
                 `}
-            </style>
-            <div className="flex flex-col justify-between h-[100dvh]">
-                <div className="px-[24px] py-[16px]">
-                    <div className="flex justify-between items-center h-[24px]">
-                        <div className="font-bold text-[20px] leading-[20px]">
-                            Add Birthday
-                        </div>
-                        <Cross />
-                    </div>
-
-                    <div className="mt-[64px]">
-                        <div className="flex justify-between">
-                            <ConfigProvider
-                                theme={{
-                                    token: {
-                                        colorPrimaryHover: "#06C755",
-                                        colorPrimary: "#06C755",
-                                        borderRadius: 4,
-                                        // boxShadowSecondary: "",
-                                        colorText: "#777777",
-                                        optionSelectedFontWeight: 400,
-                                        optionHeight: 36,
-                                    },
-                                    components: {
-                                        Select: {
-                                            optionHeight: 36,
-                                            optionPadding: 10,
-                                            optionSelectedBg: "#F5F5F5",
-                                        },
-                                    },
-                                }}
-                            >
-                                <Select
-                                    style={{ width: 191, height: 40 }}
-                                    allowClear
-                                    placeholder="Month"
-                                    options={monthOptions}
-                                    onChange={handleChangeMonth}
-                                    listHeight={190}
-                                />
-                                <Select
-                                    style={{ width: 112, height: 40 }}
-                                    allowClear
-                                    placeholder="Day"
-                                    options={dayOptions}
-                                    onChange={handleChangeDay}
-                                    listHeight={190}
-                                />
-                            </ConfigProvider>
-                        </div>
-
-                        <div className="mt-[32px] h-[26px] flex items-center justify-between">
-                            <div className="font-bold text-[16px] leading-[20.8px]">
-                                Notify my birthday
-                            </div>
-                            <div>
-                                <SwitchCustom
-                                    native={"iOS"}
-                                    checked={checked}
-                                    onChange={handleChangeSwitch}
-                                />
-                            </div>
-                        </div>
-
-                        <div className="mt-[16px] text-[12px] leading-[15.6px] text-[#555555]">
-                            If you choose to notify your birthday, we’ll notify
-                            your birthday to your friends who also added Line
-                            Birthday on your birthday and 7 days before.
-                        </div>
-                    </div>
-                </div>
-
-                <div className="h-[97px] p-[24px] flex justify-center ">
-                    <ButtonCustom
-                        title="Confirm"
-                        onClick={handleConfirm}
-                        disable={disable}
-                    />
-                </div>
+      </style>
+      <div className="flex flex-col justify-between h-[100dvh]">
+        <div className="px-[24px] py-[16px]">
+          <div className="flex justify-between items-center h-[24px]">
+            <div className="font-bold text-[20px] leading-[20px]">
+              Add Birthday
             </div>
-        </>
-    )
-}
+            <Cross />
+          </div>
 
-export default AddBirthday
+          <div className="mt-[64px]">
+            <div className="flex justify-between">
+              <ConfigProvider
+                theme={{
+                  token: {
+                    colorPrimaryHover: "#06C755",
+                    colorPrimary: "#06C755",
+                    borderRadius: 4,
+                    // boxShadowSecondary: "",
+                    colorText: "#777777",
+                    optionSelectedFontWeight: 400,
+                    optionHeight: 36,
+                  },
+                  components: {
+                    Select: {
+                      optionHeight: 36,
+                      optionPadding: 10,
+                      optionSelectedBg: "#F5F5F5",
+                    },
+                  },
+                }}
+              >
+                <Select
+                  style={{ width: 191, height: 40 }}
+                  allowClear
+                  placeholder="Month"
+                  options={monthOptions}
+                  onChange={handleChangeMonth}
+                  listHeight={190}
+                />
+                <Select
+                  style={{ width: 112, height: 40 }}
+                  allowClear
+                  placeholder="Day"
+                  options={dayOptions}
+                  onChange={handleChangeDay}
+                  listHeight={190}
+                />
+              </ConfigProvider>
+            </div>
+
+            <div className="mt-[32px] h-[26px] flex items-center justify-between">
+              <div className="font-bold text-[16px] leading-[20.8px]">
+                Notify my birthday
+              </div>
+              <div>
+                <SwitchCustom
+                  native={"iOS"}
+                  checked={checked}
+                  onChange={handleChangeSwitch}
+                />
+              </div>
+            </div>
+
+            <div className="mt-[16px] text-[12px] leading-[15.6px] text-[#555555]">
+              If you choose to notify your birthday, we’ll notify your birthday
+              to your friends who also added Line Birthday on your birthday and
+              7 days before.
+            </div>
+          </div>
+        </div>
+
+        <div className="h-[97px] p-[24px] flex justify-center ">
+          <ButtonCustom
+            title="Confirm"
+            onClick={handleConfirm}
+            disable={disable}
+          />
+        </div>
+      </div>
+    </>
+  );
+};
+
+export default AddBirthday;
