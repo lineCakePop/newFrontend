@@ -12,7 +12,7 @@ const LiffId = process.env.REACT_APP_LIFF_ID;
 
 function App() {
   useEffect(() => {
-    // liffCheck();
+    liffCheck();
   }, []);
 
   // auth
@@ -24,18 +24,17 @@ function App() {
     });
     const idToken = await liff.getIDToken();
     console.log(idToken);
-    const response = await axios.post(
-      "https://api.line.me/oauth2/v2.1/verify",
-      { id_token: idToken, client_id: 2003293436 }
-    );
-    console.log(response);
   };
 
   return (
     <>
       <Routes>
-        <Route path="/wishlist-detail" element={<WishListDetail />} />
+        <Route path="/wishlist-detail/:userId" element={<WishListDetail />} />
         <Route path="/friend-wishlist" element={<FriendWishlist />} />
+        <Route
+          path="/item-information/:productId"
+          element={<ItemInformation />}
+        />
         <Route path="*" element={<ItemInformation />} />
       </Routes>
     </>

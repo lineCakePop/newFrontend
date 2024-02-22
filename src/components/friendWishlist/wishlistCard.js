@@ -2,7 +2,13 @@ import React from "react";
 
 import { ReactComponent as ArrowHead } from "../../icons/ItemInformation/Vector.svg";
 
-function WishlistCard({ displayName, pictureUrl, wishlist, birthDay }) {
+function WishlistCard({
+  displayName,
+  pictureUrl,
+  wishlist,
+  birthDay,
+  onClickViewMore,
+}) {
   const dateFormat = (birthDay) => {
     if (birthDay) {
       const format = birthDay
@@ -33,7 +39,10 @@ function WishlistCard({ displayName, pictureUrl, wishlist, birthDay }) {
             <span className="text-[12px]">{dateFormat(birthDay)}</span>
           </div>
         </div>
-        <div className="flex self-start items-center">
+        <div
+          className="flex self-start items-center cursor-pointer"
+          onClick={onClickViewMore}
+        >
           <span className="text-[#06C755] mr-[10px] text-[12px]">
             View more
           </span>

@@ -1,12 +1,19 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
+
+import liff from "@line/liff";
 
 //  ======================= svg =======================
 import { ReactComponent as UserAdd } from "../../icons/friendWishlist/user-add.svg";
 import { ReactComponent as Search } from "../../icons/friendWishlist/search.svg";
+
 import WishlistCard from "../../components/friendWishlist/wishlistCard";
+
+import axios from "axios";
 
 const testData = [
   {
+    _id: "textId",
     displayName: "ไม้แก่น",
     pictureUrl:
       "https://media.wired.com/photos/598e35fb99d76447c4eb1f28/master/pass/phonepicutres-TA.jpg",
@@ -46,13 +53,41 @@ const testData = [
 ];
 
 function FriendWishlist() {
+  useEffect(() => {
+    getFrinedWisList();
+  }, []);
+
+  const navigate = useNavigate();
+
   //  ======================= useState =======================
 
   const [searchInput, setSearchInput] = useState("");
-  const [wishlist, setWishlist] = useState(testData);
-  const [displayWishlist, setDisplayWishlist] = useState(testData);
+  const [wishlist, setWishlist] = useState([]);
+  const [displayWishlist, setDisplayWishlist] = useState([]);
 
   //  ======================= function =======================
+
+  const getFrinedWisList = async () => {
+    try {
+      const idToken = await liff.getIDToken();
+
+      const respones = await axios.get(
+        `https://immensely-delicate-kingfish.ngrok-free.app/user/friendWishlist`,
+        {
+          headers: {
+            "ngrok-skip-browser-warning": "69420",
+          },
+          params: {
+            id: idToken,
+          },
+        }
+      );
+      setWishlist(respones.data);
+      setDisplayWishlist(respones.data);
+    } catch (err) {
+      console.log(err);
+    }
+  };
 
   const handleSearch = (text) => {
     setSearchInput(text);
@@ -65,12 +100,30 @@ function FriendWishlist() {
     );
   };
 
+  const handleShareTarget = () => {
+    liff.shareTargetPicker(
+      [
+        {
+          type: "text",
+          text: "Hello, World!",
+        },
+      ],
+      {
+        isMultiple: true,
+      }
+    );
+  };
+
+  const onClickViewMore = (id) => {
+    navigate(`/wishlist-detail/${id}`);
+  };
+
   return (
     <div>
       {/* header */}
       <div className="h-[56px] px-[24px] py-[16px] items-center border-b border-[#DFDFDF] flex justify-between">
         <span className="text-[20px] font-bold">Friend’s wishlist</span>
-        <UserAdd />
+        <UserAdd onClick={handleShareTarget} />
       </div>
       {/* search */}
       <div className="h-[72px] px-[24px] py-[16px] justify-center items-center relative">
@@ -94,6 +147,9 @@ function FriendWishlist() {
             pictureUrl={friendWislist.pictureUrl}
             wishlist={friendWislist.wishlist}
             birthDay={friendWislist.birthDay}
+            onClickViewMore={() => {
+              onClickViewMore(friendWislist._id);
+            }}
           />
         );
       })}
