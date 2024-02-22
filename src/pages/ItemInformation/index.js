@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { ReactComponent as ArrowHead } from "../../icons/ItemInformation/Vector.svg";
-
-import Button from "../../components/Button";
+import ButtonCustom from "../../components/Button";
 
 import { useParams } from "react-router-dom";
 
@@ -160,7 +159,7 @@ const ItemInformation = () => {
       </div>
       {/* footer */}
       <div className="cursor-pointer h-[97px] flex justify-center items-center">
-        <Button
+        <ButtonCustom
           title="Confirm"
           onClick={() => {
             onClickConfirm();

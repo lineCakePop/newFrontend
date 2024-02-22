@@ -7,6 +7,7 @@ import "./App.css";
 import ItemInformation from "./pages/ItemInformation";
 import FriendWishlist from "./pages/friendWishlist";
 import WishListDetail from "./pages/wishListDetail";
+import AddBirthday from "./pages/AddBirthday";
 
 const LiffId = process.env.REACT_APP_LIFF_ID;
 
@@ -30,6 +31,7 @@ function App() {
     <>
       <Routes>
         <Route path="/wishlist-detail/:userId" element={<WishListDetail />} />
+        <Route path="/add-birthday" element={<AddBirthday />} />
         <Route path="/friend-wishlist" element={<FriendWishlist />} />
         <Route
           path="/item-information/:productId"
