@@ -1,13 +1,14 @@
 import React from "react"
 import Switch from "@mui/material/Switch"
 import { styled } from "@mui/material/styles"
-const SwitchCustom = ({ native, onChange }) => {
+const SwitchCustom = ({ native, onChange, checked }) => {
     const IOSSwitch = styled((props) => (
         <Switch
             focusVisibleClassName=".Mui-focusVisible"
             disableRipple
             {...props}
             onChange={onChange}
+            checked={checked}
         />
     ))(({ theme }) => ({
         width: 42,

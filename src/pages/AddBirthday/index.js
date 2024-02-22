@@ -1,116 +1,218 @@
 import React, { useState } from "react"
-import { ReactComponent as Cross } from "../../icons/Cross.svg"
-import Button from "../../components/Button"
-import SwitchCustom from "../../components/Switch"
-import ScrollPicker from "../../components/ScrollPicker"
 
-import Switch from "@mui/material/Switch"
-import { styled } from "@mui/material/styles"
+import { ConfigProvider, Select } from "antd"
+
+import axios from "axios"
+
+// =============== Image ===============
+import { ReactComponent as Cross } from "../../icons/Cross.svg"
+
+// =============== Components ===============
+import ButtonCustom from "../../components/Button"
+import SwitchCustom from "../../components/Switch"
 
 const AddBirthday = () => {
-    const [checked, setChecked] = React.useState(true)
+    // =============== setState ===============
+    const [checked, setChecked] = useState(true)
+    const [year, setYear] = useState(new Date().getFullYear())
+    const [month, setMonth] = useState("")
+    const [day, setDay] = useState("")
+    const [disable, setDisable] = useState(true)
 
-    const handleChange = (event) => {
+    // =============== Const ===============
+    const tokenId =
+        "eyJraWQiOiI5NWU5MTE5ZjY1M2VhZTA5NWJiM2Q4NzFkNmJhOGZmNDY0NjdhYTMxNDU3NWE0NTQzNjE1ZjA1MWQ0YjczNWE2IiwidHlwIjoiSldUIiwiYWxnIjoiRVMyNTYifQ.eyJpc3MiOiJodHRwczovL2FjY2Vzcy5saW5lLm1lIiwic3ViIjoiVWQ3YmMxNDUxOGZiZjgzMjdmNzFhY2NiNWQ2MDcwNDgwIiwiYXVkIjoiMjAwMzYxOTE2NSIsImV4cCI6MTcwODU4Mjg0NCwiaWF0IjoxNzA4NTc5MjQ0LCJhbXIiOlsibGluZXFyIl0sIm5hbWUiOiJXaW50ZXIiLCJwaWN0dXJlIjoiaHR0cHM6Ly9wcm9maWxlLmxpbmUtc2Nkbi5uZXQvMGhXalYwX3FjOUNFVnJTUjB0N1JsM0VsY01CaWdjWnc0TkV5OURKVWRPWDNGT0t4c1FBbmhBZGt3YlVuWkZMaHNRVVh4SEpSd2NWQ0FWIn0.VxJlw6doVM074CgfdXR_bBSVUtNgW-55DVdefIZWwbAAbufTxcqXVwL8_IQpy4sChe1SnyNUIDC6AH_UEvtHMA"
+
+    const monthOptions = [
+        { value: "01", label: "January" },
+        { value: "02", label: "February" },
+        { value: "03", label: "March" },
+        { value: "04", label: "April" },
+        { value: "05", label: "May" },
+        { value: "06", label: "June" },
+        { value: "07", label: "July" },
+        { value: "08", label: "August" },
+        { value: "09", label: "September" },
+        { value: "10", label: "October" },
+        { value: "11", label: "November" },
+        { value: "12", label: "December" },
+    ]
+
+    const dayOptions = Array.from({ length: 31 }, (_, index) => ({
+        value: (index + 1).toString().padStart(2, "0"),
+        label: `${index + 1}`,
+    }))
+
+    // =============== Axios ===============
+    const putChangeBirthday = async () => {
+        const birthday = `${year}-${month}-${day}`
+        try {
+            const response = await axios.put(
+                "https://immensely-delicate-kingfish.ngrok-free.app/user/changeBd",
+                {
+                    id: tokenId,
+                    birthday: birthday,
+                },
+                {
+                    headers: {
+                        "ngrok-skip-browser-warning": "69420",
+                    },
+                }
+            )
+            // console.log(response)
+        } catch (error) {
+            console.log(error.response.data)
+        }
+    }
+
+    const putChangeNotify = async () => {
+        try {
+            const response = await axios.put(
+                "https://immensely-delicate-kingfish.ngrok-free.app/user/changeNotify",
+                {
+                    id: tokenId,
+                    notify: checked,
+                },
+                {
+                    headers: {
+                        "ngrok-skip-browser-warning": "69420",
+                    },
+                }
+            )
+            // console.log(response)
+        } catch (error) {
+            console.log(error.response.data)
+        }
+    }
+
+    // =============== Handler ===============
+    const handleChangeSwitch = (event) => {
         setChecked(event.target.checked)
     }
 
-    const IOSSwitch = styled((props) => (
-        <Switch
-            focusVisibleClassName=".Mui-focusVisible"
-            disableRipple
-            {...props}
-            checked={checked}
-            onChange={handleChange}
-        />
-    ))(({ theme }) => ({
-        width: 42,
-        height: 26,
-        padding: 0,
-        "& .MuiSwitch-switchBase": {
-            padding: 0,
-            margin: 2,
-            transitionDuration: "300ms",
-            "&.Mui-checked": {
-                transform: "translateX(16px)",
-                color: "#fff",
-                "& + .MuiSwitch-track": {
-                    backgroundColor:
-                        theme.palette.mode === "dark" ? "#2ECA45" : "#65C466",
-                    opacity: 1,
-                    border: 0,
-                },
-                "&.Mui-disabled + .MuiSwitch-track": {
-                    opacity: 0.5,
-                },
-            },
-            "&.Mui-focusVisible .MuiSwitch-thumb": {
-                color: "#33cf4d",
-                border: "6px solid #fff",
-            },
-            "&.Mui-disabled .MuiSwitch-thumb": {
-                color:
-                    theme.palette.mode === "light"
-                        ? theme.palette.grey[100]
-                        : theme.palette.grey[600],
-            },
-            "&.Mui-disabled + .MuiSwitch-track": {
-                opacity: theme.palette.mode === "light" ? 0.7 : 0.3,
-            },
-        },
-        "& .MuiSwitch-thumb": {
-            boxSizing: "border-box",
-            width: 22,
-            height: 22,
-        },
-        "& .MuiSwitch-track": {
-            borderRadius: 26 / 2,
-            backgroundColor:
-                theme.palette.mode === "light" ? "#E9E9EA" : "#39393D",
-            opacity: 1,
-            transition: theme.transitions.create(["background-color"], {
-                duration: 500,
-            }),
-        },
-    }))
+    const handleChangeMonth = (value) => {
+        setMonth(value ? value : "")
+        setDisable(handleDisable())
+    }
+
+    const handleChangeDay = (value) => {
+        setDay(value ? value : "")
+        setDisable(handleDisable())
+    }
+
+    const handleConfirm = () => {
+        putChangeBirthday()
+        putChangeNotify()
+    }
+
+    const handleDisable = () => {
+        console.log("day", day, "month", month)
+        if (day !== "" && month !== "") {
+            console.log("disable")
+            return false
+        }
+        return true
+    }
 
     return (
-        <div className="flex flex-col justify-between h-[100vh]">
-            <div className="px-[24px] py-[16px]">
-                <div className="flex justify-between items-center h-[24px]">
-                    <div className="font-bold text-[20px] leading-[20px]">
-                        Add Birthday
+        <>
+            <style>
+                {`
+                .rc-virtual-list-scrollbar {
+                    // padding: 10px 0 !important;
+                }
+                .rc-virtual-list-scrollbar-thumb {        
+                    width: 4px !important;
+                    left: 4px !important;
+                    background: #C8C8C8 !important;
+                }
+                .ant-select-dropdown {
+                    // padding: 10px 0 !important;
+                    box-shadow: none !important;
+                    border: 1px solid #DFDFDF !important;
+                }
+                `}
+            </style>
+            <div className="flex flex-col justify-between h-[100dvh]">
+                <div className="px-[24px] py-[16px]">
+                    <div className="flex justify-between items-center h-[24px]">
+                        <div className="font-bold text-[20px] leading-[20px]">
+                            Add Birthday
+                        </div>
+                        <Cross />
                     </div>
-                    <Cross />
+
+                    <div className="mt-[64px]">
+                        <div className="flex justify-between">
+                            <ConfigProvider
+                                theme={{
+                                    token: {
+                                        colorPrimaryHover: "#06C755",
+                                        colorPrimary: "#06C755",
+                                        borderRadius: 4,
+                                        // boxShadowSecondary: "",
+                                        colorText: "#777777",
+                                        optionSelectedFontWeight: 400,
+                                        optionHeight: 36,
+                                    },
+                                    components: {
+                                        Select: {
+                                            optionHeight: 36,
+                                            optionPadding: 10,
+                                            optionSelectedBg: "#F5F5F5",
+                                        },
+                                    },
+                                }}
+                            >
+                                <Select
+                                    style={{ width: 191, height: 40 }}
+                                    allowClear
+                                    placeholder="Month"
+                                    options={monthOptions}
+                                    onChange={handleChangeMonth}
+                                    listHeight={190}
+                                />
+                                <Select
+                                    style={{ width: 112, height: 40 }}
+                                    allowClear
+                                    placeholder="Day"
+                                    options={dayOptions}
+                                    onChange={handleChangeDay}
+                                    listHeight={190}
+                                />
+                            </ConfigProvider>
+                        </div>
+
+                        <div className="mt-[32px] h-[26px] flex items-center justify-between">
+                            <div className="font-bold text-[16px] leading-[20.8px]">
+                                Notify my birthday
+                            </div>
+                            <div>
+                                <SwitchCustom
+                                    native={"iOS"}
+                                    checked={checked}
+                                    onChange={handleChangeSwitch}
+                                />
+                            </div>
+                        </div>
+
+                        <div className="mt-[16px] text-[12px] leading-[15.6px] text-[#555555]">
+                            If you choose to notify your birthday, we’ll notify
+                            your birthday to your friends who also added Line
+                            Birthday on your birthday and 7 days before.
+                        </div>
+                    </div>
                 </div>
 
-                <div className="mt-[64px]">
-                    <div className="text-[#777777] font-medium text-[18px]">
-                        Choose date
-                    </div>
-
-                    <div className="mt-[32px] h-[26px] flex items-center justify-between">
-                        <div className="font-bold text-[16px] leading-[20.8px]">
-                            Notify my birthday
-                        </div>
-                        <div>
-                            <IOSSwitch />
-                        </div>
-                    </div>
-
-                    <div className="mt-[16px] text-[12px] leading-[15.6px] text-[#555555]">
-                        If you choose to notify your birthday, we’ll notify your
-                        birthday to your friends who also added Line Birthday on
-                        your birthday and 7 days before.
-                    </div>
-
-                    <ScrollPicker />
+                <div className="h-[97px] p-[24px] flex justify-center ">
+                    <ButtonCustom
+                        title="Confirm"
+                        onClick={handleConfirm}
+                        disable={disable}
+                    />
                 </div>
             </div>
-
-            <div className="h-[97px] p-[24px] ">
-                <Button title="Confirm" />
-            </div>
-        </div>
+        </>
     )
 }
 
