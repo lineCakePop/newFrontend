@@ -15,7 +15,7 @@ const LiffId = process.env.REACT_APP_LIFF_ID;
 function App() {
   const { setIdToken } = useContext(AuthContext);
   useEffect(() => {
-    // liffCheck();
+    liffCheck();
   }, []);
 
   // auth
@@ -27,7 +27,7 @@ function App() {
     });
     const idTokenResponse = await liff.getIDToken();
     setIdToken(idTokenResponse);
-    console.log(idTokenResponse);
+    // console.log(idTokenResponse);
   };
 
   return (

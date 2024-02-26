@@ -64,8 +64,29 @@ const WishListDetail = () => {
     return "";
   };
 
-  const daysToDate = () => {};
-
+  const daysToDate = () => {
+    let today = new Date(Date.now());
+    let todayMidNight = new Date(
+      today.getFullYear(),
+      today.getMonth(),
+      today.getDate()
+    );
+    let userBD = new Date(userWishlist.birthday);
+    let userBDMidNight = new Date(
+      today.getFullYear(),
+      userBD.getMonth(),
+      userBD.getDate()
+    );
+    userBDMidNight =
+      userBDMidNight < todayMidNight
+        ? new Date(today.getFullYear() + 1, userBD.getMonth(), userBD.getDate())
+        : userBDMidNight;
+    // console.log(userBDMidNight);
+    const dayDiff = Math.floor(
+      (userBDMidNight - todayMidNight) / (1000 * 60 * 60 * 24)
+    );
+    return dayDiff;
+  };
   return (
     <div className="">
       <div className="h-[128px] px-[24px] py-[16px] border-b border-[#DFDFDF]">
@@ -86,7 +107,7 @@ const WishListDetail = () => {
             <div>
               <p className="text-[14px] font-semibold">{dateFormat()}</p>
               <p className="text-[12px] text-[#777777]">
-                284 days until birthday
+                {daysToDate()} days until birthday
               </p>
             </div>
           </div>
@@ -101,8 +122,15 @@ const WishListDetail = () => {
           </div>
         </div>
         {/* content */}
-        <div className="mt-[36px] flex-col gap-[32px] items-center">
-          <WishlistCard />
+        <div className="mt-[36px] flex-col flex gap-[32px] items-center">
+          {userWishlist.wishlist.map((wishlist) => (
+            <WishlistCard
+              productName={wishlist.productName}
+              productPicture={wishlist.productPicture}
+              productPrice={wishlist.productPrice}
+              variantText={wishlist.variantText}
+            />
+          ))}
         </div>
       </div>
     </div>
