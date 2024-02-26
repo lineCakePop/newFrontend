@@ -1,7 +1,8 @@
-import React, { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
-
+import axios from "axios";
 import liff from "@line/liff";
+import { useNavigate } from "react-router-dom";
+import { AuthContext } from "../../context/AuthContext";
+import React, { useContext, useEffect, useState } from "react";
 
 //  ======================= svg =======================
 import { ReactComponent as UserAdd } from "../../icons/friendWishlist/user-add.svg";
@@ -9,17 +10,16 @@ import { ReactComponent as Search } from "../../icons/friendWishlist/search.svg"
 
 import WishlistCard from "../../components/friendWishlist/wishlistCard";
 
-import axios from "axios";
-
-const LiffId = process.env.REACT_APP_LIFF_ID;
-
-
 function FriendWishlist() {
+  const { idToken } = useContext(AuthContext);
+
+  const navigate = useNavigate();
+
+  //  ======================= useEffect =======================
+
   useEffect(() => {
     getFrinedWisList();
   }, []);
-
-  const navigate = useNavigate();
 
   //  ======================= useState =======================
 
@@ -31,12 +31,6 @@ function FriendWishlist() {
 
   const getFrinedWisList = async () => {
     try {
-      await liff.init({
-        liffId: LiffId,
-        withLoginOnExternalBrowser: true,
-      });
-      const idToken = await liff.getIDToken();
-
       const respones = await axios.get(
         `https://immensely-delicate-kingfish.ngrok-free.app/user/friendWishlist`,
         {

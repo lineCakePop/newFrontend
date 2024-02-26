@@ -1,13 +1,20 @@
-import React, { useEffect, useState } from "react";
+import axios from "axios";
 import { useParams } from "react-router-dom";
+import React, { useEffect, useState } from "react";
+
+// ======================= svgg =======================
 
 import { ReactComponent as Birthday } from "../../icons/wishlistDetail/birthDayCake.svg";
 import { ReactComponent as Gift } from "../../icons/wishlistDetail/gift.svg";
 
-import axios from "axios";
+// ======================= component =======================
+
+import WishlistCard from "../../components/wishlistDetail/wishlistCard";
 
 const WishListDetail = () => {
   const { userId } = useParams();
+
+  // ======================= useState =======================
 
   const [userWishlist, setUserWishlist] = useState({
     displayName: "",
@@ -16,9 +23,13 @@ const WishListDetail = () => {
     wishlist: [],
   });
 
+  // ======================= useEffect =======================
+
   useEffect(() => {
     getWisList();
   }, []);
+
+  // ======================= function =======================
 
   const getWisList = async () => {
     try {
@@ -53,19 +64,7 @@ const WishListDetail = () => {
     return "";
   };
 
-  const daysToDate = () => {
-    const currentDate = new Date();
-    const birthday = new Date(userWishlist.birthday);
-
-    const differenceMs = Math.abs(currentDate - birthday);
-
-    // Convert milliseconds to days
-    const daysDifference = Math.floor(differenceMs / (1000 * 60 * 60 * 24));
-
-    console.log(daysDifference % 365);
-  };
-
-  console.log(daysToDate());
+  const daysToDate = () => {};
 
   return (
     <div className="">
@@ -80,7 +79,7 @@ const WishListDetail = () => {
           </span>
           <span className="text-[18px] font-medium">'s Wishlist</span>
         </div>
-        {/* birthday total wishlist */}
+        {/* birthday &&  total wishlist */}
         <div className="mt-[24px] justify-between h-[40px] flex">
           <div className="flex">
             <Birthday className="mr-[8px]" />
@@ -100,6 +99,10 @@ const WishListDetail = () => {
               <p className="text-[12px] text-[#777777]">Wishlists</p>
             </div>
           </div>
+        </div>
+        {/* content */}
+        <div className="mt-[36px] flex-col gap-[32px] items-center">
+          <WishlistCard />
         </div>
       </div>
     </div>
