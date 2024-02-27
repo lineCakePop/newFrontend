@@ -27,7 +27,7 @@ function App() {
     });
     const idTokenResponse = await liff.getIDToken();
     setIdToken(idTokenResponse);
-    // console.log(idTokenResponse);
+    console.log(idTokenResponse);
   };
 
   return (

@@ -18,8 +18,10 @@ function FriendWishlist() {
   //  ======================= useEffect =======================
 
   useEffect(() => {
-    getFrinedWisList();
-  }, []);
+    if (idToken !== "") {
+      getFriendWisList();
+    }
+  }, [idToken]);
 
   //  ======================= useState =======================
 
@@ -29,7 +31,7 @@ function FriendWishlist() {
 
   //  ======================= function =======================
 
-  const getFrinedWisList = async () => {
+  const getFriendWisList = async () => {
     try {
       const respones = await axios.get(
         `https://immensely-delicate-kingfish.ngrok-free.app/user/friendWishlist`,
@@ -220,7 +222,7 @@ function FriendWishlist() {
             displayName={friendWislist.displayName}
             pictureUrl={friendWislist.pictureUrl}
             wishlist={friendWislist.wishlist}
-            birthDay={friendWislist.birthDay}
+            birthday={friendWislist.birthday}
             onClickViewMore={() => {
               onClickViewMore(friendWislist._id);
             }}
