@@ -11,7 +11,7 @@ const ButtonCustom = ({
         <>
             {type === "normal" ? (
                 <div
-                    onClick={onClick}
+                    onClick={disable ? () => {} : onClick}
                     className={`${
                         style === ""
                             ? "w-[327px] h-[49px] rounded-[5px] bg-[#06C755]"
