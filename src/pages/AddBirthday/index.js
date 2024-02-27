@@ -1,6 +1,8 @@
-import React, { useEffect, useState } from "react"
+import React, { useEffect, useState, useContext } from "react"
 
 import { ConfigProvider, Select } from "antd"
+
+import { AuthContext } from "../../context/AuthContext"
 
 import axios from "axios"
 
@@ -15,10 +17,8 @@ import SwitchCustom from "../../components/Switch"
 import ModalCustom from "../../components/Modal"
 
 const AddBirthday = () => {
-    const idToken =
-        "eyJraWQiOiJmYTEzNDA0Mjk5M2E0YTE3MTdlNGVlMTZiMGM0OGYzNTRkZTYxNzFmODUwMTU1OTcxODg1MDM4Mjg4ZmI5MmM5IiwidHlwIjoiSldUIiwiYWxnIjoiRVMyNTYifQ.eyJpc3MiOiJodHRwczovL2FjY2Vzcy5saW5lLm1lIiwic3ViIjoiVWQ3YmMxNDUxOGZiZjgzMjdmNzFhY2NiNWQ2MDcwNDgwIiwiYXVkIjoiMjAwMzYxOTE2NSIsImV4cCI6MTcwOTAxMDk4OSwiaWF0IjoxNzA5MDA3Mzg5LCJhbXIiOlsibGluZXNzbyJdLCJuYW1lIjoiV2ludGVyIiwicGljdHVyZSI6Imh0dHBzOi8vcHJvZmlsZS5saW5lLXNjZG4ubmV0LzBoV2pWMF9xYzlDRVZyU1IwdDdSbDNFbGNNQmlnY1p3NE5FeTlESlVkT1gzRk9LeHNRQW5oQWRrd2JVblpGTGhzUVVYeEhKUndjVkNBViJ9.jQcsB5JIvibR8Nu0qIC1lCjXjkcABp7Z7PAWrHw8bSWaiex7vw2WOCviko-z6XcTYJNjITCgBBArgG6LyCZAuQ"
-
-    // const LiffId = process.env.REACT_APP_LIFF_ID
+    const { idToken } = useContext(AuthContext)
+    const LiffId = process.env.REACT_APP_LIFF_ID
 
     // =============== setState ===============
     const [checked, setChecked] = useState(true)
@@ -31,14 +31,6 @@ const AddBirthday = () => {
     const [addBirthday, setAddBirthday] = useState(false)
     const [displayModal, setDisplayModal] = useState(false)
     const [birthdayLabel, setBirthdayLabel] = useState("")
-
-    //   {
-    //     "displayName": "Winter",
-    //     "pictureUrl": "https://sprofile.line-scdn.net/0hWjV03izdCEV7SR0t7Rl2OgsZCy9YOFFXVytBKklAUn0ULUxGACgSIRxNVXYRLUwVBC9BcRtLAyZ3Wn8jZR_0cXx5VXRHe0wbVSpFpA",
-    //     "birthday": "2001-09-05T00:00:00.000Z",
-    //     "setBd": true,
-    //     "notifyFriend": true
-    // }
 
     // =============== Const ===============
     const monthOptions = [
@@ -65,11 +57,11 @@ const AddBirthday = () => {
     const putChangeBirthday = async () => {
         const birthday = `${year}-${month}-${day}`
         try {
-            // await liff.init({
-            //     liffId: LiffId,
-            //     withLoginOnExternalBrowser: true,
-            // })
-            // const idToken = await liff.getIDToken()
+            await liff.init({
+                liffId: LiffId,
+                withLoginOnExternalBrowser: true,
+            })
+            const idToken = await liff.getIDToken()
             const response = await axios.put(
                 "https://immensely-delicate-kingfish.ngrok-free.app/user/changeBd",
                 {
@@ -84,17 +76,17 @@ const AddBirthday = () => {
             )
             // console.log(response)
         } catch (error) {
-            console.log(error.response)
+            console.log(error)
         }
     }
 
     const putChangeNotify = async () => {
         try {
-            // await liff.init({
-            //     liffId: LiffId,
-            //     withLoginOnExternalBrowser: true,
-            // })
-            // const idToken = await liff.getIDToken()
+            await liff.init({
+                liffId: LiffId,
+                withLoginOnExternalBrowser: true,
+            })
+            const idToken = await liff.getIDToken()
             const response = await axios.put(
                 "https://immensely-delicate-kingfish.ngrok-free.app/user/changeNotify",
                 {
@@ -109,17 +101,17 @@ const AddBirthday = () => {
             )
             // console.log(response)
         } catch (error) {
-            console.log(error.response)
+            console.log(error)
         }
     }
 
     const getMyBd = async () => {
         try {
-            // await liff.init({
-            //     liffId: LiffId,
-            //     withLoginOnExternalBrowser: true,
-            // })
-            // const idToken = await liff.getIDToken()
+            await liff.init({
+                liffId: LiffId,
+                withLoginOnExternalBrowser: true,
+            })
+            const idToken = await liff.getIDToken()
             const response = await axios.get(
                 "https://immensely-delicate-kingfish.ngrok-free.app/user/myBd",
                 {
@@ -142,7 +134,7 @@ const AddBirthday = () => {
             }
             setAddBirthday(response.data.setBd)
         } catch (error) {
-            console.log(error.response)
+            console.log(error)
         }
     }
     // =============== useEffect ===============
@@ -179,9 +171,11 @@ const AddBirthday = () => {
     }
 
     const handleDisable = () => {
+        console.log(notify, checked, notify === checked)
         if (day && month && !addBirthday) {
             return false
         } else if (addBirthday && notify === checked) {
+            console.log("addBirthday && notify === checked")
             return false
         }
         return true

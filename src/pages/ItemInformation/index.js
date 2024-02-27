@@ -1,32 +1,25 @@
+import axios from "axios";
 import React, { useEffect, useState } from "react";
-import { ReactComponent as ArrowHead } from "../../icons/ItemInformation/Vector.svg";
-import ButtonCustom from "../../components/Button";
-
 import { useParams } from "react-router-dom";
 
-import axios from "axios";
+// ======================= svg =======================
 
-const product = {
-  productName: "Bonjour Tote Bag",
-  productPicture:
-    "https://static.wixstatic.com/media/2349a0_c9b86d38c80d4353853d5681593cd88a~mv2.jpg/v1/fill/w_480,h_440,al_c,q_80,usm_0.66_1.00_0.01,enc_auto/2349a0_c9b86d38c80d4353853d5681593cd88a~mv2.jpg",
-  productPrice: 1400,
-  seller: "anytoty shop",
-  sellerPicture: "https://cdn01.pinkoi.com/product/Ku8E3KRW/0/1/640x530.jpg",
-  link_to_product: "",
-  link_to_seller: "",
-  variant: {
-    color: ["red", "green"],
-    variant_name2: ["s", "m"],
-  },
-};
+import { ReactComponent as ArrowHead } from "../../icons/ItemInformation/Vector.svg";
+
+// ======================= component =======================
+
+import ButtonCustom from "../../components/Button";
 
 const ItemInformation = () => {
   const { productId } = useParams();
 
+  // ======================= useEffect =======================
+
   useEffect(() => {
     getProductInformation();
   }, []);
+
+  // ======================= useState=======================
 
   const [itemInformation, setItemInformation] = useState({
     productName: "",
@@ -40,6 +33,8 @@ const ItemInformation = () => {
   });
 
   const [variantArray, setVariantArray] = useState([]);
+
+  // ======================= function =======================
 
   const getProductInformation = async () => {
     try {

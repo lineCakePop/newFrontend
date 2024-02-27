@@ -1,7 +1,8 @@
-import React, { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
-
+import axios from "axios";
 import liff from "@line/liff";
+import { useNavigate } from "react-router-dom";
+import { AuthContext } from "../../context/AuthContext";
+import React, { useContext, useEffect, useState } from "react";
 
 //  ======================= svg =======================
 import { ReactComponent as UserAdd } from "../../icons/friendWishlist/user-add.svg";
@@ -9,17 +10,16 @@ import { ReactComponent as Search } from "../../icons/friendWishlist/search.svg"
 
 import WishlistCard from "../../components/friendWishlist/wishlistCard";
 
-import axios from "axios";
-
-const LiffId = process.env.REACT_APP_LIFF_ID;
-
-
 function FriendWishlist() {
+  const { idToken } = useContext(AuthContext);
+
+  const navigate = useNavigate();
+
+  //  ======================= useEffect =======================
+
   useEffect(() => {
     getFrinedWisList();
   }, []);
-
-  const navigate = useNavigate();
 
   //  ======================= useState =======================
 
@@ -31,12 +31,6 @@ function FriendWishlist() {
 
   const getFrinedWisList = async () => {
     try {
-      await liff.init({
-        liffId: LiffId,
-        withLoginOnExternalBrowser: true,
-      });
-      const idToken = await liff.getIDToken();
-
       const respones = await axios.get(
         `https://immensely-delicate-kingfish.ngrok-free.app/user/friendWishlist`,
         {
@@ -70,8 +64,122 @@ function FriendWishlist() {
     liff.shareTargetPicker(
       [
         {
-          type: "text",
-          text: "Hello, World!",
+          type: "flex",
+          altText: "This is a Flex Message",
+          contents: {
+            type: "bubble",
+            body: {
+              type: "box",
+              layout: "vertical",
+              contents: [
+                {
+                  type: "box",
+                  layout: "vertical",
+                  contents: [
+                    {
+                      type: "text",
+                      text: "Let’s become friend!",
+                      weight: "regular",
+                      color: "#06C755",
+                      size: "14px",
+                    },
+                  ],
+                  paddingStart: "20px",
+                  paddingTop: "20px",
+                  paddingEnd: "20px",
+                  paddingBottom: "16px",
+                },
+                {
+                  type: "box",
+                  layout: "horizontal",
+                  contents: [
+                    {
+                      type: "box",
+                      layout: "vertical",
+                      contents: [
+                        {
+                          type: "image",
+                          url: "https://firebasestorage.googleapis.com/v0/b/cakepop-be50a.appspot.com/o/Image%20Area.png?alt=media&token=37e30d34-af80-4bbd-b863-4078bb845abe",
+                          aspectMode: "cover",
+                          size: "64px",
+                        },
+                      ],
+                      height: "42px",
+                      width: "42px",
+                    },
+                    {
+                      type: "box",
+                      layout: "vertical",
+                      contents: [
+                        {
+                          type: "text",
+                          text: "Join Line Birthday for",
+                          size: "16px",
+                          maxLines: 3,
+                          color: "#111111",
+                          weight: "bold",
+                        },
+                        {
+                          type: "text",
+                          text: "memorable experience",
+                          size: "16px",
+                          maxLines: 3,
+                          weight: "bold",
+                          color: "#111111",
+                        },
+                      ],
+                      margin: "12px",
+                    },
+                  ],
+                  height: "42px",
+                  paddingStart: "20px",
+                  paddingEnd: "20px",
+                },
+                {
+                  type: "separator",
+                  margin: "20px",
+                },
+                {
+                  type: "box",
+                  layout: "vertical",
+                  contents: [
+                    {
+                      type: "box",
+                      layout: "vertical",
+                      contents: [
+                        {
+                          type: "text",
+                          text: "Accept Invite",
+                          size: "16px",
+                          color: "#FFFFFF",
+                          weight: "bold",
+                          action: {
+                            type: "uri",
+                            label: "action",
+                            uri: "http://linecorp.com/",
+                          },
+                        },
+                      ],
+                      width: "265px",
+                      height: "49px",
+                      backgroundColor: "#06C755",
+                      cornerRadius: "5px",
+                      justifyContent: "center",
+                      alignItems: "center",
+                    },
+                  ],
+                  paddingAll: "20px",
+                },
+              ],
+              margin: "0px",
+              paddingAll: "0px",
+            },
+            styles: {
+              footer: {
+                separator: true,
+              },
+            },
+          },
         },
       ],
       {
