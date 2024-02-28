@@ -1,5 +1,7 @@
 import axios from "axios";
+
 import liff from "@line/liff";
+
 import { useNavigate } from "react-router-dom";
 import { AuthContext } from "../../context/AuthContext";
 import React, { useContext, useEffect, useState } from "react";
@@ -10,6 +12,10 @@ import { ReactComponent as Search } from "../../icons/friendWishlist/search.svg"
 
 import WishlistCard from "../../components/friendWishlist/wishlistCard";
 
+import { LOADING, SUCCESS } from "../../utils/const";
+
+import loadingGif from "../../icons/cakeGif.gif";
+
 function FriendWishlist() {
   const { idToken } = useContext(AuthContext);
 
@@ -18,25 +24,25 @@ function FriendWishlist() {
   //  ======================= useEffect =======================
 
   useEffect(() => {
-    getFrinedWisList();
-  }, []);
+    if (idToken !== "") {
+      getFriendWisList();
+    }
+  }, [idToken]);
 
   //  ======================= useState =======================
 
   const [searchInput, setSearchInput] = useState("");
   const [wishlist, setWishlist] = useState([]);
   const [displayWishlist, setDisplayWishlist] = useState([]);
+  const [status, setStatus] = useState(LOADING);
 
   //  ======================= function =======================
 
-  const getFrinedWisList = async () => {
+  const getFriendWisList = async () => {
     try {
       const respones = await axios.get(
-        `https://immensely-delicate-kingfish.ngrok-free.app/user/friendWishlist`,
+        `${process.env.REACT_APP_API_PROXY}/user/friendWishlist`,
         {
-          headers: {
-            "ngrok-skip-browser-warning": "69420",
-          },
           params: {
             id: idToken,
           },
@@ -44,6 +50,7 @@ function FriendWishlist() {
       );
       setWishlist(respones.data);
       setDisplayWishlist(respones.data);
+      setStatus(SUCCESS);
     } catch (err) {
       console.log(err);
     }
@@ -60,137 +67,152 @@ function FriendWishlist() {
     );
   };
 
-  const handleShareTarget = () => {
-    liff.shareTargetPicker(
-      [
-        {
-          type: "flex",
-          altText: "This is a Flex Message",
-          contents: {
-            type: "bubble",
-            body: {
-              type: "box",
-              layout: "vertical",
-              contents: [
-                {
-                  type: "box",
-                  layout: "vertical",
-                  contents: [
-                    {
-                      type: "text",
-                      text: "Let’s become friend!",
-                      weight: "regular",
-                      color: "#06C755",
-                      size: "14px",
-                    },
-                  ],
-                  paddingStart: "20px",
-                  paddingTop: "20px",
-                  paddingEnd: "20px",
-                  paddingBottom: "16px",
-                },
-                {
-                  type: "box",
-                  layout: "horizontal",
-                  contents: [
-                    {
-                      type: "box",
-                      layout: "vertical",
-                      contents: [
-                        {
-                          type: "image",
-                          url: "https://firebasestorage.googleapis.com/v0/b/cakepop-be50a.appspot.com/o/Image%20Area.png?alt=media&token=37e30d34-af80-4bbd-b863-4078bb845abe",
-                          aspectMode: "cover",
-                          size: "64px",
-                        },
-                      ],
-                      height: "42px",
-                      width: "42px",
-                    },
-                    {
-                      type: "box",
-                      layout: "vertical",
-                      contents: [
-                        {
-                          type: "text",
-                          text: "Join Line Birthday for",
-                          size: "16px",
-                          maxLines: 3,
-                          color: "#111111",
-                          weight: "bold",
-                        },
-                        {
-                          type: "text",
-                          text: "memorable experience",
-                          size: "16px",
-                          maxLines: 3,
-                          weight: "bold",
-                          color: "#111111",
-                        },
-                      ],
-                      margin: "12px",
-                    },
-                  ],
-                  height: "42px",
-                  paddingStart: "20px",
-                  paddingEnd: "20px",
-                },
-                {
-                  type: "separator",
-                  margin: "20px",
-                },
-                {
-                  type: "box",
-                  layout: "vertical",
-                  contents: [
-                    {
-                      type: "box",
-                      layout: "vertical",
-                      contents: [
-                        {
-                          type: "text",
-                          text: "Accept Invite",
-                          size: "16px",
-                          color: "#FFFFFF",
-                          weight: "bold",
-                          action: {
-                            type: "uri",
-                            label: "action",
-                            uri: "http://linecorp.com/",
+  const handleShareTarget = async () => {
+    try {
+      const response = await axios.get(
+        `${process.env.REACT_APP_API_PROXY}/user/inviteLink`,
+        { params: { id: idToken } }
+      );
+      console.log();
+
+      liff.shareTargetPicker(
+        [
+          {
+            type: "flex",
+            altText: "Line birthday invite",
+            contents: {
+              type: "bubble",
+              body: {
+                type: "box",
+                layout: "vertical",
+                contents: [
+                  {
+                    type: "box",
+                    layout: "vertical",
+                    contents: [
+                      {
+                        type: "text",
+                        text: "Let’s become friend!",
+                        weight: "regular",
+                        color: "#06C755",
+                        size: "14px",
+                      },
+                    ],
+                    paddingStart: "20px",
+                    paddingTop: "20px",
+                    paddingEnd: "20px",
+                    paddingBottom: "16px",
+                  },
+                  {
+                    type: "box",
+                    layout: "horizontal",
+                    contents: [
+                      {
+                        type: "box",
+                        layout: "vertical",
+                        contents: [
+                          {
+                            type: "image",
+                            url: "https://firebasestorage.googleapis.com/v0/b/cakepop-be50a.appspot.com/o/Image%20Area.png?alt=media&token=37e30d34-af80-4bbd-b863-4078bb845abe",
+                            aspectMode: "cover",
+                            size: "64px",
                           },
+                        ],
+                        height: "42px",
+                        width: "42px",
+                      },
+                      {
+                        type: "box",
+                        layout: "vertical",
+                        contents: [
+                          {
+                            type: "text",
+                            text: "Join Line Birthday for",
+                            size: "16px",
+                            maxLines: 3,
+                            color: "#111111",
+                            weight: "bold",
+                          },
+                          {
+                            type: "text",
+                            text: "memorable experience",
+                            size: "16px",
+                            maxLines: 3,
+                            weight: "bold",
+                            color: "#111111",
+                          },
+                        ],
+                        margin: "12px",
+                      },
+                    ],
+                    height: "42px",
+                    paddingStart: "20px",
+                    paddingEnd: "20px",
+                  },
+                  {
+                    type: "separator",
+                    margin: "20px",
+                  },
+                  {
+                    type: "box",
+                    layout: "vertical",
+                    contents: [
+                      {
+                        type: "box",
+                        layout: "vertical",
+                        contents: [
+                          {
+                            type: "text",
+                            text: "Accept Invite",
+                            size: "16px",
+                            color: "#FFFFFF",
+                            weight: "bold",
+                          },
+                        ],
+                        width: "265px",
+                        height: "49px",
+                        backgroundColor: "#06C755",
+                        cornerRadius: "5px",
+                        justifyContent: "center",
+                        alignItems: "center",
+                        action: {
+                          type: "uri",
+                          label: "action",
+                          uri: `https://liff.line.me/2003619165-JRmR1GYd/invite-friend/${response.data.inviteId}`,
                         },
-                      ],
-                      width: "265px",
-                      height: "49px",
-                      backgroundColor: "#06C755",
-                      cornerRadius: "5px",
-                      justifyContent: "center",
-                      alignItems: "center",
-                    },
-                  ],
-                  paddingAll: "20px",
+                      },
+                    ],
+                    paddingAll: "20px",
+                  },
+                ],
+                margin: "0px",
+                paddingAll: "0px",
+              },
+              styles: {
+                footer: {
+                  separator: true,
                 },
-              ],
-              margin: "0px",
-              paddingAll: "0px",
-            },
-            styles: {
-              footer: {
-                separator: true,
               },
             },
           },
-        },
-      ],
-      {
-        isMultiple: true,
-      }
-    );
+        ],
+        {
+          isMultiple: true,
+        }
+      );
+    } catch (err) {}
   };
 
   const onClickViewMore = (id) => {
     navigate(`/wishlist-detail/${id}`);
   };
+
+  if (status === LOADING)
+    return (
+      <div className="h-[100dvh] flex justify-center items-center">
+        <img src={loadingGif} alt="loading" />
+      </div>
+    );
 
   return (
     <div>
@@ -220,7 +242,7 @@ function FriendWishlist() {
             displayName={friendWislist.displayName}
             pictureUrl={friendWislist.pictureUrl}
             wishlist={friendWislist.wishlist}
-            birthDay={friendWislist.birthDay}
+            birthday={friendWislist.birthday}
             onClickViewMore={() => {
               onClickViewMore(friendWislist._id);
             }}

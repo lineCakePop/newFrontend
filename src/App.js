@@ -8,27 +8,27 @@ import FriendWishlist from "./pages/friendWishlist"
 import WishListDetail from "./pages/wishListDetail"
 import AddBirthday from "./pages/AddBirthday"
 import Loading from "./pages/Loading"
+import InviteFriend from "./pages/inviteFriend"
+
 import { AuthContext } from "./context/AuthContext"
 
 const LiffId = process.env.REACT_APP_LIFF_ID
 
 function App() {
     const { setIdToken } = useContext(AuthContext)
-
     useEffect(() => {
         liffCheck()
     }, [])
 
     // auth
     const liffCheck = async () => {
-        // const isInClient = await liff.isInClient();
         await liff.init({
             liffId: LiffId,
             withLoginOnExternalBrowser: true,
         })
         const idTokenResponse = await liff.getIDToken()
         setIdToken(idTokenResponse)
-        // console.log(idTokenResponse);
+        console.log(idTokenResponse)
     }
 
     return (
@@ -43,6 +43,10 @@ function App() {
                 <Route
                     path="/item-information/:productId"
                     element={<ItemInformation />}
+                />
+                <Route
+                    path="invite-friend/:inviteCode"
+                    element={<InviteFriend />}
                 />
                 <Route path="*" element={<Loading />} />
             </Routes>

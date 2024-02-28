@@ -6,12 +6,13 @@ function WishlistCard({
   displayName,
   pictureUrl,
   wishlist,
-  birthDay,
+  birthday,
   onClickViewMore,
 }) {
-  const dateFormat = (birthDay) => {
-    if (birthDay) {
-      const format = birthDay
+  const dateFormat = (birthday) => {
+    if (birthday) {
+      const date = new Date(birthday);
+      const format = date
         .toLocaleDateString("en-US", {
           day: "2-digit",
           month: "long",
@@ -36,7 +37,9 @@ function WishlistCard({
               {displayName}
             </div>
 
-            <span className="text-[12px]">{dateFormat(birthDay)}</span>
+            <span className="text-[12px] text-[#555555]">
+              {dateFormat(birthday)}
+            </span>
           </div>
         </div>
         <div
