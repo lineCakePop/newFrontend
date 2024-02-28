@@ -10,7 +10,7 @@ import { AuthContext } from "../../context/AuthContext";
 import { LOADING, SUCCESS } from "../../utils/const";
 
 import WishlistCard from "../../components/myWishlist/wishlistCard";
-import ButtonCustom from "../../components/Button";
+import ButtonCustom from "../../components/button";
 
 import loadingGif from "../../icons/cakeGif.gif";
 
