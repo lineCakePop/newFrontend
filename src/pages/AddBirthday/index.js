@@ -60,7 +60,7 @@ const AddBirthday = () => {
             setAlreadyAddBirthday(true);
             setDisplayModal(false);
             await axios.put(
-                "https://us-central1-linecakepop.cloudfunctions.net/api/user/changeBd",
+                `${process.env.REACT_APP_API_PROXY}/user/changeBd`,
                 {
                     id: idToken,
                     birthday: birthday,
@@ -80,7 +80,7 @@ const AddBirthday = () => {
         try {
             liff.closeWindow();
             await axios.put(
-                "https://us-central1-linecakepop.cloudfunctions.net/api/user/changeNotify",
+                `${process.env.REACT_APP_API_PROXY}/user/changeNotify`,
                 {
                     id: idToken,
                     notify: checked,
@@ -99,7 +99,7 @@ const AddBirthday = () => {
     const getMyBd = async () => {
         try {
             const response = await axios.get(
-                "https://us-central1-linecakepop.cloudfunctions.net/api/user/myBd",
+                `${process.env.REACT_APP_API_PROXY}/user/myBd`,
                 {
                     headers: {
                         "ngrok-skip-browser-warning": "69420",
