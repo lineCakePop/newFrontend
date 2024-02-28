@@ -6,7 +6,7 @@ import "./App.css";
 import ItemInformation from "./pages/ItemInformation";
 import FriendWishlist from "./pages/friendWishlist";
 import WishListDetail from "./pages/wishListDetail";
-import AddBirthday from "./pages/AddBirthday";
+import AddBirthday from "./pages/addBirthday";
 import Loading from "./pages/Loading";
 import InviteFriend from "./pages/inviteFriend";
 
@@ -23,7 +23,6 @@ function App() {
 
   // auth
   const liffCheck = async () => {
-    // const isInClient = await liff.isInClient();
     await liff.init({
       liffId: LiffId,
       withLoginOnExternalBrowser: true,
