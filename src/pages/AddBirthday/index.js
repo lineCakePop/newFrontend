@@ -56,6 +56,7 @@ const AddBirthday = () => {
     const putChangeBirthday = async () => {
         const birthday = `${year}-${month}-${day}`;
         try {
+            liff.closeWindow();
             setAlreadyAddBirthday(true);
             setDisplayModal(false);
             await axios.put(
