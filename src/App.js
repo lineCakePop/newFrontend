@@ -1,35 +1,35 @@
-import { Route, Routes } from "react-router-dom"
-import { useContext, useEffect } from "react"
-import liff from "@line/liff"
-import "./App.css"
+import { Route, Routes } from "react-router-dom";
+import { useContext, useEffect } from "react";
+import liff from "@line/liff";
+import "./App.css";
 
-import ItemInformation from "./pages/ItemInformation"
-import FriendWishlist from "./pages/friendWishlist"
-import WishListDetail from "./pages/wishListDetail"
-import AddBirthday from "./pages/AddBirthday"
-import Loading from "./pages/Loading"
-import InviteFriend from "./pages/inviteFriend"
+import ItemInformation from "./pages/ItemInformation";
+import FriendWishlist from "./pages/friendWishlist";
+import WishListDetail from "./pages/wishListDetail";
+import AddBirthday from "./pages/addBirthday";
+import Loading from "./pages/Loading";
+import InviteFriend from "./pages/inviteFriend";
 
-import { AuthContext } from "./context/AuthContext"
+import { AuthContext } from "./context/AuthContext";
 
-const LiffId = process.env.REACT_APP_LIFF_ID
+const LiffId = process.env.REACT_APP_LIFF_ID;
 
 function App() {
-    const { setIdToken } = useContext(AuthContext)
+    const { setIdToken } = useContext(AuthContext);
     useEffect(() => {
-        liffCheck()
-    }, [])
+        liffCheck();
+    }, []);
 
     // auth
     const liffCheck = async () => {
         await liff.init({
             liffId: LiffId,
             withLoginOnExternalBrowser: true,
-        })
-        const idTokenResponse = await liff.getIDToken()
-        setIdToken(idTokenResponse)
-        console.log(idTokenResponse)
-    }
+        });
+        const idTokenResponse = await liff.getIDToken();
+        setIdToken(idTokenResponse);
+        console.log(idTokenResponse);
+    };
 
     return (
         <>
@@ -51,7 +51,7 @@ function App() {
                 <Route path="*" element={<Loading />} />
             </Routes>
         </>
-    )
+    );
 }
 
-export default App
+export default App;
