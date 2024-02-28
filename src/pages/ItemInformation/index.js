@@ -2,6 +2,8 @@ import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 
+import liff from "@line/liff";
+
 // ======================= svg =======================
 
 import { ReactComponent as ArrowHead } from "../../icons/ItemInformation/Vector.svg";
@@ -9,6 +11,10 @@ import { ReactComponent as ArrowHead } from "../../icons/ItemInformation/Vector.
 // ======================= component =======================
 
 import ButtonCustom from "../../components/Button";
+
+import { LOADING, SUCCESS } from "../../utils/const";
+
+import loadingGif from "../../icons/cakeGif.gif";
 
 const ItemInformation = () => {
   const { productId } = useParams();
@@ -34,12 +40,14 @@ const ItemInformation = () => {
 
   const [variantArray, setVariantArray] = useState([]);
 
+  const [status, setStatus] = useState(LOADING);
+
   // ======================= function =======================
 
   const getProductInformation = async () => {
     try {
       const response = await axios.get(
-        "https://immensely-delicate-kingfish.ngrok-free.app/wishlist/productToChooseVariant",
+        `${process.env.REACT_APP_API_PROXY}/wishlist/productToChooseVariant`,
         {
           headers: {
             "ngrok-skip-browser-warning": "69420",
@@ -53,6 +61,7 @@ const ItemInformation = () => {
       setVariantArray(
         new Array(Object.keys(response.data.variant).length).fill("")
       );
+      setStatus(SUCCESS);
     } catch (err) {
       console.log(err);
     }
@@ -60,23 +69,26 @@ const ItemInformation = () => {
 
   const onClickConfirm = async () => {
     try {
+      liff.closeWindow();
       await axios.put(
-        "https://immensely-delicate-kingfish.ngrok-free.app/wishlist/addVariantToWishlist",
+        `${process.env.REACT_APP_API_PROXY}/wishlist/addVariantToWishlist`,
         {
           id: productId,
           variantOption1: variantArray[0],
           variantOption2: variantArray[1],
-        },
-        {
-          headers: {
-            "ngrok-skip-browser-warning": "69420",
-          },
         }
       );
     } catch (err) {
       console.log(err);
     }
   };
+
+  if (status === LOADING)
+    return (
+      <div className="h-[100dvh] flex justify-center items-center">
+        <img src={loadingGif} alt="loading" />
+      </div>
+    );
 
   return (
     <div className="">

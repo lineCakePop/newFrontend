@@ -8,6 +8,8 @@ import FriendWishlist from "./pages/friendWishlist";
 import WishListDetail from "./pages/wishListDetail";
 import AddBirthday from "./pages/AddBirthday";
 import Loading from "./pages/Loading";
+import InviteFriend from "./pages/inviteFriend";
+
 import { AuthContext } from "./context/AuthContext";
 
 const LiffId = process.env.REACT_APP_LIFF_ID;
@@ -15,7 +17,7 @@ const LiffId = process.env.REACT_APP_LIFF_ID;
 function App() {
   const { setIdToken } = useContext(AuthContext);
   useEffect(() => {
-    liffCheck();
+    // liffCheck();
   }, []);
 
   // auth
@@ -40,6 +42,7 @@ function App() {
           path="/item-information/:productId"
           element={<ItemInformation />}
         />
+        <Route path="invite-friend/:inviteCode" element={<InviteFriend />} />
         <Route path="*" element={<Loading />} />
       </Routes>
     </>

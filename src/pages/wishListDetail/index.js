@@ -11,6 +11,10 @@ import { ReactComponent as Gift } from "../../icons/wishlistDetail/gift.svg";
 
 import WishlistCard from "../../components/wishlistDetail/wishlistCard";
 
+import { LOADING, SUCCESS } from "../../utils/const";
+
+import loadingGif from "../../icons/cakeGif.gif";
+
 const WishListDetail = () => {
   const { userId } = useParams();
 
@@ -22,6 +26,7 @@ const WishListDetail = () => {
     birthday: "",
     wishlist: [],
   });
+  const [status, setStatus] = useState(LOADING);
 
   // ======================= useEffect =======================
 
@@ -34,17 +39,15 @@ const WishListDetail = () => {
   const getWisList = async () => {
     try {
       const respones = await axios.get(
-        `https://immensely-delicate-kingfish.ngrok-free.app/user/wishlistOfOneFriend`,
+        `${process.env.REACT_APP_API_PROXY}/user/wishlistOfOneFriend`,
         {
-          headers: {
-            "ngrok-skip-browser-warning": "69420",
-          },
           params: {
             id: userId,
           },
         }
       );
       setUserWishlist(respones.data);
+      setStatus(SUCCESS);
     } catch (err) {
       console.log(err);
     }
@@ -89,50 +92,57 @@ const WishListDetail = () => {
   };
   return (
     <div className="">
-      <div className="h-[128px] px-[24px] py-[16px] border-b border-[#DFDFDF]">
-        {/* profile pic and name */}
-        <div className="flex items-center">
-          <div className="h-[32px] w-[32px] flex justify-center items-center overflow-hidden rounded-full mr-[10px]">
-            <img src={userWishlist.pictureUrl} />
-          </div>
-          <span className="text-[18px] font-bold">
-            {userWishlist.displayName}
-          </span>
-          <span className="text-[18px] font-medium">'s Wishlist</span>
+      {status === LOADING ? (
+        <div className="h-[100dvh] flex justify-center items-center">
+          <img src={loadingGif} alt="loading" />
         </div>
-        {/* birthday &&  total wishlist */}
-        <div className="mt-[24px] justify-between h-[40px] flex">
-          <div className="flex">
-            <Birthday className="mr-[8px]" />
-            <div>
-              <p className="text-[14px] font-semibold">{dateFormat()}</p>
-              <p className="text-[12px] text-[#777777]">
-                {daysToDate()} days until birthday
-              </p>
+      ) : (
+        <div className="h-[128px] px-[24px] py-[16px] border-b border-[#DFDFDF]">
+          {/* profile pic and name */}
+          <div className="flex items-center">
+            <div className="h-[32px] w-[32px] flex justify-center items-center overflow-hidden rounded-full mr-[10px]">
+              <img src={userWishlist.pictureUrl} />
+            </div>
+            <span className="text-[18px] font-bold">
+              {userWishlist.displayName}
+            </span>
+            <span className="text-[18px] font-medium">'s Wishlist</span>
+          </div>
+          {/* birthday &&  total wishlist */}
+          <div className="mt-[24px] justify-between h-[40px] flex">
+            <div className="flex">
+              <Birthday className="mr-[8px]" />
+              <div>
+                <p className="text-[14px] font-semibold">{dateFormat()}</p>
+                <p className="text-[12px] text-[#777777]">
+                  {daysToDate()} days until birthday
+                </p>
+              </div>
+            </div>
+            <div className="flex">
+              <Gift className="mr-[8px]" />
+              <div>
+                <p className="text-[14px] font-semibold">
+                  {userWishlist.wishlist.length}
+                </p>
+                <p className="text-[12px] text-[#777777]">Wishlists</p>
+              </div>
             </div>
           </div>
-          <div className="flex">
-            <Gift className="mr-[8px]" />
-            <div>
-              <p className="text-[14px] font-semibold">
-                {userWishlist.wishlist.length}
-              </p>
-              <p className="text-[12px] text-[#777777]">Wishlists</p>
-            </div>
+          {/* content */}
+          <div className="mt-[36px] flex-col flex gap-[32px] items-center">
+            {userWishlist.wishlist.map((wishlist) => (
+              <WishlistCard
+                key={wishlist.productName}
+                productName={wishlist.productName}
+                productPicture={wishlist.productPicture}
+                productPrice={wishlist.productPrice}
+                variantText={wishlist.variantText}
+              />
+            ))}
           </div>
         </div>
-        {/* content */}
-        <div className="mt-[36px] flex-col flex gap-[32px] items-center">
-          {userWishlist.wishlist.map((wishlist) => (
-            <WishlistCard
-              productName={wishlist.productName}
-              productPicture={wishlist.productPicture}
-              productPrice={wishlist.productPrice}
-              variantText={wishlist.variantText}
-            />
-          ))}
-        </div>
-      </div>
+      )}
     </div>
   );
 };
