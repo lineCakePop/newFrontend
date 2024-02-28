@@ -78,6 +78,7 @@ const AddBirthday = () => {
 
     const putChangeNotify = async () => {
         try {
+            liff.closeWindow();
             await axios.put(
                 "https://us-central1-linecakepop.cloudfunctions.net/api/user/changeNotify",
                 {
