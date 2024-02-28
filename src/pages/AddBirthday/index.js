@@ -27,10 +27,10 @@ const AddBirthday = () => {
     const [month, setMonth] = useState()
     const [day, setDay] = useState()
     const [disable, setDisable] = useState(true)
-
     const [addBirthday, setAddBirthday] = useState(false)
     const [displayModal, setDisplayModal] = useState(false)
     const [birthdayLabel, setBirthdayLabel] = useState("")
+    const [statusPage, setStatusPage] = useState("")
 
     // =============== Const ===============
     const monthOptions = [
@@ -57,13 +57,9 @@ const AddBirthday = () => {
     const putChangeBirthday = async () => {
         const birthday = `${year}-${month}-${day}`
         try {
-            await liff.init({
-                liffId: LiffId,
-                withLoginOnExternalBrowser: true,
-            })
-            const idToken = await liff.getIDToken()
+            liff.closeWindow()
             const response = await axios.put(
-                "https://immensely-delicate-kingfish.ngrok-free.app/user/changeBd",
+                "https://us-central1-linecakepop.cloudfunctions.net/api/user/changeBd",
                 {
                     id: idToken,
                     birthday: birthday,
@@ -75,6 +71,7 @@ const AddBirthday = () => {
                 }
             )
             // console.log(response)
+            console.log(response)
         } catch (error) {
             console.log(error)
         }
@@ -82,13 +79,8 @@ const AddBirthday = () => {
 
     const putChangeNotify = async () => {
         try {
-            await liff.init({
-                liffId: LiffId,
-                withLoginOnExternalBrowser: true,
-            })
-            const idToken = await liff.getIDToken()
             const response = await axios.put(
-                "https://immensely-delicate-kingfish.ngrok-free.app/user/changeNotify",
+                "https://us-central1-linecakepop.cloudfunctions.net/api/user/changeNotify",
                 {
                     id: idToken,
                     notify: checked,
@@ -107,13 +99,8 @@ const AddBirthday = () => {
 
     const getMyBd = async () => {
         try {
-            await liff.init({
-                liffId: LiffId,
-                withLoginOnExternalBrowser: true,
-            })
-            const idToken = await liff.getIDToken()
             const response = await axios.get(
-                "https://immensely-delicate-kingfish.ngrok-free.app/user/myBd",
+                "https://us-central1-linecakepop.cloudfunctions.net/api/user/myBd",
                 {
                     headers: {
                         "ngrok-skip-browser-warning": "69420",
@@ -124,7 +111,7 @@ const AddBirthday = () => {
                 }
             )
 
-            console.log(response.data)
+            console.log("response.data", response.data)
 
             if (response.data.setBd) {
                 setMonth(response.data.birthday.split("-")[1])
@@ -137,14 +124,18 @@ const AddBirthday = () => {
             console.log(error)
         }
     }
+
     // =============== useEffect ===============
     useEffect(() => {
         setDisable(handleDisable())
     }, [month, day, checked])
 
     useEffect(() => {
-        getMyBd()
-    }, [])
+        if (idToken !== "") {
+            console.log("idToken", idToken)
+            getMyBd()
+        }
+    }, [idToken])
 
     // =============== Handler ===============
     const handleChangeSwitch = (event) => {
@@ -171,11 +162,9 @@ const AddBirthday = () => {
     }
 
     const handleDisable = () => {
-        console.log(notify, checked, notify === checked)
         if (day && month && !addBirthday) {
             return false
-        } else if (addBirthday && notify === checked) {
-            console.log("addBirthday && notify === checked")
+        } else if (addBirthday && notify !== checked) {
             return false
         }
         return true
@@ -205,10 +194,12 @@ const AddBirthday = () => {
 
         return `${number}${suffix}`
     }
-    return (
-        <>
-            <style>
-                {`
+
+    if (statusPage === "") {
+        return (
+            <>
+                <style>
+                    {`
                 .rc-virtual-list-scrollbar {
                     // padding: 10px 0 !important;
                 }
@@ -223,107 +214,109 @@ const AddBirthday = () => {
                     border: 1px solid #DFDFDF !important;
                 }
                 `}
-            </style>
+                </style>
 
-            {displayModal && (
-                <ModalCustom
-                    title={
-                        <div>
-                            Your birthday is on
-                            <br />“{birthdayLabel}”
-                        </div>
-                    }
-                    subTitle={<>You cannot change the date later.</>}
-                    handleCancel={handleCancelModal}
-                    handleConfirm={handleConfirmModal}
-                />
-            )}
-
-            <div className="flex flex-col justify-between h-[100dvh]">
-                <div className="px-[24px] py-[16px]">
-                    <div className="flex justify-between items-center h-[24px]">
-                        <div className="font-bold text-[20px] leading-[20px]">
-                            Add Birthday
-                        </div>
-                        {/* <Cross /> */}
-                    </div>
-
-                    <div className="mt-[64px]">
-                        <div className="flex justify-between">
-                            <ConfigProvider
-                                theme={{
-                                    token: {
-                                        colorPrimaryHover: "#06C755",
-                                        colorPrimary: "#06C755",
-                                        borderRadius: 4,
-                                        // boxShadowSecondary: "",
-                                        colorText: "#777777",
-                                        optionSelectedFontWeight: 400,
-                                        optionHeight: 36,
-                                    },
-                                    components: {
-                                        Select: {
-                                            optionHeight: 36,
-                                            optionPadding: 10,
-                                            optionSelectedBg: "#F5F5F5",
-                                        },
-                                    },
-                                }}
-                            >
-                                <Select
-                                    style={{ width: 191, height: 40 }}
-                                    allowClear={false}
-                                    placeholder="Month"
-                                    options={monthOptions}
-                                    onChange={handleChangeMonth}
-                                    listHeight={190}
-                                    value={month}
-                                    disabled={addBirthday}
-                                />
-                                <Select
-                                    style={{ width: 112, height: 40 }}
-                                    allowClear={false}
-                                    placeholder="Day"
-                                    options={dayOptions}
-                                    onChange={handleChangeDay}
-                                    listHeight={190}
-                                    value={day}
-                                    disabled={addBirthday}
-                                />
-                            </ConfigProvider>
-                        </div>
-
-                        <div className="mt-[32px] h-[26px] flex items-center justify-between">
-                            <div className="font-bold text-[16px] leading-[20.8px]">
-                                Notify my birthday
-                            </div>
+                {displayModal && (
+                    <ModalCustom
+                        title={
                             <div>
-                                <SwitchCustom
-                                    native={"iOS"}
-                                    checked={checked}
-                                    onChange={handleChangeSwitch}
-                                />
+                                Your birthday is on
+                                <br />“{birthdayLabel}”
+                            </div>
+                        }
+                        subTitle={<>You cannot change the date later.</>}
+                        handleCancel={handleCancelModal}
+                        handleConfirm={handleConfirmModal}
+                    />
+                )}
+
+                <div className="flex flex-col justify-between h-[100dvh]">
+                    <div className="px-[24px] py-[16px]">
+                        <div className="flex justify-between items-center h-[24px]">
+                            <div className="font-bold text-[20px] leading-[20px]">
+                                Add Birthday
+                            </div>
+                            {/* <Cross /> */}
+                        </div>
+
+                        <div className="mt-[64px]">
+                            <div className="flex justify-between">
+                                <ConfigProvider
+                                    theme={{
+                                        token: {
+                                            colorPrimaryHover: "#06C755",
+                                            colorPrimary: "#06C755",
+                                            borderRadius: 4,
+                                            // boxShadowSecondary: "",
+                                            colorText: "#777777",
+                                            optionSelectedFontWeight: 400,
+                                            optionHeight: 36,
+                                        },
+                                        components: {
+                                            Select: {
+                                                optionHeight: 36,
+                                                optionPadding: 10,
+                                                optionSelectedBg: "#F5F5F5",
+                                            },
+                                        },
+                                    }}
+                                >
+                                    <Select
+                                        style={{ width: 191, height: 40 }}
+                                        allowClear={false}
+                                        placeholder="Month"
+                                        options={monthOptions}
+                                        onChange={handleChangeMonth}
+                                        listHeight={190}
+                                        value={month}
+                                        disabled={addBirthday}
+                                    />
+                                    <Select
+                                        style={{ width: 112, height: 40 }}
+                                        allowClear={false}
+                                        placeholder="Day"
+                                        options={dayOptions}
+                                        onChange={handleChangeDay}
+                                        listHeight={190}
+                                        value={day}
+                                        disabled={addBirthday}
+                                    />
+                                </ConfigProvider>
+                            </div>
+
+                            <div className="mt-[32px] h-[26px] flex items-center justify-between">
+                                <div className="font-bold text-[16px] leading-[20.8px]">
+                                    Notify my birthday
+                                </div>
+                                <div>
+                                    <SwitchCustom
+                                        native={"iOS"}
+                                        checked={checked}
+                                        onChange={handleChangeSwitch}
+                                    />
+                                </div>
+                            </div>
+
+                            <div className="mt-[16px] text-[12px] leading-[15.6px] text-[#555555]">
+                                If you choose to notify your birthday, we’ll
+                                notify your birthday to your friends who also
+                                added Line Birthday on your birthday and 7 days
+                                before.
                             </div>
                         </div>
+                    </div>
 
-                        <div className="mt-[16px] text-[12px] leading-[15.6px] text-[#555555]">
-                            If you choose to notify your birthday, we’ll notify
-                            your birthday to your friends who also added Line
-                            Birthday on your birthday and 7 days before.
-                        </div>
+                    <div className="h-[97px] p-[24px] flex justify-center border-t border-[#DFDFDF] ">
+                        <ButtonCustom
+                            title="Save"
+                            onClick={handleSave}
+                            disable={disable}
+                        />
                     </div>
                 </div>
-
-                <div className="h-[97px] p-[24px] flex justify-center border-t border-[#DFDFDF] ">
-                    <ButtonCustom
-                        title="Save"
-                        onClick={handleSave}
-                        disable={disable}
-                    />
-                </div>
-            </div>
-        </>
-    )
+            </>
+        )
+    }
 }
 
 export default AddBirthday
