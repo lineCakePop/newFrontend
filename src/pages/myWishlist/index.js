@@ -1,10 +1,40 @@
-import React, { useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 
 import { ReactComponent as Birthday } from "../../icons/wishlistDetail/birthDayCake.svg";
 import { ReactComponent as Gift } from "../../icons/wishlistDetail/gift.svg";
 
+import axios from "axios";
+
+import { AuthContext } from "../../context/AuthContext";
+
+import { LOADING, SUCCESS } from "../../utils/const";
+
+import WishlistCard from "../../components/myWishlist/wishlistCard";
+import ButtonCustom from "../../components/Button";
+
+import loadingGif from "../../icons/cakeGif.gif";
+
 const MyWishlist = () => {
-  const [userWishlist, setUserWishlist] = useState();
+  const { idToken } = useContext(AuthContext);
+
+  //   ======================== useState ========================
+
+  const [userWishlist, setUserWishlist] = useState({
+    displayName: "",
+    pictureUrl: "",
+    birthday: "",
+    wishlist: [],
+  });
+
+  const [status, setStatus] = useState(LOADING);
+
+  useEffect(() => {
+    if (idToken !== "") {
+      getMyWishlist();
+    }
+  }, [idToken]);
+
+  //   ======================== function ========================
 
   const dateFormat = () => {
     if (userWishlist.birthday !== "") {
@@ -44,9 +74,51 @@ const MyWishlist = () => {
     return dayDiff;
   };
 
+  const getMyWishlist = async () => {
+    try {
+      const response = await axios.get(
+        `${process.env.REACT_APP_API_PROXY}/user/myWishlist`,
+        {
+          params: {
+            id: idToken,
+          },
+        }
+      );
+      setUserWishlist(response.data);
+      setStatus(SUCCESS);
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+  const onClickDelete = async (id) => {
+    try {
+      await axios.put(
+        `${process.env.REACT_APP_API_PROXY}/wishlist/removeWishlist`,
+        { transactionId: id }
+      );
+
+      // remove that product from wishList
+      setUserWishlist((userWishlist) => ({
+        ...userWishlist,
+        wishlist: userWishlist.wishlist.filter(
+          (product) => product.transactionId !== id
+        ),
+      }));
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+  if (status === LOADING)
+    return (
+      <div className="h-[100dvh] flex justify-center items-center">
+        <img src={loadingGif} alt="loading" />
+      </div>
+    );
+
   return (
-    <div>
-      {" "}
+    <div className="flex-col flex h-[100dvh]">
       <div className="h-[128px] px-[24px] py-[16px] border-b border-[#DFDFDF]">
         {/* profile pic and name */}
         <div className="flex items-center">
@@ -79,6 +151,25 @@ const MyWishlist = () => {
             </div>
           </div>
         </div>
+      </div>
+      <div className="pt-[36px] flex flex-col items-center gap-[32px] grow  overflow-y-scroll">
+        {userWishlist.wishlist.map((information) => (
+          <WishlistCard
+            key={information.transactionId}
+            wishlistInformation={information}
+            onClickDelete={() => {
+              onClickDelete(information.transactionId);
+            }}
+          />
+        ))}
+      </div>
+      <div className=" h-[97px] p-[24px] flex justify-center">
+        <ButtonCustom
+          title="Explore Line Shopping"
+          onClick={() => {
+            window.location.href = "https://shop.line.me/home/";
+          }}
+        />
       </div>
     </div>
   );

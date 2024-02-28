@@ -12,14 +12,14 @@ const WishlistCard = ({
     <div className="w-[328px] h-[108px] flex gap-[10px]">
       {/* img */}
       <div className="h-[108px] w-[106px] flex justify-center items-center overflow-hidden rounded">
-        <img src={productPicture} alt="product picture" className="h-[108px]" />
+        <img src={productPicture} alt="product picture" className="w-[106px]" />
       </div>
       {/* detail */}
       <div>
         <div className="font-semibold text-[14px] leading-[18.2px] w-[180px] truncate h-[18.2px] ">
           {productName}
         </div>
-        <div className="leading-[18.2px] font-normal text-[#555555] text-[14px] mt-[4px]">
+        <div className="leading-[18.2px] h-[18.2px]  font-normal text-[#555555] text-[14px] mt-[4px]">
           {variantText}
         </div>
         <div className="text-[12px] font-semibold mt-[4px] leading-[15.6px]">

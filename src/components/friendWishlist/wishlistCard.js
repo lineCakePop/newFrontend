@@ -30,7 +30,7 @@ function WishlistCard({
       <div className="flex justify-between">
         <div className="flex">
           <div className="w-[39px] h-[39px] rounded-full flex justify-center items-center overflow-hidden">
-            <img src={pictureUrl} className="h-[39px]" />
+            <img src={pictureUrl} className="w-[39px]" />
           </div>
           <div className="ml-[10px] flex-col justify-center">
             <div className="text-[14px] font-semibold h-[18.2px]">
@@ -54,11 +54,15 @@ function WishlistCard({
       </div>
       {/* product */}
       <div className="mt-[16px] flex gap-[12px]">
-        {wishlist.map((product) => (
-          <div className="h-[72px] w-[72px] border-[0.5px] border-[#DFDFDF] overflow-hidden flex justify-center items-center rounded">
-            <img src={product.productPicture} className="h-[72px]"></img>
-          </div>
-        ))}
+        {wishlist.map((product, index) =>
+          index < 4 ? (
+            <div className="h-[72px] w-[72px] border-[0.5px] border-[#DFDFDF] overflow-hidden flex justify-center items-center rounded">
+              <img src={product.productPicture} className="h-[72px]"></img>
+            </div>
+          ) : (
+            <></>
+          )
+        )}
       </div>
     </div>
   );
