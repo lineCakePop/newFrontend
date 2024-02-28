@@ -11,13 +11,14 @@ import Loading from "./pages/Loading";
 import InviteFriend from "./pages/inviteFriend";
 
 import { AuthContext } from "./context/AuthContext";
+import MyWishlist from "./pages/myWishlist";
 
 const LiffId = process.env.REACT_APP_LIFF_ID;
 
 function App() {
   const { setIdToken } = useContext(AuthContext);
   useEffect(() => {
-    // liffCheck();
+    liffCheck();
   }, []);
 
   // auth
@@ -43,6 +44,7 @@ function App() {
           element={<ItemInformation />}
         />
         <Route path="invite-friend/:inviteCode" element={<InviteFriend />} />
+        <Route path="my-wishlist" element={<MyWishlist />} />
         <Route path="*" element={<Loading />} />
       </Routes>
     </>
