@@ -18,17 +18,20 @@ function InviteFriend() {
     if (idToken !== "" && inviteCode !== "") {
       sendInvite();
     }
-  }, [idToken]);
+  }, [idToken, inviteCode]);
 
   console.log(inviteCode);
 
   const sendInvite = async () => {
     try {
+      const response = await axios.post(
+        `${process.env.REACT_APP_API_PROXY}/user/inviteFriend`,
+        {
+          inviteCode: inviteCode,
+          tokenId: idToken,
+        }
+      );
       liff.closeWindow();
-      await axios.post(`${process.env.REACT_APP_API_PROXY}/user/inviteFriend`, {
-        inviteCode: inviteCode,
-        tokenId: idToken,
-      });
     } catch (err) {
       console.log(err);
     }
