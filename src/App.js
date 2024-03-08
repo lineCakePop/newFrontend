@@ -18,7 +18,7 @@ const LiffId = process.env.REACT_APP_LIFF_ID;
 function App() {
   const { setIdToken } = useContext(AuthContext);
   useEffect(() => {
-    // liffCheck();
+    liffCheck();
   }, []);
 
   // auth
@@ -39,7 +39,7 @@ function App() {
         <Route path="/add-birthday" element={<AddBirthday />} />
         <Route path="/friend-wishlist" element={<FriendWishlist />} />
         <Route
-          path="/item-information/:productId"
+          path="/item-information/:transactionId"
           element={<ItemInformation />}
         />
         <Route path="invite-friend/:inviteCode" element={<InviteFriend />} />
