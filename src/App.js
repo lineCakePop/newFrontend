@@ -12,6 +12,7 @@ import InviteFriend from "./pages/inviteFriend";
 
 import { AuthContext } from "./context/AuthContext";
 import MyWishlist from "./pages/myWishlist";
+import FriendCheck from "./components/friendCheck";
 
 const LiffId = process.env.REACT_APP_LIFF_ID;
 
@@ -34,18 +35,20 @@ function App() {
 
   return (
     <>
-      <Routes>
-        <Route path="/wishlist-detail/:userId" element={<WishListDetail />} />
-        <Route path="/add-birthday" element={<AddBirthday />} />
-        <Route path="/friend-wishlist" element={<FriendWishlist />} />
-        <Route
-          path="/item-information/:transactionId"
-          element={<ItemInformation />}
-        />
-        <Route path="invite-friend/:inviteCode" element={<InviteFriend />} />
-        <Route path="my-wishlist" element={<MyWishlist />} />
-        <Route path="*" element={<Loading />} />
-      </Routes>
+      <FriendCheck>
+        <Routes>
+          <Route path="/wishlist-detail/:userId" element={<WishListDetail />} />
+          <Route path="/add-birthday" element={<AddBirthday />} />
+          <Route path="/friend-wishlist" element={<FriendWishlist />} />
+          <Route
+            path="/item-information/:transactionId"
+            element={<ItemInformation />}
+          />
+          <Route path="invite-friend/:inviteCode" element={<InviteFriend />} />
+          <Route path="my-wishlist" element={<MyWishlist />} />
+          <Route path="*" element={<Loading />} />
+        </Routes>
+      </FriendCheck>
     </>
   );
 }
