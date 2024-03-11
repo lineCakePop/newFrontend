@@ -125,24 +125,24 @@ const MyWishlist = () => {
 
   if (status === LOADING)
     return (
-      <div className="h-[100dvh] flex justify-center items-center">
+      <div className="grow flex justify-center items-center">
         <img src={loadingGif} alt="loading" />
       </div>
     );
 
   return (
     <>
-      <div className="flex-col flex h-[100dvh]">
+      <div className="flex-col flex grow">
         <div className="h-[128px] px-[24px] py-[16px] border-b border-[#DFDFDF]">
           {/* profile pic and name */}
           <div className="flex items-center">
             <div className="h-[32px] w-[32px] flex justify-center items-center overflow-hidden rounded-full mr-[10px]">
               <img src={userWishlist.pictureUrl} />
             </div>
+            <span className="text-[18px] font-medium">Hello, </span>
             <span className="text-[18px] font-bold">
               {userWishlist.displayName}
             </span>
-            <span className="text-[18px] font-medium">'s Wishlist</span>
           </div>
           {/* birthday &&  total wishlist */}
           <div className="mt-[24px] justify-between h-[40px] flex">
