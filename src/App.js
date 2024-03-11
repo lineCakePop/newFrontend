@@ -13,6 +13,7 @@ import InviteFriend from "./pages/inviteFriend";
 import { AuthContext } from "./context/AuthContext";
 import MyWishlist from "./pages/myWishlist";
 import FriendCheck from "./components/friendCheck";
+import CreatePartySelectItem from "./pages/createPartySelectItem";
 
 const LiffId = process.env.REACT_APP_LIFF_ID;
 
@@ -46,6 +47,10 @@ function App() {
           />
           <Route path="invite-friend/:inviteCode" element={<InviteFriend />} />
           <Route path="my-wishlist" element={<MyWishlist />} />
+          <Route
+            path="create-party-select-item"
+            element={<CreatePartySelectItem />}
+          />
           <Route path="*" element={<Loading />} />
         </Routes>
       </FriendCheck>
