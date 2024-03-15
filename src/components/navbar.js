@@ -20,7 +20,7 @@ const Navbar = () => {
   const navigate = useNavigate();
 
   const navbarItem = [
-    { img: <Calendar />, name: "Calendar", path: "" },
+    { img: <Calendar />, name: "Calendar", path: "/calendar" },
     { img: <Friends />, name: "Friends", path: "/friend-wishlist" },
     { img: <Gifts />, name: "Party", path: "" },
     { img: <Heart />, name: "My wishlist", path: "/my-wishlist" },
@@ -35,7 +35,7 @@ const Navbar = () => {
     try {
       const response = await axios.get(
         `${process.env.REACT_APP_API_PROXY}/user/inviteLink`,
-        { params: { id: idToken } }
+        { params: { id: idToken } },
       );
       console.log();
 
@@ -162,7 +162,7 @@ const Navbar = () => {
         ],
         {
           isMultiple: true,
-        }
+        },
       );
     } catch (err) {}
   };
@@ -180,7 +180,7 @@ const Navbar = () => {
           }
           `}
       </style>
-      <div className="h-[132px] px-[24px] py-[8px]">
+      <div className="h-[132px] p-[24px] pt-[8px]">
         <div
           className="h-[36px] w-[117px] rounded-[5px] border border-[#EFEFEF] flex justify-center items-center"
           onClick={handleShareTarget}
