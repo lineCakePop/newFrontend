@@ -180,7 +180,7 @@ const Navbar = () => {
           }
           `}
       </style>
-      <div className="h-[132px] p-[24px] pt-[8px]">
+      <div className="h-[132px] px-[24px] pt-[8px] pb-[24px]">
         <div
           className="h-[36px] w-[117px] rounded-[5px] border border-[#EFEFEF] flex justify-center items-center"
           onClick={handleShareTarget}
