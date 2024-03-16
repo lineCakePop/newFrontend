@@ -17,7 +17,6 @@ import Loading from "../Loading";
 
 const AddBirthday = () => {
   const { idToken } = useContext(AuthContext);
-  const LiffId = process.env.REACT_APP_LIFF_ID;
 
   // =============== setState ===============
   const [checked, setChecked] = useState(true);
@@ -59,18 +58,10 @@ const AddBirthday = () => {
       liff.closeWindow();
       setAlreadyAddBirthday(true);
       setDisplayModal(false);
-      await axios.put(
-        `${process.env.REACT_APP_API_PROXY}/user/changeBd`,
-        {
-          id: idToken,
-          birthday: birthday,
-        },
-        {
-          headers: {
-            "ngrok-skip-browser-warning": "69420",
-          },
-        }
-      );
+      await axios.put(`${process.env.REACT_APP_API_PROXY}/user/changeBd`, {
+        id: idToken,
+        birthday: birthday,
+      });
     } catch (error) {
       console.log(error);
     }
@@ -79,18 +70,10 @@ const AddBirthday = () => {
   const putChangeNotify = async () => {
     try {
       liff.closeWindow();
-      await axios.put(
-        `${process.env.REACT_APP_API_PROXY}/user/changeNotify`,
-        {
-          id: idToken,
-          notify: checked,
-        },
-        {
-          headers: {
-            "ngrok-skip-browser-warning": "69420",
-          },
-        }
-      );
+      await axios.put(`${process.env.REACT_APP_API_PROXY}/user/changeNotify`, {
+        id: idToken,
+        notify: checked,
+      });
     } catch (error) {
       console.log(error);
     }
@@ -101,16 +84,11 @@ const AddBirthday = () => {
       const response = await axios.get(
         `${process.env.REACT_APP_API_PROXY}/user/myBd`,
         {
-          headers: {
-            "ngrok-skip-browser-warning": "69420",
-          },
           params: {
             id: idToken,
           },
-        }
+        },
       );
-
-      // console.log("response.data", response.data);
 
       if (response.data.setBd) {
         setMonth(response.data.birthday.split("-")[1]);
@@ -192,10 +170,10 @@ const AddBirthday = () => {
       lastDigit === 1 && number !== 11
         ? suffixes[1]
         : lastDigit === 2 && number !== 12
-        ? suffixes[2]
-        : lastDigit === 3 && number !== 13
-        ? suffixes[3]
-        : suffixes[0];
+          ? suffixes[2]
+          : lastDigit === 3 && number !== 13
+            ? suffixes[3]
+            : suffixes[0];
 
     return `${number}${suffix}`;
   };

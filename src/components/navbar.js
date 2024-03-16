@@ -20,7 +20,7 @@ const Navbar = () => {
   const navigate = useNavigate();
 
   const navbarItem = [
-    { img: <Calendar />, name: "Calendar", path: "" },
+    { img: <Calendar />, name: "Calendar", path: "/calendar" },
     { img: <Friends />, name: "Friends", path: "/friend-wishlist" },
     { img: <Gifts />, name: "Party", path: "" },
     { img: <Heart />, name: "My wishlist", path: "/my-wishlist" },
@@ -35,7 +35,7 @@ const Navbar = () => {
     try {
       const response = await axios.get(
         `${process.env.REACT_APP_API_PROXY}/user/inviteLink`,
-        { params: { id: idToken } }
+        { params: { id: idToken } },
       );
       console.log();
 
@@ -162,7 +162,7 @@ const Navbar = () => {
         ],
         {
           isMultiple: true,
-        }
+        },
       );
     } catch (err) {}
   };
@@ -191,7 +191,7 @@ const Navbar = () => {
           </span>
         </div>
         <div className="flex justify-center">
-          {navbarItem.map((item) => (
+          {navbarItem.map((item, index) => (
             <div
               onClick={() => {
                 handleClickNavbar(item.path);
@@ -199,6 +199,7 @@ const Navbar = () => {
               className={`w-[64px] h-[60px] flex flex-col items-center  pt-[14px] ${
                 item.path === pathname ? "border-[#06C755] border-b-[2px]" : ""
               }`}
+              key={index}
             >
               <div className={`${item.path === pathname ? "active-icon" : ""}`}>
                 {item.img}

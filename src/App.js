@@ -12,6 +12,7 @@ import InviteFriend from "./pages/inviteFriend";
 
 import { AuthContext } from "./context/AuthContext";
 import MyWishlist from "./pages/myWishlist";
+import Calendar from "./pages/calendar";
 import FriendCheck from "./components/friendCheck";
 import CreatePartySelectItem from "./pages/createPartySelectItem";
 import Navbar from "./components/navbar";
@@ -60,6 +61,7 @@ function App() {
               path="create-party-select-item"
               element={<CreatePartySelectItem />}
             />
+            <Route path="calendar" element={<Calendar />} />
             <Route path="*" element={<Loading />} />
           </Routes>
         </div>
