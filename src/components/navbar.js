@@ -191,7 +191,7 @@ const Navbar = () => {
           </span>
         </div>
         <div className="flex justify-center">
-          {navbarItem.map((item) => (
+          {navbarItem.map((item, index) => (
             <div
               onClick={() => {
                 handleClickNavbar(item.path);
@@ -199,6 +199,7 @@ const Navbar = () => {
               className={`w-[64px] h-[60px] flex flex-col items-center  pt-[14px] ${
                 item.path === pathname ? "border-[#06C755] border-b-[2px]" : ""
               }`}
+              key={index}
             >
               <div className={`${item.path === pathname ? "active-icon" : ""}`}>
                 {item.img}

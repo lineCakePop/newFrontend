@@ -17,7 +17,6 @@ import Loading from "../Loading";
 
 const AddBirthday = () => {
   const { idToken } = useContext(AuthContext);
-  const LiffId = process.env.REACT_APP_LIFF_ID;
 
   // =============== setState ===============
   const [checked, setChecked] = useState(true);
@@ -90,8 +89,6 @@ const AddBirthday = () => {
           },
         },
       );
-
-      // console.log("response.data", response.data);
 
       if (response.data.setBd) {
         setMonth(response.data.birthday.split("-")[1]);
