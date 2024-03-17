@@ -7,6 +7,8 @@ const WishlistCard = ({
   variantText,
   productPicture,
   productPrice,
+  onClickSendGift,
+  wishlist,
 }) => {
   return (
     <div className="w-[328px] h-[108px] flex gap-[10px]">
@@ -26,7 +28,12 @@ const WishlistCard = ({
           ฿{productPrice.toLocaleString("en-US")}
         </div>
         {/* button */}
-        <div className="h-[40px] mt-[8px] w-[211px] border rounded border-[#DFDFDF] flex justify-center items-center">
+        <div
+          className="h-[40px] mt-[8px] w-[211px] border rounded border-[#DFDFDF] flex justify-center items-center"
+          onClick={() => {
+            onClickSendGift(wishlist);
+          }}
+        >
           <Gift />
           <span className="text-[10px] font-semibold ml-[7px]">Send Gift</span>
         </div>

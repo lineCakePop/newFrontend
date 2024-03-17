@@ -1,5 +1,5 @@
 import axios from "axios";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import React, { useEffect, useState } from "react";
 
 // ======================= svgg =======================
@@ -14,9 +14,12 @@ import WishlistCard from "../../components/wishlistDetail/wishlistCard";
 import { LOADING, SUCCESS } from "../../utils/const";
 
 import loadingGif from "../../icons/cakeGif.gif";
+import BottomSheet from "../../components/bottomSheet";
 
 const WishListDetail = () => {
   const { userId } = useParams();
+
+  const navigate = useNavigate();
 
   // ======================= useState =======================
 
@@ -44,8 +47,9 @@ const WishListDetail = () => {
           params: {
             id: userId,
           },
-        }
+        },
       );
+      console.log("respones.data", respones.data);
       setUserWishlist(respones.data);
       setStatus(SUCCESS);
     } catch (err) {
@@ -72,13 +76,13 @@ const WishListDetail = () => {
     let todayMidNight = new Date(
       today.getFullYear(),
       today.getMonth(),
-      today.getDate()
+      today.getDate(),
     );
     let userBD = new Date(userWishlist.birthday);
     let userBDMidNight = new Date(
       today.getFullYear(),
       userBD.getMonth(),
-      userBD.getDate()
+      userBD.getDate(),
     );
     userBDMidNight =
       userBDMidNight < todayMidNight
@@ -86,10 +90,26 @@ const WishListDetail = () => {
         : userBDMidNight;
     // console.log(userBDMidNight);
     const dayDiff = Math.floor(
-      (userBDMidNight - todayMidNight) / (1000 * 60 * 60 * 24)
+      (userBDMidNight - todayMidNight) / (1000 * 60 * 60 * 24),
     );
     return dayDiff;
   };
+
+  const [targetWishlist, setTargetWishlist] = useState();
+  const [displayBottomSheet, setDisplayBottomSheet] = useState(false);
+
+  const onClickSendGift = (wishlist) => {
+    console.log(wishlist);
+    setTargetWishlist(wishlist);
+    setDisplayBottomSheet(true);
+  };
+
+  const handleSharing = () => {
+    navigate(`/create-party`);
+  };
+
+  const handleIndividual = () => {};
+
   return (
     <div className="">
       {status === LOADING ? (
@@ -98,7 +118,6 @@ const WishListDetail = () => {
         </div>
       ) : (
         <>
-          {" "}
           <div className="h-[128px] px-[24px] py-[16px] border-b border-[#DFDFDF]">
             {/* profile pic and name */}
             <div className="flex items-center">
@@ -141,9 +160,23 @@ const WishListDetail = () => {
                 productPicture={wishlist.productPicture}
                 productPrice={wishlist.productPrice}
                 variantText={wishlist.variantText}
+                onClickSendGift={onClickSendGift}
+                wishlist={wishlist}
               />
             ))}
           </div>
+
+          {displayBottomSheet && (
+            <BottomSheet
+              productName={targetWishlist.productName}
+              productPicture={targetWishlist.productPicture}
+              productPrice={targetWishlist.productPrice}
+              variantText={targetWishlist.variantText}
+              setDisplayBottomSheet={setDisplayBottomSheet}
+              handleSharing={handleSharing}
+              handleIndividual={handleIndividual}
+            />
+          )}
         </>
       )}
     </div>

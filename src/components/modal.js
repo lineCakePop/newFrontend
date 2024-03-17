@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 
 const ModalCustom = ({
   title = <></>,
@@ -16,7 +16,7 @@ const ModalCustom = ({
       >
         <div className="w-[278px]  bg-[#FFFFFF] rounded-[20px] px-[24px] pt-[32px] pb-[16px]">
           {/* title */}
-          <div className="text-[16px] font-bold text-center leading-[20.6px] text-[#111111]">
+          <div className="text-[16px] font-bold text-center leading-[20.8px] text-[#111111]">
             {title}
           </div>
 
