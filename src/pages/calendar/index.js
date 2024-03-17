@@ -355,7 +355,7 @@ const Calendar = () => {
     );
 
   return (
-    <div className="bg-white h-[100vh] overflow-scroll flex flex-col">
+    <div className="bg-white h-[100dvh] overflow-scroll flex flex-col">
       {/* calendar */}
       <div className="py-[24px] flex flex-col items-center  ">
         {/* header */}
