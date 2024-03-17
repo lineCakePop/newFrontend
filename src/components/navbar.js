@@ -24,7 +24,7 @@ const Navbar = () => {
     { img: <Friends />, name: "Friends", path: "/friend-wishlist" },
     { img: <Gifts />, name: "Party", path: "" },
     { img: <Heart />, name: "My wishlist", path: "/my-wishlist" },
-    { img: <Settings />, name: "Setting", path: "" },
+    { img: <Settings />, name: "Setting", path: "/setting" },
   ];
 
   const handleClickNavbar = (path) => {

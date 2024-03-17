@@ -226,7 +226,6 @@ const AddBirthday = () => {
             <div className="font-bold text-[20px] leading-[20px]">
               Add Birthday
             </div>
-            {/* <Cross /> */}
           </div>
 
           <div className="mt-[64px]">

@@ -17,6 +17,7 @@ import FriendCheck from "./components/friendCheck";
 import CreatePartySelectItem from "./pages/createPartySelectItem";
 import Navbar from "./components/navbar";
 import CreateParty from "./pages/createParty";
+import Setting from "./pages/setting";
 
 const LiffId = process.env.REACT_APP_LIFF_ID;
 
@@ -64,6 +65,7 @@ function App() {
             />
             <Route path="create-party" element={<CreateParty />} />
             <Route path="calendar" element={<Calendar />} />
+            <Route path="setting" element={<Setting />} />
             <Route path="*" element={<Loading />} />
           </Routes>
         </div>
