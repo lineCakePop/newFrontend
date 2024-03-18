@@ -12,6 +12,10 @@ import { ReactComponent as Search } from "../../icons/friendWishlist/search.svg"
 
 import axios from "axios";
 
+import { LOADING, SUCCESS } from "../../utils/const";
+
+import loadingGif from "../../icons/cakeGif.gif";
+
 const RecipientSelector = ({
   setRecipientId,
   defaultReceiver,
@@ -22,7 +26,7 @@ const RecipientSelector = ({
   // ========================= useState =========================
 
   const [displaySelector, setDisplaySelector] = useState(
-    defaultDisplaySelector
+    defaultDisplaySelector,
   );
   const [currentRecipient, setCurrentRecipient] = useState(defaultReceiver);
 
@@ -30,6 +34,8 @@ const RecipientSelector = ({
 
   const [friendList, setFriendList] = useState([]);
   const [displayFriendList, setDisplayFriendList] = useState([]);
+
+  const [status, setStatus] = useState(LOADING);
 
   // ========================= useEffect =========================
 
@@ -45,8 +51,8 @@ const RecipientSelector = ({
     setSearchInput(input);
     setDisplayFriendList(
       friendList.filter((user) =>
-        user.displayName.toLowerCase().includes(input.toLowerCase())
-      )
+        user.displayName.toLowerCase().includes(input.toLowerCase()),
+      ),
     );
   };
 
@@ -68,10 +74,11 @@ const RecipientSelector = ({
           params: {
             id: idToken,
           },
-        }
+        },
       );
       setFriendList(response.data);
       setDisplayFriendList(response.data);
+      setStatus(SUCCESS);
     } catch (err) {
       console.log(err);
     }
@@ -80,11 +87,11 @@ const RecipientSelector = ({
   return (
     <>
       {displaySelector && (
-        <div className="absolute left-0 top-0 h-[100dvh] w-[100%]">
+        <div className="absolute bg-white left-0 top-0 h-[100dvh] w-[100%] z-[10] flex flex-col">
           {/* header */}
           <div className="h-[56px] bg-white flex justify-between items-center px-[24px]">
             <div />
-            <span>Choose recipient</span>
+            <span className="text-[20px] font-bold">Choose recipient</span>
             <Cross
               onClick={() => {
                 setDisplaySelector(false);
@@ -109,25 +116,35 @@ const RecipientSelector = ({
             Friends
           </div>
           {/* list of friend */}
-          <div className="flex flex-col gap-[4px]">
-            {displayFriendList.map((user) => (
-              <div
-                className="flex px-[24px] items-center bg-white h-[66px] gap-[16px]"
-                onClick={() => {
-                  handleSelectFriend(user);
-                }}
-              >
-                <UserIconCustom height={50} width={50} img={user.pictureUrl} />
-                <span className="text-[14px] leading-[18.2px] font-semibold">
-                  {user.displayName}
-                </span>
-              </div>
-            ))}
-          </div>
+          {status === LOADING ? (
+            <div className="grow flex justify-center items-center">
+              <img src={loadingGif} alt="loading" />
+            </div>
+          ) : (
+            <div className="flex flex-col gap-[4px]">
+              {displayFriendList.map((user) => (
+                <div
+                  className="flex px-[24px] items-center bg-white h-[66px] gap-[16px]"
+                  onClick={() => {
+                    handleSelectFriend(user);
+                  }}
+                >
+                  <UserIconCustom
+                    height={50}
+                    width={50}
+                    img={user.pictureUrl}
+                  />
+                  <span className="text-[14px] leading-[18.2px] font-semibold">
+                    {user.displayName}
+                  </span>
+                </div>
+              ))}
+            </div>
+          )}
         </div>
       )}
       {/* ============================== */}
-      <div className="rounded border-[1px] border-[#DFDFDF] h-[48px] w-[327px] flex justify-between items-center py-[12px] px-[10px]">
+      <div className="rounded border-[1px] border-[#DFDFDF] h-[48px] w-[100%] flex justify-between items-center py-[12px] px-[10px]">
         <div className="flex gap-[8px] h-[24px] items-center">
           <UserIconCustom
             width={24}
