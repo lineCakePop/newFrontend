@@ -90,8 +90,6 @@ const Setting = () => {
 
   // =============== useEffect ===============
   useEffect(() => {
-    console.log("idToken", idToken);
-    window.location.reload();
     if (idToken !== "") {
       getMyBd();
     }
