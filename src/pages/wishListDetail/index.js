@@ -16,7 +16,7 @@ import { LOADING, SUCCESS } from "../../utils/const";
 import loadingGif from "../../icons/cakeGif.gif";
 import BottomSheet from "../../components/bottomSheet";
 
-const WishListDetail = () => {
+const WishlistDetail = () => {
   const { userId } = useParams();
 
   const navigate = useNavigate();
@@ -34,23 +34,26 @@ const WishListDetail = () => {
   // ======================= useEffect =======================
 
   useEffect(() => {
-    getWisList();
+    getWishlist();
   }, []);
 
   // ======================= function =======================
 
-  const getWisList = async () => {
+  const getWishlist = async () => {
     try {
-      const respones = await axios.get(
+      // const testId = "65d36f14881470fd62b5c05a";
+
+      const response = await axios.get(
         `${process.env.REACT_APP_API_PROXY}/user/wishlistOfOneFriend`,
         {
           params: {
             id: userId,
+            // id: testId,
           },
         },
       );
-      console.log("respones.data", respones.data);
-      setUserWishlist(respones.data);
+      console.log("response.data", response.data);
+      setUserWishlist(response.data);
       setStatus(SUCCESS);
     } catch (err) {
       console.log(err);
@@ -160,6 +163,8 @@ const WishListDetail = () => {
                 productPicture={wishlist.productPicture}
                 productPrice={wishlist.productPrice}
                 variantText={wishlist.variantText}
+                discountPrice={wishlist.discountPrice}
+                haveDiscount={wishlist.haveDiscount}
                 onClickSendGift={onClickSendGift}
                 wishlist={wishlist}
               />
@@ -183,4 +188,4 @@ const WishListDetail = () => {
   );
 };
 
-export default WishListDetail;
+export default WishlistDetail;

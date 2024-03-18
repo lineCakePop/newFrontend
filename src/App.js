@@ -5,7 +5,7 @@ import "./App.css";
 
 import ItemInformation from "./pages/ItemInformation";
 import FriendWishlist from "./pages/friendWishlist";
-import WishListDetail from "./pages/wishListDetail";
+import WishlistDetail from "./pages/wishlistDetail";
 import AddBirthday from "./pages/addBirthday";
 import Loading from "./pages/Loading";
 import InviteFriend from "./pages/inviteFriend";
@@ -46,7 +46,7 @@ function App() {
           <Routes>
             <Route
               path="/wishlist-detail/:userId"
-              element={<WishListDetail />}
+              element={<WishlistDetail />}
             />
             <Route path="/add-birthday" element={<AddBirthday />} />
             <Route path="/friend-wishlist" element={<FriendWishlist />} />
