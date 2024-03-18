@@ -13,7 +13,9 @@ const ButtonCustom = ({
         <div
           onClick={disable ? () => {} : onClick}
           className={`${
-            style === "" ? "w-[327px] h-[49px] rounded-[5px] bg-[#06C755]" : ""
+            style === ""
+              ? "w-[327px] h-[49px] rounded-[5px] bg-[#06C755]"
+              : style
           } 
                     
                     ${disable ? "bg-[#DFDFDF]" : ""}
@@ -28,7 +30,7 @@ const ButtonCustom = ({
           className={`${
             style === ""
               ? "w-[327px] h-[49px] rounded-[5px] border border-[#06C755]"
-              : ""
+              : style
           } 
                   
                   ${disable ? "bg-[#DFDFDF]" : ""}
