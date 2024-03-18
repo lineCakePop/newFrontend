@@ -1,7 +1,5 @@
 import axios from "axios";
 
-import liff from "@line/liff";
-
 import { useNavigate } from "react-router-dom";
 import { AuthContext } from "../../context/AuthContext";
 import React, { useContext, useEffect, useState } from "react";
@@ -40,16 +38,16 @@ function FriendWishlist() {
 
   const getFriendWisList = async () => {
     try {
-      const respones = await axios.get(
+      const response = await axios.get(
         `${process.env.REACT_APP_API_PROXY}/user/friendWishlist`,
         {
           params: {
             id: idToken,
           },
-        }
+        },
       );
-      setWishlist(respones.data);
-      setDisplayWishlist(respones.data);
+      setWishlist(response.data);
+      setDisplayWishlist(response.data);
       setStatus(SUCCESS);
     } catch (err) {
       console.log(err);
@@ -59,15 +57,13 @@ function FriendWishlist() {
   const handleSearch = (text) => {
     setSearchInput(text);
     setDisplayWishlist(
-      wishlist.filter((friendWislist) =>
-        friendWislist.displayName
+      wishlist.filter((friendWishlist) =>
+        friendWishlist.displayName
           .toLocaleLowerCase()
-          .includes(text.toLocaleLowerCase())
-      )
+          .includes(text.toLocaleLowerCase()),
+      ),
     );
   };
-
-  
 
   const onClickViewMore = (id) => {
     navigate(`/wishlist-detail/${id}`);
@@ -82,7 +78,6 @@ function FriendWishlist() {
 
   return (
     <div>
-
       {/* search */}
       <div className="h-[72px] px-[24px] py-[16px] justify-center items-center relative">
         <input
@@ -98,15 +93,15 @@ function FriendWishlist() {
         )}
       </div>
       {/* friend wishlist */}
-      {displayWishlist.map((friendWislist) => {
+      {displayWishlist.map((friendWishlist) => {
         return (
           <WishlistCard
-            displayName={friendWislist.displayName}
-            pictureUrl={friendWislist.pictureUrl}
-            wishlist={friendWislist.wishlist}
-            birthday={friendWislist.birthday}
+            displayName={friendWishlist.displayName}
+            pictureUrl={friendWishlist.pictureUrl}
+            wishlist={friendWishlist.wishlist}
+            birthday={friendWishlist.birthday}
             onClickViewMore={() => {
-              onClickViewMore(friendWislist._id);
+              onClickViewMore(friendWishlist._id);
             }}
           />
         );
