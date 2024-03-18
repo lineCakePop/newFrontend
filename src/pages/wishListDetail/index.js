@@ -61,7 +61,7 @@ const WishlistDetail = () => {
   };
 
   const dateFormat = () => {
-    if (userWishlist.birthday !== "") {
+    if (userWishlist.birthday) {
       const date = new Date(userWishlist.birthday)
         .toLocaleDateString("en-US", {
           day: "2-digit",
@@ -71,7 +71,7 @@ const WishlistDetail = () => {
 
       return (date[1][0] === "0" ? date[1][1] : date[1]) + " " + date[0];
     }
-    return "";
+    return "No adding";
   };
 
   const daysToDate = () => {
@@ -137,16 +137,25 @@ const WishlistDetail = () => {
               <div className="flex">
                 <Birthday className="mr-[8px]" />
                 <div>
-                  <p className="text-[14px] font-semibold">{dateFormat()}</p>
+                  <p
+                    className={`text-[14px] font-semibold ${!userWishlist.birthday ? `text-[#777777]` : `text-[#2A2A2A]`}`}
+                  >
+                    {dateFormat()}
+                  </p>
                   <p className="text-[12px] text-[#777777]">
-                    {daysToDate()} days until birthday
+                    {userWishlist.birthday
+                      ? `
+                    ${daysToDate()} days until birthday`
+                      : `Birthday`}
                   </p>
                 </div>
               </div>
               <div className="flex">
                 <Gift className="mr-[8px]" />
                 <div>
-                  <p className="text-[14px] font-semibold">
+                  <p
+                    className={`text-[14px] font-semibold text-[#777777] ${userWishlist.wishlist.length === 0 ? `text-[#777777]` : `text-[#2A2A2A]`}`}
+                  >
                     {userWishlist.wishlist.length}
                   </p>
                   <p className="text-[12px] text-[#777777]">Wishlists</p>
