@@ -114,9 +114,9 @@ const WishlistDetail = () => {
   const handleIndividual = () => {};
 
   return (
-    <div className="">
+    <div className="h-[100dvh] overflow-y-scroll">
       {status === LOADING ? (
-        <div className="h-[100dvh] flex justify-center items-center">
+        <div className="h-[100dvh] flex justify-center items-center ">
           <img src={loadingGif} alt="loading" />
         </div>
       ) : (
