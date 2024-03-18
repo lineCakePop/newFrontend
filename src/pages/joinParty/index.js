@@ -1,31 +1,169 @@
-import BillSummary from "../../components/billSummary";
+import axios from "axios";
+import { useContext, useEffect, useState } from "react";
+import { useParams } from "react-router-dom";
+import { AuthContext } from "../../context/AuthContext";
+import { LOADING, SUCCESS } from "../../utils/const";
+
+import loadingGif from "../../icons/cakeGif.gif";
+
 import PartyHeader from "../../components/partyDetail/partyHeader";
+import BillSummary from "../../components/billSummary";
+import JoinPartyCard from "../../components/partyDetail/joinPartyMemberCard";
+import ButtonCustom from "../../components/button";
+
+import liff from "@line/liff";
 
 const JoinParty = () => {
+  const { partyId } = useParams();
+
+  const { idToken } = useContext(AuthContext);
+
+  // ================ useState ================
+
+  const [partyInformation, setPartyInformation] = useState({
+    discount: 0,
+    giftPrice: 0,
+    shippingPrice: 0,
+    host: { hostId: "", hostName: "", hostPicture: "", you: false },
+    maxMember: 0,
+    member: [],
+    partyDate: "",
+    partyId: "",
+    partyStatus: "",
+    product: {
+      productName: "",
+      productPicture: "",
+      seller: "",
+      sellerPicture: "",
+      variant: "",
+    },
+    receiver: {
+      receiverId: "",
+      receiverName: "",
+      receiverPicture: "",
+    },
+  });
+
+  const [status, setStatus] = useState(LOADING);
+
+  const [partyMember, setPartyMember] = useState([]);
+
+  const [close, setClose] = useState(false);
+
+  // ================ useEffect ================
+
+  useEffect(() => {
+    if (partyId !== "") {
+      getPartyDetail();
+    }
+  }, [partyId]);
+
+  useEffect(() => {
+    if (close) {
+      liff.closeWindow();
+    }
+  }, [close]);
+
+  // ================ function ================
+
+  const getPartyDetail = async () => {
+    try {
+      const response = await axios.get(
+        `${process.env.REACT_APP_API_PROXY}/party/partyDetail`,
+        {
+          params: {
+            id: partyId,
+          },
+        },
+      );
+      setStatus(SUCCESS);
+      setPartyInformation(response.data);
+      setPartyMember([
+        {
+          name: response.data.host.hostName,
+          profile: response.data.host.hostPicture,
+          owner: true,
+        },
+        ...response.data.member.map((member) => ({
+          name: member.memberName,
+          profile: member.memberPicture,
+          owner: false,
+        })),
+      ]);
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+  const joinParty = async () => {
+    try {
+      await axios.post(`${process.env.REACT_APP_API_PROXY}/party/joinParty`, {
+        userId: idToken,
+        partyId: partyId,
+      });
+      setClose(true);
+    } catch (err) {}
+  };
+
+  if (status === LOADING)
+    return (
+      <div className="h-[100dvh] flex justify-center items-center">
+        <img src={loadingGif} alt="loading" />
+      </div>
+    );
+
   return (
     <div className="">
       <PartyHeader
         title="Let’s join the party!"
-        productName="mini tote- dec 2023"
-        productPicture="https://d.line-scdn.net/obs/r/ect/ect/image_170306648681276807322dc6866t12bee266"
-        seller="everyday apparels"
-        sellerPicture="https://profile.line-scdn.net/0hWLMiq4BYCGNwEBwbHgJ3NExVBg4HPg4rCHJDVlQXU1QPJU0yHyNHBgJAUVQPIUtnGHYUVlIUXloN/small"
-        variant="red green"
-        productPrice={790}
-        createBy="Mon A"
-        partyDate="2024-03-11T05:58:51.093Z"
-        partyExpireDate="2024-03-18T05:58:51.093Z"
-        receiverId="65d5b262d2b63ba97f85446d"
-        receiverName="ไม้แก่น"
-        receiverPicture="https://profile.line-scdn.net/0hAn-QP_AFHkEQKA2rPgFhFixtECxnBhgJaEcFIjZ8FXZuS11DfkhTc2F4SSVoSwxHLx1SIzEpEnI-"
+        productName={partyInformation.product.productName}
+        productPicture={partyInformation.product.productPicture}
+        seller={partyInformation.product.seller}
+        sellerPicture={partyInformation.product.sellerPicture}
+        variant={partyInformation.product.variant}
+        productPrice={partyInformation.giftPrice}
+        createBy={partyInformation.host.hostName}
+        partyDate={partyInformation.partyDate}
+        partyExpireDate={partyInformation.partyExpireDate}
+        receiverId={partyInformation.receiver.receiverId}
+        receiverName={partyInformation.receiver.receiverName}
+        receiverPicture={partyInformation.receiver.receiverPicture}
       />
       <div className="bg-[#DFDFDF] h-[8px] " />
       <div className="p-[24px] border-b border-[#DFDFDF] h-[168px]">
         <BillSummary
-          giftPrice={1350}
-          shippingPrice={50}
-          discount={0}
-          eachPayment={350}
+          giftPrice={partyInformation.giftPrice}
+          shippingPrice={partyInformation.shippingPrice}
+          discount={partyInformation.discount}
+          eachPayment={partyInformation.giftPrice / partyInformation.maxMember}
+        />
+      </div>
+      {/* party member */}
+      <div className="p-[24px]">
+        {/* party header */}
+        <div className="h-[21px] mb-[16px] flex justify-between">
+          <span className="text-[16px] font-bold">Party Members</span>
+          <span className="text-[#06C755] font-bold">
+            {partyMember.length}
+            <span className="text-[#949494]">
+              /{partyInformation.maxMember}
+            </span>
+          </span>
+        </div>
+        {partyMember.map((member) => (
+          <JoinPartyCard
+            name={member.name}
+            profile={member.profile}
+            owner={member.owner}
+          />
+        ))}
+      </div>
+      {/* footer */}
+      <div className="h-[97px] p-[24px] flex justify-center">
+        <ButtonCustom
+          title="Join"
+          onClick={joinParty}
+          disable={partyMember.length === partyInformation.maxMember}
         />
       </div>
     </div>

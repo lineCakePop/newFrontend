@@ -67,7 +67,7 @@ function App() {
             <Route path="create-party" element={<CreateParty />} />
             <Route path="calendar" element={<Calendar />} />
             <Route path="setting" element={<Setting />} />
-            <Route path="join-party" element={<JoinParty />} />
+            <Route path="join-party/:partyId" element={<JoinParty />} />
             <Route path="*" element={<Loading />} />
           </Routes>
         </div>

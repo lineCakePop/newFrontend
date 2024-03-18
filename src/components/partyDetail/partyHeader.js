@@ -2,6 +2,8 @@ import React from "react";
 import ProductDetail from "../productDetail";
 import UserIconCustom from "../userIcon";
 
+import { daysToDate } from "../../utils/function";
+
 const PartyHeader = ({
   title,
   productPicture,
@@ -17,6 +19,23 @@ const PartyHeader = ({
   receiverName,
   receiverPicture,
 }) => {
+  const formatDate = (utcTimestamp) => {
+    const date = new Date(utcTimestamp);
+
+    const options = {
+      hour: "numeric",
+      minute: "2-digit",
+      hour12: true, // Use 12-hour clock format
+      year: "numeric",
+      month: "numeric",
+      day: "numeric",
+    };
+
+    return new Intl.DateTimeFormat("en-US", options).format(date);
+  };
+
+  const formattedDate = formatDate(partyDate).split(/,|\//);
+
   return (
     <div>
       <div className="px-[24px] py-[16px] h-[106px] border-b border-[#DFDFDF]">
@@ -26,8 +45,18 @@ const PartyHeader = ({
             Create by <span className="text-[#111111]">{createBy}</span>
           </div>
           <div className="text-[12px] h-[34px]">
-            <div className="text-[#949494] h-[16px]">date</div>
-            <div className="text-[#FF334B] h-[16px]">expire In</div>
+            <div className="text-[#949494] h-[16px]">
+              {formattedDate[3] +
+                " " +
+                formattedDate[1] +
+                "/" +
+                formattedDate[0] +
+                "/" +
+                formattedDate[2]}
+            </div>
+            <div className="text-[#FF334B] h-[16px]">
+              Expire In {daysToDate(partyExpireDate)} days
+            </div>
           </div>
         </div>
       </div>
