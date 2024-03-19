@@ -8,6 +8,7 @@ const ProductDetail = ({
   sellerPicture,
   variant,
   productName,
+  discount,
 }) => {
   return (
     <div className="h-[126px] bg-white">
@@ -24,8 +25,20 @@ const ProductDetail = ({
           <div className="mt-[4px] text-[12px] h-[15.6px] text-[#555555]">
             {variant}
           </div>
-          <div className="mt-[16px] h-[21px] font-semibold text-[16px]">
-            ฿{productPrice.toLocaleString("en-US")}
+          <div className="mt-[16px] h-[21px] font-semibold text-[16px] flex items-center">
+            {discount === 0 ? (
+              `
+            ฿${productPrice.toLocaleString("en-US")}`
+            ) : (
+              <>
+                <div className="text-[14px]  font-semibold line-through mr-[4px]">
+                  ฿{productPrice.toLocaleString("en-US")}
+                </div>
+                <div className="text-[16px] font-semibold leading-[15.6px] text-[#FF334B]">
+                  ฿{(productPrice - discount).toLocaleString("en-US")}
+                </div>
+              </>
+            )}
           </div>
         </div>
       </div>

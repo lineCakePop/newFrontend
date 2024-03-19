@@ -78,6 +78,7 @@ const JoinParty = () => {
       );
       setStatus(SUCCESS);
       setPartyInformation(response.data);
+      console.log(response.data);
       setPartyMember([
         {
           name: response.data.host.hostName,
@@ -116,6 +117,7 @@ const JoinParty = () => {
     <div className="">
       <PartyHeader
         title="Let’s join the party!"
+        discount={partyInformation.discount}
         productName={partyInformation.product.productName}
         productPicture={partyInformation.product.productPicture}
         seller={partyInformation.product.seller}
@@ -132,10 +134,13 @@ const JoinParty = () => {
       <div className="bg-[#DFDFDF] h-[8px] " />
       <div className="p-[24px] border-b border-[#DFDFDF] h-[168px]">
         <BillSummary
-          giftPrice={partyInformation.giftPrice}
+          giftPrice={partyInformation.giftPrice - partyInformation.discount}
           shippingPrice={partyInformation.shippingPrice}
           discount={partyInformation.discount}
-          eachPayment={partyInformation.giftPrice / partyInformation.maxMember}
+          eachPayment={
+            (partyInformation.giftPrice - partyInformation.discount) /
+            partyInformation.maxMember
+          }
         />
       </div>
       {/* party member */}

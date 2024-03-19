@@ -18,6 +18,7 @@ const PartyHeader = ({
   receiverId,
   receiverName,
   receiverPicture,
+  discount,
 }) => {
   const formatDate = (utcTimestamp) => {
     const date = new Date(utcTimestamp);
@@ -77,6 +78,7 @@ const PartyHeader = ({
           sellerPicture={sellerPicture}
           variant={variant}
           productPrice={productPrice}
+          discount={discount}
         />
       </div>
     </div>
