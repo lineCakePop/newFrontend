@@ -189,6 +189,8 @@ const WishlistDetail = () => {
               setDisplayBottomSheet={setDisplayBottomSheet}
               handleSharing={handleSharing}
               handleIndividual={handleIndividual}
+              discountPrice={targetWishlist.discountPrice}
+              haveDiscount={targetWishlist.haveDiscount}
             />
           )}
         </>

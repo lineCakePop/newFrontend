@@ -11,6 +11,8 @@ const BottomSheet = ({
   setDisplayBottomSheet,
   handleSharing,
   handleIndividual,
+  haveDiscount,
+  discountPrice,
 }) => {
   useEffect(() => {
     // Disable scrolling when the modal is displayed
@@ -57,20 +59,25 @@ const BottomSheet = ({
               />
             </div>
 
-            <div className="flex justify-between">
+            <div className="flex justify-between items-center">
               <div className="font-semibold text-[14px] leading-[18.2px] w-[281px] truncate h-[18.2px] ">
                 {productName}
               </div>
-              <div className="text-[12px] font-semibold  leading-[15.6px]">
-                ฿{productPrice.toLocaleString("en-US")}
-              </div>
+              {haveDiscount ? (
+                <div className="flex h-[16px] items-center">
+                  <div className="text-[10px] leading-[13px]  font-semibold line-through mr-[4px]">
+                    ฿{productPrice.toLocaleString("en-US")}
+                  </div>
+                  <div className="text-[12px] font-semibold  text-[#FF334B]">
+                    ฿{discountPrice.toLocaleString("en-US")}
+                  </div>
+                </div>
+              ) : (
+                <div className="text-[12px] font-semibold mt-[4px] leading-[15.6px]">
+                  ฿{productPrice.toLocaleString("en-US")}
+                </div>
+              )}
             </div>
-
-            {variantText && (
-              <div className="leading-[18.2px] h-[18.2px] font-normal text-[#555555] text-[14px] mt-[4px]">
-                {variantText}
-              </div>
-            )}
           </div>
           {/* footer */}
           <div className="mt-[16px] py-[24px]">
