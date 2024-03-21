@@ -28,9 +28,6 @@ import { AuthContext } from "../../context/AuthContext";
 const Calendar = () => {
   const { idToken } = useContext(AuthContext);
 
-  //   const idToken =
-  //     "eyJraWQiOiJjY2Q1OGMyZjI2NDZmNDVmZTBiNGJiYjAyMzdkNjJmMGRkN2JiMTY2OWQ0MGMxMjFiODQ4OGYxMGJmMzYzOTAwIiwidHlwIjoiSldUIiwiYWxnIjoiRVMyNTYifQ.eyJpc3MiOiJodHRwczovL2FjY2Vzcy5saW5lLm1lIiwic3ViIjoiVWQ3YmMxNDUxOGZiZjgzMjdmNzFhY2NiNWQ2MDcwNDgwIiwiYXVkIjoiMjAwMzYxOTE2NSIsImV4cCI6MTcxMDYwNTE5OCwiaWF0IjoxNzEwNjAxNTk4LCJhbXIiOlsibGluZXNzbyJdLCJuYW1lIjoiV2ludGVyIiwicGljdHVyZSI6Imh0dHBzOi8vcHJvZmlsZS5saW5lLXNjZG4ubmV0LzBoV2pWMF9xYzlDRVZyU1IwdDdSbDNFbGNNQmlnY1p3NE5FeTlESlVkT1gzRk9LeHNRQW5oQWRrd2JVblpGTGhzUVVYeEhKUndjVkNBViJ9.6_ygvdu79FTs10rBMKGn2ynidGRGiTm7mGmZpOezvAJpdzQ8LpH97Vy13bTtFAv6Usc3uDUZ-7fc0pbmVc67_w";
-
   const navigate = useNavigate();
 
   // =============== Const ===============
@@ -50,19 +47,20 @@ const Calendar = () => {
     "December",
   ];
   const months = [
-    "Jan",
-    "Feb",
-    "Mar",
-    "Apr",
+    "January",
+    "February",
+    "March",
+    "April",
     "May",
-    "Jun",
-    "Jul",
-    "Aug",
-    "Sep",
-    "Oct",
-    "Nov",
-    "Dec",
+    "June",
+    "July",
+    "August",
+    "September",
+    "October",
+    "November",
+    "December",
   ];
+
   const hollidayItem = [
     { img: <Children />, name: "Children’s Day" },
     { img: <Chinese />, name: "Chinese New Year’s Day" },
@@ -182,8 +180,10 @@ const Calendar = () => {
       }
     });
 
+    eventMonth.sort((a, b) => a.date - b.date);
+
     setEventCurrentMonth(eventMonth);
-    console.log(eventMonth);
+    // console.log("eventMonth", eventMonth);
   };
 
   //   create calendar
@@ -462,14 +462,106 @@ const Calendar = () => {
             )}
           </>
         ) : (
-          <div className="flex items-center flex-col justify-center h-[100%]">
-            <Click />
-            <div className="text-[16px] mt-[6px] leading-[20.8px] font-medium text-[#949494]">
-              Click on date
-            </div>
-            <div className="text-[16px] leading-[20.8px] font-medium text-[#949494]">
-              to see the event
-            </div>
+          // <div className="flex items-center flex-col justify-center h-[100%]">
+          //   <Click />
+          //   <div className="text-[16px] mt-[6px] leading-[20.8px] font-medium text-[#949494]">
+          //     Click on date
+          //   </div>
+          //   <div className="text-[16px] leading-[20.8px] font-medium text-[#949494]">
+          //     to see the event
+          //   </div>
+          // </div>
+          <div>
+            {eventCurrentMonth.map((event, index) => {
+              const date = event.date;
+              const month = monthsFullName[current.getMonth()];
+              const year = current.getFullYear();
+
+              let sameDay = false;
+              if (index) {
+                sameDay =
+                  eventCurrentMonth[index].date ===
+                  eventCurrentMonth[index - 1].date;
+              }
+
+              if (event.seasonName) {
+                const seasonName = event.seasonName.replace(/'/g, "’");
+                const icon = hollidayItem.find(
+                  (item) => item.name === seasonName,
+                )?.img;
+                return (
+                  <div
+                    key={index}
+                    className={`${index ? (sameDay ? "" : "mt-[24px] pt-[24px] border-t  border-[#DFDFDF]") : ""}`}
+                  >
+                    {!sameDay && (
+                      <div className="text-[16px] leading-[20.8px] font-medium">
+                        {`${date} ${month} ${year}`}
+                      </div>
+                    )}
+
+                    <div className="flex items-end mt-[16px]">
+                      {icon}
+                      <div className="text-[14px] ml-[8px] font-semibold leading-[18.2px]">
+                        {seasonName}
+                      </div>
+                    </div>
+                  </div>
+                );
+              }
+              const pictureUrl = event.birthday.pictureUrl;
+              const userId = event.birthday.userId;
+              const displayName =
+                userId === myBirthday.userId
+                  ? "Me"
+                  : event.birthday.displayName;
+              return (
+                <div
+                  key={index}
+                  className={`${index ? (sameDay ? "" : "mt-[24px] pt-[24px] border-t  border-[#DFDFDF]") : ""}`}
+                >
+                  {!sameDay && (
+                    <>
+                      <div className="text-[16px] leading-[20.8px] font-medium">
+                        {`${date} ${month} ${year}`}
+                      </div>
+
+                      <div className="flex items-end mt-[16px]">
+                        <Birthday />
+                        <div className="text-[14px] ml-[8px] font-semibold leading-[18.2px]">
+                          Birthday
+                        </div>
+                      </div>
+                    </>
+                  )}
+
+                  <div
+                    className={`${!sameDay ? "mt-[16px]" : "mt-[12px]"} flex justify-between`}
+                  >
+                    <div className="flex gap-[16px] items-center">
+                      <div className=" w-[36px] h-[36px]">
+                        <img
+                          src={pictureUrl}
+                          className="w-[36px] rounded-full"
+                          alt={"profile"}
+                        />
+                      </div>
+                      <div className="text-[12px] leading-[15.6px] font-semibold">
+                        {displayName}
+                      </div>
+                    </div>
+
+                    {userId !== myBirthday.userId && (
+                      <Wishlist
+                        onClick={() => {
+                          handleWishlist(userId);
+                        }}
+                      />
+                    )}
+                  </div>
+                </div>
+              );
+            })}
           </div>
         )}
       </div>
