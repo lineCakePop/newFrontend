@@ -12,8 +12,9 @@ import JoinPartyCard from "../../components/partyDetail/joinPartyMemberCard";
 import ButtonCustom from "../../components/button";
 
 import liff from "@line/liff";
+import ReceivingAccountCard from "../../components/partyDetail/receivingAccountCard";
 
-const JoinParty = () => {
+const BillSharingParty = () => {
   const { partyId } = useParams();
 
   const { idToken } = useContext(AuthContext);
@@ -103,16 +104,6 @@ const JoinParty = () => {
     }
   };
 
-  const joinParty = async () => {
-    try {
-      await axios.post(`${process.env.REACT_APP_API_PROXY}/party/joinParty`, {
-        userId: idToken,
-        partyId: partyId,
-      });
-      setClose(true);
-    } catch (err) {}
-  };
-
   if (status === LOADING)
     return (
       <div className="h-[100dvh] flex justify-center items-center">
@@ -123,7 +114,7 @@ const JoinParty = () => {
   return (
     <div className="">
       <PartyHeader
-        title="Let’s join the party!"
+        title="Bill Sharing Party"
         productName={partyInformation.product.productName}
         productPicture={partyInformation.product.productPicture}
         seller={partyInformation.product.seller}
@@ -147,37 +138,16 @@ const JoinParty = () => {
           addCost={partyInformation.addCost}
           totalMember={partyInformation.maxMember}
         />
-      </div>
-      {/* party member */}
-      <div className="p-[24px]">
-        {/* party header */}
-        <div className="h-[21px] mb-[16px] flex justify-between">
-          <span className="text-[16px] font-bold">Party Members</span>
-          <span className="text-[#06C755] font-bold">
-            {partyMember.length}
-            <span className="text-[#949494]">
-              /{partyInformation.maxMember}
-            </span>
-          </span>
-        </div>
-        {partyMember.map((member) => (
-          <JoinPartyCard
-            name={member.name}
-            profile={member.profile}
-            owner={member.owner}
-          />
-        ))}
-      </div>
-      {/* footer */}
-      <div className="h-[97px] p-[24px] flex justify-center">
-        <ButtonCustom
-          title="Join"
-          onClick={joinParty}
-          disable={partyMember.length === partyInformation.maxMember}
+        <h3 className="mt-[32px] text-[#555555] text-[14px] mb-[16px]">
+          Receiving Account
+        </h3>
+        <ReceivingAccountCard
+          accountId={"012-345-6789"}
+          name={"Doraemon San"}
         />
       </div>
     </div>
   );
 };
 
-export default JoinParty;
+export default BillSharingParty;
