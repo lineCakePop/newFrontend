@@ -21,9 +21,10 @@ const JoinParty = () => {
   // ================ useState ================
 
   const [partyInformation, setPartyInformation] = useState({
-    discount: 0,
     giftPrice: 0,
+    discount: 0,
     shippingPrice: 0,
+    addCost: 0,
     host: { hostId: "", hostName: "", hostPicture: "", you: false },
     maxMember: 0,
     member: [],
@@ -36,6 +37,9 @@ const JoinParty = () => {
       seller: "",
       sellerPicture: "",
       variant: "",
+      productPrice: 0,
+      discountPrice: 0,
+      haveDiscount: false,
     },
     receiver: {
       receiverId: "",
@@ -49,6 +53,10 @@ const JoinParty = () => {
   const [partyMember, setPartyMember] = useState([]);
 
   const [close, setClose] = useState(false);
+
+  const giftTotal = partyInformation.product.haveDiscount
+    ? partyInformation.product.discountPrice
+    : partyInformation.product.productPrice;
 
   // ================ useEffect ================
 
@@ -123,7 +131,9 @@ const JoinParty = () => {
         seller={partyInformation.product.seller}
         sellerPicture={partyInformation.product.sellerPicture}
         variant={partyInformation.product.variant}
-        productPrice={partyInformation.giftPrice}
+        productPrice={partyInformation.product.productPrice}
+        discountPrice={partyInformation.product.discountPrice}
+        haveDiscount={partyInformation.product.haveDiscount}
         createBy={partyInformation.host.hostName}
         partyDate={partyInformation.partyDate}
         partyExpireDate={partyInformation.partyExpireDate}
@@ -132,15 +142,13 @@ const JoinParty = () => {
         receiverPicture={partyInformation.receiver.receiverPicture}
       />
       <div className="bg-[#DFDFDF] h-[8px] " />
-      <div className="p-[24px] border-b border-[#DFDFDF] h-[168px]">
+      <div className="p-[24px] border-b border-[#DFDFDF]">
         <BillSummary
-          giftPrice={partyInformation.giftPrice - partyInformation.discount}
+          giftPrice={giftTotal}
           shippingPrice={partyInformation.shippingPrice}
           discount={partyInformation.discount}
-          eachPayment={
-            (partyInformation.giftPrice - partyInformation.discount) /
-            partyInformation.maxMember
-          }
+          addCost={partyInformation.addCost}
+          totalMember={partyInformation.maxMember}
         />
       </div>
       {/* party member */}

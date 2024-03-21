@@ -1,24 +1,36 @@
 import React from "react";
 
-const BillSummary = ({ giftPrice, shippingPrice, discount, eachPayment }) => {
+const BillSummary = ({
+  giftPrice,
+  shippingPrice,
+  discount,
+  addCost,
+  totalMember,
+}) => {
+  const totalBill = () => {
+    return giftPrice + shippingPrice - discount + addCost;
+  };
+
   const arrayBill = [
     { name: "Gift total", price: giftPrice },
     { name: "Shipping Fee", price: shippingPrice },
-    { name: "Total", price: discount },
-    { name: "Each Payment", price: eachPayment },
-  ];
+    { name: "Additional Cost", price: addCost },
+    { name: "Discount", price: discount },
+    { name: "Total", price: totalBill() },
+    { name: "Each Payment", price: totalBill() / totalMember },
+  ].filter((item) => item.price !== 0);
 
   return (
-    <div className="h-[120px] flex flex-col gap-[14px]">
+    <div className=" flex flex-col gap-[14px]">
       {arrayBill.map((item, index) => (
         <div className="flex justify-between">
           <div
-            className={`${index < 2 ? "text-[#555555] text-[14px]" : "text-[16px] font-medium"}`}
+            className={`${index < arrayBill.length - 2 ? "text-[#555555] text-[14px]" : "text-[16px] "}`}
           >
             {item.name}
           </div>
           <div
-            className={`${index < 2 ? "text-[#555555] text-[14px]" : "text-[16px] font-semibold"}`}
+            className={`${index < arrayBill.length - 2 ? "text-[#555555] text-[14px]" : "text-[16px] font-medium"}`}
           >
             ฿
             {

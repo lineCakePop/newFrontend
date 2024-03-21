@@ -15,6 +15,8 @@ const PartyHeader = ({
   createBy,
   partyDate,
   partyExpireDate,
+  discountPrice,
+  haveDiscount,
   receiverId,
   receiverName,
   receiverPicture,
@@ -78,7 +80,8 @@ const PartyHeader = ({
           sellerPicture={sellerPicture}
           variant={variant}
           productPrice={productPrice}
-          discount={discount}
+          discountPrice={discountPrice}
+          haveDiscount={haveDiscount}
         />
       </div>
     </div>
