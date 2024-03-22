@@ -440,7 +440,7 @@ const CreateParty = () => {
                             action: {
                               type: "uri",
                               label: "action",
-                              uri: `https://linecakepop.netlify.app/join-party/${partyId}`,
+                              uri: `https://liff.line.me/2003619165-JRmR1GYd/join-party/${partyId}`,
                             },
                           },
                         ],
