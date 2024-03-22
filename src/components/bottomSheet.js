@@ -85,7 +85,7 @@ const BottomSheet = ({
               Select option
             </div>
 
-            <div className="mt-[24px] flex flex-col gap-[12px]">
+            <div className="mt-[24px] flex flex-col gap-[12px] items-center justify-center">
               <ButtonCustom
                 title="Create Sharing Party"
                 onClick={handleSharing}

@@ -108,7 +108,7 @@ const WishlistDetail = () => {
   };
 
   const handleSharing = () => {
-    navigate(`/create-party`);
+    navigate(`/create-party`, { state: { targetWishlist, userWishlist } });
   };
 
   const handleIndividual = () => {};
