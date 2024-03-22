@@ -86,7 +86,7 @@ const PartyCard = ({
   };
 
   const onClickViewDetail = () => {
-    navigate(`/bill-sharing-party/${partyId}/${false}`);
+    navigate(`/bill-sharing-party/${partyId}/false`);
   };
 
   return (

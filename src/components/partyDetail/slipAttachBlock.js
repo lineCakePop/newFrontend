@@ -74,7 +74,7 @@ const SlipAttachBlock = ({ paidStatus, paidDate, slipPicture, slipDate }) => {
           {displayImage ? (
             <div className="self-start relative">
               <div className="h-[72px] w-[72px] flex justify-center items-center overflow-hidden rounded-lg  ">
-                <img src={selectedImage} className="h-[72px] w-auto" />
+                <img src={displayImage} className="h-[72px] w-auto" />
               </div>
               <Remove
                 className="absolute top-[-7px] right-[-7px]"
@@ -143,7 +143,7 @@ const SlipAttachBlock = ({ paidStatus, paidDate, slipPicture, slipDate }) => {
             </div>
 
             <span className="text-[#949494] text-[10px] ">
-              {formatDate(currentPaidstatus)}
+              {formatDate(paidDate)}
             </span>
           </div>
         </div>

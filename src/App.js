@@ -72,7 +72,7 @@ function App() {
             <Route path="setting" element={<Setting />} />
             <Route path="join-party/:partyId" element={<JoinParty />} />
             <Route
-              path="bill-sharing-party/:partyId"
+              path="bill-sharing-party/:partyId/:showHeader"
               element={<BillSharingParty />}
             />
             <Route path="*" element={<Loading />} />
