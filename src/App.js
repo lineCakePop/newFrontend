@@ -20,6 +20,7 @@ import CreateParty from "./pages/createParty";
 import Setting from "./pages/setting";
 import JoinParty from "./pages/joinParty";
 import BillSharingParty from "./pages/billSharingParty";
+import Party from "./pages/party";
 
 const LiffId = process.env.REACT_APP_LIFF_ID;
 
@@ -67,6 +68,7 @@ function App() {
             />
             <Route path="create-party" element={<CreateParty />} />
             <Route path="calendar" element={<Calendar />} />
+            <Route path="party" element={<Party />} />
             <Route path="setting" element={<Setting />} />
             <Route path="join-party/:partyId" element={<JoinParty />} />
             <Route
