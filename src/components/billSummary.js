@@ -23,7 +23,7 @@ const BillSummary = ({
   return (
     <div className=" flex flex-col gap-[14px]">
       {arrayBill.map((item, index) => (
-        <div className="flex justify-between">
+        <div className="flex justify-between" key={item.name}>
           <div
             className={`${index < arrayBill.length - 2 ? "text-[#555555] text-[14px]" : "text-[16px] "}`}
           >

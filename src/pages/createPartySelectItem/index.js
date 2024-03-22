@@ -8,7 +8,11 @@ import UserIconCustom from "../../components/userIcon";
 import ProductImgCustom from "../../components/productImg";
 
 const CreatePartySelectItem = () => {
-  const [receiverId, setReceiverId] = useState("");
+  const [receiver, setReceiver] = useState({
+    _id: "",
+    displayName: "",
+    pictureUrl: "",
+  });
   const [addButtonDisable, setAddButtonDisable] = useState(false);
   const [lineShoppingUrl, setLineShoppingUrl] = useState("");
   const [productDetail, setProductDetail] = useState({
@@ -20,6 +24,7 @@ const CreatePartySelectItem = () => {
     sellerPicture: "",
     variant: [],
   });
+
   const [variantArray, setVariantArray] = useState([]);
   // https://shop.line.me/@junenycandy/product/1002705377?utm_source=Seller_feature&utm_medium=Storefront-Productend&utm_keyword=811cf8ca09d65653504816fe50268ed21710753383316
   const getProductFromLink = async () => {
@@ -79,12 +84,8 @@ const CreatePartySelectItem = () => {
             Gift Recipient
           </div>
           <RecipientSelector
-            defaultReceiver={{
-              receiverId: "",
-              receiverName: "",
-              receiverPicture: "",
-            }}
-            setRecipientId={setReceiverId}
+            defaultReceiver={receiver}
+            setReceiver={setReceiver}
             defaultDisplaySelector={true}
           />
         </div>
