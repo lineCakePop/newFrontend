@@ -347,6 +347,112 @@ const Calendar = () => {
     );
   };
 
+  const renderEventMonth = () => {
+    if (eventCurrentMonth.length) {
+      return (
+        <div>
+          {eventCurrentMonth.map((event, index) => {
+            const date = event.date;
+            const month = monthsFullName[current.getMonth()];
+            const year = current.getFullYear();
+
+            let sameDay = false;
+            if (index) {
+              sameDay =
+                eventCurrentMonth[index].date ===
+                eventCurrentMonth[index - 1].date;
+            }
+
+            if (event.seasonName) {
+              const seasonName = event.seasonName.replace(/'/g, "’");
+              const icon = hollidayItem.find(
+                (item) => item.name === seasonName,
+              )?.img;
+              return (
+                <div
+                  key={index}
+                  className={`${index ? (sameDay ? "" : "mt-[24px] pt-[24px] border-t  border-[#DFDFDF]") : ""}`}
+                >
+                  {!sameDay && (
+                    <div className="text-[16px] leading-[20.8px] font-medium">
+                      {`${date} ${month} ${year}`}
+                    </div>
+                  )}
+
+                  <div className="flex items-end mt-[16px]">
+                    {icon}
+                    <div className="text-[14px] ml-[8px] font-semibold leading-[18.2px]">
+                      {seasonName}
+                    </div>
+                  </div>
+                </div>
+              );
+            }
+            const pictureUrl = event.birthday.pictureUrl;
+            const userId = event.birthday.userId;
+            const displayName =
+              userId === myBirthday.userId ? "Me" : event.birthday.displayName;
+            return (
+              <div
+                key={index}
+                className={`${index ? (sameDay ? "" : "mt-[24px] pt-[24px] border-t  border-[#DFDFDF]") : ""}`}
+              >
+                {!sameDay && (
+                  <>
+                    <div className="text-[16px] leading-[20.8px] font-medium">
+                      {`${date} ${month} ${year}`}
+                    </div>
+
+                    <div className="flex items-end mt-[16px]">
+                      <Birthday />
+                      <div className="text-[14px] ml-[8px] font-semibold leading-[18.2px]">
+                        Birthday
+                      </div>
+                    </div>
+                  </>
+                )}
+
+                <div
+                  className={`${!sameDay ? "mt-[16px]" : "mt-[12px]"} flex justify-between`}
+                >
+                  <div className="flex gap-[16px] items-center">
+                    <div className=" w-[36px] h-[36px]">
+                      <img
+                        src={pictureUrl}
+                        className="w-[36px] rounded-full"
+                        alt={"profile"}
+                      />
+                    </div>
+                    <div className="text-[12px] leading-[15.6px] font-semibold">
+                      {displayName}
+                    </div>
+                  </div>
+
+                  {userId !== myBirthday.userId && (
+                    <Wishlist
+                      onClick={() => {
+                        handleWishlist(userId);
+                      }}
+                    />
+                  )}
+                </div>
+              </div>
+            );
+          })}
+        </div>
+      );
+    }
+
+    return (
+      <div className="flex items-center flex-col ">
+        <Empty />
+        <div className="text-[16px] mt-[6px] text-center leading-[20.8px] font-medium text-[#949494]">
+          No upcoming event <br /> in this month
+        </div>
+      </div>
+    );
+  };
+
   if (status === LOADING)
     return (
       <div className="grow flex justify-center items-center">
@@ -455,8 +561,8 @@ const Calendar = () => {
             ) : (
               <div className="flex items-center flex-col mt-[24px]">
                 <Empty />
-                <div className="text-[16px] mt-[6px] leading-[20.8px] font-medium text-[#949494]">
-                  No upcoming event
+                <div className="text-[16px] mt-[6px] text-center leading-[20.8px] font-medium text-[#949494]">
+                  No upcoming event <br /> in this day
                 </div>
               </div>
             )}
@@ -471,98 +577,7 @@ const Calendar = () => {
           //     to see the event
           //   </div>
           // </div>
-          <div>
-            {eventCurrentMonth.map((event, index) => {
-              const date = event.date;
-              const month = monthsFullName[current.getMonth()];
-              const year = current.getFullYear();
-
-              let sameDay = false;
-              if (index) {
-                sameDay =
-                  eventCurrentMonth[index].date ===
-                  eventCurrentMonth[index - 1].date;
-              }
-
-              if (event.seasonName) {
-                const seasonName = event.seasonName.replace(/'/g, "’");
-                const icon = hollidayItem.find(
-                  (item) => item.name === seasonName,
-                )?.img;
-                return (
-                  <div
-                    key={index}
-                    className={`${index ? (sameDay ? "" : "mt-[24px] pt-[24px] border-t  border-[#DFDFDF]") : ""}`}
-                  >
-                    {!sameDay && (
-                      <div className="text-[16px] leading-[20.8px] font-medium">
-                        {`${date} ${month} ${year}`}
-                      </div>
-                    )}
-
-                    <div className="flex items-end mt-[16px]">
-                      {icon}
-                      <div className="text-[14px] ml-[8px] font-semibold leading-[18.2px]">
-                        {seasonName}
-                      </div>
-                    </div>
-                  </div>
-                );
-              }
-              const pictureUrl = event.birthday.pictureUrl;
-              const userId = event.birthday.userId;
-              const displayName =
-                userId === myBirthday.userId
-                  ? "Me"
-                  : event.birthday.displayName;
-              return (
-                <div
-                  key={index}
-                  className={`${index ? (sameDay ? "" : "mt-[24px] pt-[24px] border-t  border-[#DFDFDF]") : ""}`}
-                >
-                  {!sameDay && (
-                    <>
-                      <div className="text-[16px] leading-[20.8px] font-medium">
-                        {`${date} ${month} ${year}`}
-                      </div>
-
-                      <div className="flex items-end mt-[16px]">
-                        <Birthday />
-                        <div className="text-[14px] ml-[8px] font-semibold leading-[18.2px]">
-                          Birthday
-                        </div>
-                      </div>
-                    </>
-                  )}
-
-                  <div
-                    className={`${!sameDay ? "mt-[16px]" : "mt-[12px]"} flex justify-between`}
-                  >
-                    <div className="flex gap-[16px] items-center">
-                      <div className=" w-[36px] h-[36px]">
-                        <img
-                          src={pictureUrl}
-                          className="w-[36px] rounded-full"
-                          alt={"profile"}
-                        />
-                      </div>
-                      <div className="text-[12px] leading-[15.6px] font-semibold">
-                        {displayName}
-                      </div>
-                    </div>
-
-                    {userId !== myBirthday.userId && (
-                      <Wishlist
-                        onClick={() => {
-                          handleWishlist(userId);
-                        }}
-                      />
-                    )}
-                  </div>
-                </div>
-              );
-            })}
-          </div>
+          <>{renderEventMonth()}</>
         )}
       </div>
     </div>
