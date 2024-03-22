@@ -15,14 +15,12 @@ import ButtonCustom from "../../components/button";
 import liff from "@line/liff";
 
 const CreateParty = () => {
-  const [receiverId, setReceiverId] = useState("");
-  const [receiverName, setReceiverName] = useState("");
-
   const location = useLocation();
+
   const { targetWishlist, userWishlist } = location.state;
 
   const [gift, setGift] = useState();
-  const [defaultReceiver, setDefaultReceiver] = useState();
+  const [receiver, setReceiver] = useState();
 
   const [status, setStatus] = useState(LOADING);
 
@@ -38,15 +36,18 @@ const CreateParty = () => {
 
     if (location && userWishlist) {
       setGift(targetWishlist);
-      setDefaultReceiver(userWishlist);
-      setReceiverId(userWishlist._id);
+      setReceiver({
+        _id: userWishlist._id,
+        displayName: userWishlist.displayName,
+        pictureUrl: userWishlist.pictureUrl,
+      });
       setStatus(SUCCESS);
     }
   }, []);
 
   useEffect(() => {
-    console.log("receiverName", receiverName);
-  }, [receiverName]);
+    console.log("receiver", receiver);
+  }, [receiver]);
 
   //   {
   //     "userId": "eyJraWQiOiJhMmE0NTlhZWM1YjY1ZmE0ZThhZGQ1Yzc2OTdjNzliZTQ0NWFlMzEyYmJjZDZlZWY4ZmUwOWI1YmI4MjZjZjNkIiwidHlwIjoiSldUIiwiYWxnIjoiRVMyNTYifQ.eyJpc3MiOiJodHRwczovL2FjY2Vzcy5saW5lLm1lIiwic3ViIjoiVWUxMmYzOGZhYTQwYTkyZTg1M2EyNzFhNjg0OTZkMDRjIiwiYXVkIjoiMjAwMzYxOTE2NSIsImV4cCI6MTcxMDE0MDA1MiwiaWF0IjoxNzEwMTM2NDUyLCJhbXIiOlsibGluZXNzbyJdLCJuYW1lIjoiTm9uIiwicGljdHVyZSI6Imh0dHBzOi8vcHJvZmlsZS5saW5lLXNjZG4ubmV0LzBoLUlsRGxTSG1jbVpSUFdkNG9YZ05NVzE0ZkFzbUUzUXVLVjl1VkhSb0xWWXBEakV6YjF3NlYzRV9ld04tWGpFeGJ3czZCbnhvZjE5NyJ9.GeUFFOsCb-J7ii0U7ttlxRH32gEA92SFehBbDkOPMIvaD4T0YI6IZ-ivqZjC2VNt7uDyvqyZaOuT67xUENJ6NA", // tokenId
@@ -386,12 +387,8 @@ const CreateParty = () => {
         </div>
 
         <RecipientSelector
-          defaultReceiver={{
-            receiverId: receiverId,
-            receiverName: defaultReceiver.displayName,
-            receiverPicture: defaultReceiver.pictureUrl,
-          }}
-          setRecipientId={setReceiverId}
+          defaultReceiver={receiver}
+          setReceiver={setReceiver}
         />
       </div>
 
