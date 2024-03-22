@@ -1,26 +1,55 @@
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
+
+import liff from "@line/liff";
+
+import { AuthContext } from "../../context/AuthContext";
+
+import axios from "axios";
 
 import { LOADING, SUCCESS } from "../../utils/const";
 
+// =============== svg ===============
 import { ReactComponent as Remove } from "../../icons/createParty/remove_circle_outline_black.svg";
 import { ReactComponent as Add } from "../../icons/createParty/add_circle_outline_black.svg";
 
+// =============== Components ===============
 import Loading from "../Loading";
 import ProductDetail from "../../components/productDetail";
 import BillSummary from "../../components/billSummary";
 import RecipientSelector from "../../components/createParty/recipientSelector";
 import ButtonCustom from "../../components/button";
-
-import liff from "@line/liff";
+import ReceivingAccountCard from "../../components/partyDetail/receivingAccountCard";
 
 const CreateParty = () => {
   const location = useLocation();
 
   const { targetWishlist, userWishlist } = location.state;
 
-  const [gift, setGift] = useState();
-  const [receiver, setReceiver] = useState();
+  const { idToken } = useContext(AuthContext);
+
+  // =============== setState ===============
+  const [gift, setGift] = useState({
+    discountPrice: 0,
+    haveDiscount: false,
+    productId: "",
+    productName: "",
+    productPicture: "",
+    productPrice: 0,
+    seller: "",
+    sellerPicture: "",
+    variantText: "",
+  });
+  const [receiver, setReceiver] = useState({
+    displayName: "",
+    pictureUrl: "",
+    _id: "",
+  });
+  const [profile, setProfile] = useState({
+    displayName: "",
+    pictureUrl: "",
+    userId: "",
+  });
 
   const [status, setStatus] = useState(LOADING);
 
@@ -30,36 +59,25 @@ const CreateParty = () => {
 
   const [members, setMembers] = useState(2);
 
-  useEffect(() => {
-    console.log("userWishlist", userWishlist);
-    console.log("targetWishlist", targetWishlist);
+  const [totalPrice, setTotalPrice] = useState("");
+  const [eachPrice, setEachPrice] = useState("");
 
-    if (location && userWishlist) {
-      setGift(targetWishlist);
-      setReceiver({
-        _id: userWishlist._id,
-        displayName: userWishlist.displayName,
-        pictureUrl: userWishlist.pictureUrl,
-      });
-      setStatus(SUCCESS);
+  // =============== Axios ===============
+  const getUserProfile = async () => {
+    try {
+      const response = await axios.get(
+        `${process.env.REACT_APP_API_PROXY}/user/userProfile`,
+        {
+          params: {
+            id: idToken,
+          },
+        },
+      );
+      setProfile(response.data);
+    } catch (error) {
+      console.log(error);
     }
-  }, []);
-
-  useEffect(() => {
-    console.log("receiver", receiver);
-  }, [receiver]);
-
-  //   {
-  //     "userId": "eyJraWQiOiJhMmE0NTlhZWM1YjY1ZmE0ZThhZGQ1Yzc2OTdjNzliZTQ0NWFlMzEyYmJjZDZlZWY4ZmUwOWI1YmI4MjZjZjNkIiwidHlwIjoiSldUIiwiYWxnIjoiRVMyNTYifQ.eyJpc3MiOiJodHRwczovL2FjY2Vzcy5saW5lLm1lIiwic3ViIjoiVWUxMmYzOGZhYTQwYTkyZTg1M2EyNzFhNjg0OTZkMDRjIiwiYXVkIjoiMjAwMzYxOTE2NSIsImV4cCI6MTcxMDE0MDA1MiwiaWF0IjoxNzEwMTM2NDUyLCJhbXIiOlsibGluZXNzbyJdLCJuYW1lIjoiTm9uIiwicGljdHVyZSI6Imh0dHBzOi8vcHJvZmlsZS5saW5lLXNjZG4ubmV0LzBoLUlsRGxTSG1jbVpSUFdkNG9YZ05NVzE0ZkFzbUUzUXVLVjl1VkhSb0xWWXBEakV6YjF3NlYzRV9ld04tWGpFeGJ3czZCbnhvZjE5NyJ9.GeUFFOsCb-J7ii0U7ttlxRH32gEA92SFehBbDkOPMIvaD4T0YI6IZ-ivqZjC2VNt7uDyvqyZaOuT67xUENJ6NA", // tokenId
-  //     "maxMember": 2,
-  //     "recieverId": "65d5b262d2b63ba97f85446d",
-  //     "productId": "65d36f22881470fd62b5c05c",
-  //     "productPrice": 790,
-  //     "discount": 0,
-  //     "shippingPrice": 50,
-  //     "variantOption1": null,
-  //     "variantOption2": null
-  // }
+  };
 
   const getTextWidth = (text, font = "sfpro") => {
     // Create a temporary span element
@@ -89,9 +107,89 @@ const CreateParty = () => {
     return width;
   };
 
-  const handleShareTargetPicker = () => {
+  const postCreateParty = async () => {
     try {
-      liff.shareTargetPicker(
+      const response = await axios.post(
+        `${process.env.REACT_APP_API_PROXY}/party/createParty`,
+        {
+          userId: idToken,
+          maxMember: members,
+          receiverId: receiver._id,
+          productId: gift.productId,
+          productPrice: gift.productPrice,
+          discountPrice: gift.discountPrice,
+          addCost: additionalCost,
+          discount: discount,
+          shippingPrice: shippingFee,
+          variantOption1: gift.variantText,
+          variantOption2: null,
+        },
+      );
+
+      handleShareTargetPicker(response.data.partyId);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  // =============== useEffect ===============
+  useEffect(() => {
+    console.log("userWishlist", userWishlist);
+    console.log("targetWishlist", targetWishlist);
+
+    if (location && userWishlist) {
+      setGift(targetWishlist);
+      setReceiver({
+        _id: userWishlist._id,
+        displayName: userWishlist.displayName,
+        pictureUrl: userWishlist.pictureUrl,
+      });
+      setStatus(SUCCESS);
+    }
+  }, []);
+
+  useEffect(() => {
+    if (idToken !== "") {
+      getUserProfile();
+    }
+  }, [idToken]);
+
+  useEffect(() => {
+    if (gift) {
+      const giftPrice = gift.haveDiscount
+        ? gift.discountPrice
+        : gift.productPrice;
+      const total = giftPrice + shippingFee - discount + additionalCost;
+      const each = total / members;
+
+      setTotalPrice(
+        `฿${
+          total
+            .toLocaleString("en-US", {
+              style: "currency",
+              currency: "USD",
+            })
+            .split("$")[1]
+        }`,
+      );
+
+      setEachPrice(
+        `฿${
+          each
+            .toLocaleString("en-US", {
+              style: "currency",
+              currency: "USD",
+            })
+            .split("$")[1]
+        }`,
+      );
+    }
+  }, [gift, additionalCost, discount, shippingFee]);
+
+  // =============== Handler ===============
+  const handleShareTargetPicker = (partyId) => {
+    liff
+      .shareTargetPicker(
         [
           {
             type: "flex",
@@ -102,6 +200,7 @@ const CreateParty = () => {
                 type: "box",
                 layout: "vertical",
                 contents: [
+                  // header
                   {
                     type: "box",
                     layout: "vertical",
@@ -122,7 +221,7 @@ const CreateParty = () => {
                         contents: [
                           {
                             type: "span",
-                            text: "4 ",
+                            text: `${members} `,
                             color: "#06C755",
                           },
                           {
@@ -137,10 +236,12 @@ const CreateParty = () => {
                     paddingAll: "20px",
                     spacing: "8px",
                   },
+                  // separator
                   {
                     type: "separator",
                     margin: "0px",
                   },
+                  // receiver
                   {
                     type: "box",
                     layout: "horizontal",
@@ -151,7 +252,8 @@ const CreateParty = () => {
                         contents: [
                           {
                             type: "image",
-                            url: "https://scdn.line-apps.com/n/channel_devcenter/img/fx/01_1_cafe.png",
+                            // receiver picture
+                            url: receiver.pictureUrl,
                             aspectMode: "cover",
                           },
                         ],
@@ -169,7 +271,7 @@ const CreateParty = () => {
                             contents: [
                               {
                                 type: "span",
-                                text: "Sally",
+                                text: receiver.displayName,
                                 weight: "bold",
                               },
                               {
@@ -189,7 +291,7 @@ const CreateParty = () => {
                               },
                               {
                                 type: "span",
-                                text: "Mon A",
+                                text: profile.displayName,
                               },
                             ],
                             size: "10px",
@@ -199,6 +301,7 @@ const CreateParty = () => {
                         margin: "12px",
                         justifyContent: "space-between",
                         spacing: "4px",
+                        width: "180px",
                       },
                       {
                         type: "box",
@@ -206,8 +309,9 @@ const CreateParty = () => {
                         contents: [
                           {
                             type: "image",
-                            url: "https://scdn.line-apps.com/n/channel_devcenter/img/fx/01_1_cafe.png",
+                            url: "https://firebasestorage.googleapis.com/v0/b/cakepop-be50a.appspot.com/o/IMG_6841.PNG?alt=media&token=c18a5ce9-0963-45a3-b645-c224f3fce7c4",
                             aspectMode: "cover",
+                            size: "32px",
                           },
                         ],
                         height: "32px",
@@ -216,9 +320,12 @@ const CreateParty = () => {
                     ],
                     paddingAll: "20px",
                   },
+                  // separator
                   {
                     type: "separator",
+                    margin: "0px",
                   },
+                  // product
                   {
                     type: "box",
                     layout: "horizontal",
@@ -229,7 +336,7 @@ const CreateParty = () => {
                         contents: [
                           {
                             type: "image",
-                            url: "https://scdn.line-apps.com/n/channel_devcenter/img/fx/01_1_cafe.png",
+                            url: gift.productPicture,
                             aspectMode: "cover",
                           },
                         ],
@@ -247,14 +354,14 @@ const CreateParty = () => {
                             contents: [
                               {
                                 type: "text",
-                                text: "Bonjour Tote Bag",
+                                text: gift.productName,
                                 size: "14px",
                                 color: "#111111",
                                 weight: "bold",
                               },
                               {
                                 type: "text",
-                                text: "white",
+                                text: gift.variantText ? gift.variantText : " ",
                                 size: "12px",
                                 color: "#555555",
                               },
@@ -274,7 +381,7 @@ const CreateParty = () => {
                               },
                               {
                                 type: "text",
-                                text: "฿1,400.00",
+                                text: totalPrice,
                                 size: "12px",
                                 color: "#555555",
                                 align: "end",
@@ -296,7 +403,7 @@ const CreateParty = () => {
                               },
                               {
                                 type: "text",
-                                text: "฿350.00",
+                                text: eachPrice,
                                 size: "12px",
                                 color: "#111111",
                                 align: "end",
@@ -315,6 +422,7 @@ const CreateParty = () => {
                     ],
                     paddingAll: "20px",
                   },
+                  // button
                   {
                     type: "box",
                     layout: "vertical",
@@ -332,7 +440,7 @@ const CreateParty = () => {
                             action: {
                               type: "uri",
                               label: "action",
-                              uri: "http://linecorp.com/",
+                              uri: `https://linecakepop.netlify.app/join-party/${partyId}`,
                             },
                           },
                         ],
@@ -361,14 +469,14 @@ const CreateParty = () => {
         {
           isMultiple: true,
         },
-      );
-    } catch (error) {
-      console.log(error);
-    }
+      )
+      .catch(function (error) {
+        console.log("something wrong happen");
+      });
   };
 
   const handleChooseFriend = () => {
-    handleShareTargetPicker();
+    postCreateParty();
   };
 
   if (status === LOADING) {
@@ -543,6 +651,12 @@ const CreateParty = () => {
         <div className="text-[14px] leading-[18.2px] font-semibold mb-[16px]">
           Receiving Account
         </div>
+
+        <ReceivingAccountCard
+          name="Doraemon San"
+          accountId="012-345-6789"
+          edit={true}
+        />
       </div>
 
       <div className="p-[24px] flex justify-center">
