@@ -184,7 +184,7 @@ const CreateParty = () => {
         }`,
       );
     }
-  }, [gift, additionalCost, discount, shippingFee]);
+  }, [gift, additionalCost, discount, shippingFee, members]);
 
   // =============== Handler ===============
   const handleShareTargetPicker = (partyId) => {
