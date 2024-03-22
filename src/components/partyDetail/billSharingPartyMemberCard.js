@@ -30,6 +30,7 @@ const BillSharingPartyMemberCard = ({
 }) => {
   const [displayDropdown, setDisplayDropdown] = useState(false);
   const [currentPaidStatus, setCurrentPaidStatus] = useState(paidStatus);
+  const [currentPaidDate, setCurrentPaidDate] = useState(paidDate);
 
   return (
     <>
@@ -90,7 +91,7 @@ const BillSharingPartyMemberCard = ({
                           Verified
                         </p>
                         <p className="text-[10px] text-[#949494]">
-                          {formatDate(paidDate)}
+                          {formatDate(currentPaidDate)}
                         </p>
                       </div>
                       {displayDropdown ? <Open /> : <Close />}
@@ -120,7 +121,7 @@ const BillSharingPartyMemberCard = ({
                           Verified
                         </p>
                         <p className="text-[10px] text-[#949494]">
-                          {formatDate(paidDate)}
+                          {formatDate(currentPaidDate)}
                         </p>
                       </div>
                     ) : (
@@ -139,10 +140,11 @@ const BillSharingPartyMemberCard = ({
               setCurrentPaidStatus={setCurrentPaidStatus}
               slipPicture={slipPicture}
               slipId={slipId}
+              setCurrentPaidDate={setCurrentPaidDate}
             />
           )}
 
-          {you && partyStatus === ONGOING && (
+          {you && !ownerOfParty && partyStatus === ONGOING && (
             <SlipAttachBlock
               paidStatus={paidStatus}
               paidDate={paidDate}

@@ -25,7 +25,7 @@ import ReceivingAccountCard from "../../components/partyDetail/receivingAccountC
 import BillSharingPartyMemberCard from "../../components/partyDetail/billSharingPartyMemberCard";
 
 const BillSharingParty = () => {
-  const { partyId } = useParams();
+  const { partyId, showHeader } = useParams();
 
   const { idToken } = useContext(AuthContext);
 
@@ -98,6 +98,7 @@ const BillSharingParty = () => {
         },
       );
       setStatus(SUCCESS);
+      console.log(response.data);
       setPartyInformation(response.data);
       setPartyMember([
         {
@@ -165,6 +166,7 @@ const BillSharingParty = () => {
     <div className="">
       <PartyHeader
         title="Bill Sharing Party"
+        showHeader={showHeader}
         productName={partyInformation.product.productName}
         productPicture={partyInformation.product.productPicture}
         seller={partyInformation.product.seller}

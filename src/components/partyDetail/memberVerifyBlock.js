@@ -13,15 +13,20 @@ const MemberVerifyBlock = ({
   slipPicture,
   slipId,
   setCurrentPaidStatus,
+  setCurrentPaidDate,
 }) => {
   const { idToken } = useContext(AuthContext);
 
   const verifySlip = async () => {
     try {
-      await axios.post(`${process.env.REACT_APP_API_PROXY}/party/verifySlip`, {
-        tokenId: idToken,
-        slipId: slipId,
-      });
+      const response = await axios.post(
+        `${process.env.REACT_APP_API_PROXY}/party/verifySlip`,
+        {
+          tokenId: idToken,
+          slipId: slipId,
+        },
+      );
+      setCurrentPaidDate(response.data.paidDate);
       setCurrentPaidStatus(VERIFIED);
     } catch (err) {
       console.log(err);
