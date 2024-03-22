@@ -17,7 +17,7 @@ import { LOADING, SUCCESS } from "../../utils/const";
 import loadingGif from "../../icons/cakeGif.gif";
 
 const RecipientSelector = ({
-  setRecipientId,
+  setReceiver,
   defaultReceiver,
   defaultDisplaySelector = false,
 }) => {
@@ -58,11 +58,11 @@ const RecipientSelector = ({
 
   const handleSelectFriend = (user) => {
     setCurrentRecipient({
-      receiverId: user._id,
-      receiverName: user.displayName,
-      receiverPicture: user.pictureUrl,
+      _id: user._id,
+      displayName: user.displayName,
+      pictureUrl: user.pictureUrl,
     });
-    setRecipientId(user._id);
+    setReceiver(user);
     setDisplaySelector(false);
   };
 
@@ -149,10 +149,10 @@ const RecipientSelector = ({
           <UserIconCustom
             width={24}
             height={24}
-            img={currentRecipient.receiverPicture}
+            img={currentRecipient.pictureUrl}
           />
           <span className="text-[14px] leading-[18.2px]  font-semibold">
-            {currentRecipient.receiverName}
+            {currentRecipient.displayName}
           </span>
         </div>
         <span
