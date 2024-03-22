@@ -22,7 +22,7 @@ const Navbar = () => {
   const navbarItem = [
     { img: <Calendar />, name: "Calendar", path: "/calendar" },
     { img: <Friends />, name: "Friends", path: "/friend-wishlist" },
-    { img: <Gifts />, name: "Party", path: "" },
+    { img: <Gifts />, name: "Party", path: "/party" },
     { img: <Heart />, name: "My wishlist", path: "/my-wishlist" },
     { img: <Settings />, name: "Setting", path: "/setting" },
   ];
