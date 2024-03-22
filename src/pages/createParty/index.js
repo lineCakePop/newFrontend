@@ -437,11 +437,6 @@ const CreateParty = () => {
                             size: "16px",
                             color: "#FFFFFF",
                             weight: "bold",
-                            action: {
-                              type: "uri",
-                              label: "action",
-                              uri: `https://liff.line.me/2003619165-JRmR1GYd/join-party/${partyId}`,
-                            },
                           },
                         ],
                         width: "265px",
@@ -450,6 +445,11 @@ const CreateParty = () => {
                         cornerRadius: "5px",
                         justifyContent: "center",
                         alignItems: "center",
+                        action: {
+                          type: "uri",
+                          label: "action",
+                          uri: `https://liff.line.me/2003619165-JRmR1GYd/join-party/${partyId}`,
+                        },
                       },
                     ],
                     paddingAll: "20px",
