@@ -2,7 +2,13 @@ import axios from "axios";
 import { useContext, useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { AuthContext } from "../../context/AuthContext";
-import { LOADING, SUCCESS } from "../../utils/const";
+import {
+  LOADING,
+  ONGOING,
+  SUCCESS,
+  VERIFIED,
+  WAITFORMEMBER,
+} from "../../utils/const";
 
 import loadingGif from "../../icons/cakeGif.gif";
 
@@ -11,8 +17,12 @@ import BillSummary from "../../components/billSummary";
 import JoinPartyCard from "../../components/partyDetail/joinPartyMemberCard";
 import ButtonCustom from "../../components/button";
 
+import { ReactComponent as RedBin } from "../../icons/billSharingParty/redBin.svg";
+import { ReactComponent as GrayBin } from "../../icons/billSharingParty/grayBin.svg";
+
 import liff from "@line/liff";
 import ReceivingAccountCard from "../../components/partyDetail/receivingAccountCard";
+import BillSharingPartyMemberCard from "../../components/partyDetail/billSharingPartyMemberCard";
 
 const BillSharingParty = () => {
   const { partyId } = useParams();
@@ -92,13 +102,40 @@ const BillSharingParty = () => {
           name: response.data.host.hostName,
           profile: response.data.host.hostPicture,
           owner: true,
+          you: response.data.host.you,
         },
         ...response.data.member.map((member) => ({
           name: member.memberName,
           profile: member.memberPicture,
           owner: false,
+          you: member.you,
+          paidStatus: member.paidStatus,
+          slipPicture: member.slipPicture,
+          paidDate: member.paidDate,
         })),
       ]);
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+  const checkFinishParty = () => {
+    const allMemberVerify = partyInformation.member.every(
+      (user) => user.paidStatus === VERIFIED,
+    );
+    return allMemberVerify;
+  };
+
+  const onClickDeleteParty = async () => {
+    try {
+      console.log("deleteParty");
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+  const onClickFinishParty = async () => {
+    try {
     } catch (err) {
       console.log(err);
     }
@@ -146,6 +183,77 @@ const BillSharingParty = () => {
           name={"Doraemon San"}
         />
       </div>
+      {/* member */}
+      <div className="p-[24px]">
+        {/* party header */}
+        <div className="h-[21px] mb-[16px] flex justify-between">
+          <span className="text-[16px] font-bold">Party Members</span>
+          <span className="text-[#06C755] font-bold">
+            {partyMember.length}
+            <span className="text-[#949494]">
+              /{partyInformation.maxMember}
+            </span>
+          </span>
+        </div>
+        {partyMember.map((user) => (
+          <BillSharingPartyMemberCard
+            name={user.name}
+            profile={user.profile}
+            owner={user.owner}
+            you={user.you}
+            ownerOfParty={partyInformation.host.you}
+            paidStatus={user.paidStatus}
+            slipPicture={user.slipPicture}
+            paidDate={user.paidDate}
+          />
+        ))}
+      </div>
+      {/* footer */}
+      {/* owner of party */}
+      {!partyInformation.host.you && (
+        <div className="p-[24px] flex flex-col items-center">
+          {/* ongoing but someone didnt pay */}
+          {checkFinishParty() && partyInformation.partyStatus === ONGOING && (
+            <>
+              <ButtonCustom title="Finished" onClick={onClickFinishParty} />
+              <div className="mt-[12px] flex gap-[10px] justify-center items-center h-[52px]">
+                <GrayBin />{" "}
+                <span className="text-[14px] text-[#B7B7B7]">Delete Party</span>
+              </div>
+            </>
+          )}
+          {/* ongoing all member pay */}
+          {partyInformation.partyStatus === ONGOING && !checkFinishParty() && (
+            <>
+              <ButtonCustom title="Unfinished Payment" disable />
+              <div
+                className="mt-[12px] flex gap-[10px] justify-center items-center h-[52px] "
+                onClick={onClickDeleteParty}
+              >
+                <RedBin />{" "}
+                <span className="text-[14px] text-[#FF334B]">Delete Party</span>
+              </div>
+            </>
+          )}
+          {/* waiting member to join */}
+          {partyInformation.partyStatus === WAITFORMEMBER && (
+            <>
+              <div className="h-[49px] rounded-[5px] border border-[#DFDFDF] w-[100%] flex justify-center items-center">
+                <span className="text-[#DFDFDF] text-[16px] font-bold">
+                  Waiting For Others
+                </span>
+              </div>
+              <div
+                className="mt-[12px] flex gap-[10px] justify-center items-center h-[52px] "
+                onClick={onClickDeleteParty}
+              >
+                <RedBin />{" "}
+                <span className="text-[14px] text-[#FF334B]">Delete Party</span>
+              </div>
+            </>
+          )}
+        </div>
+      )}
     </div>
   );
 };

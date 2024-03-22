@@ -3,12 +3,12 @@ export const SUCCESS = "success";
 export const FAIL = "fail";
 
 // member paid status
-const WAITFORSLIP = "wait for slip";
-const SLIPATTACHED = "slip attached";
-const VERIFIED = "verified";
+export const WAITFORSLIP = "wait for slip";
+export const SLIPATTACHED = "slip attached";
+export const VERIFIED = "verified";
 
 // party status
-const WAITFORMEMBER = "wait for member";
-const ONGOING = "onGoing";
-const FINISHED = "finished";
-const DELETED = "deleted";
+export const WAITFORMEMBER = "wait for member";
+export const ONGOING = "onGoing";
+export const FINISHED = "finished";
+export const DELETED = "deleted";

@@ -8,7 +8,7 @@ const ReceivingAccountCard = ({ name, accountId, edit = false }) => {
     <div className="h-[82px] rounded p-[16px] border border-[#DFDFDF] relative">
       <p className="text-[#2A2A2A] font-semibold text-[14px]">{name}</p>
       <div className="flex text-[14px] text-[#777777] mt-[8px] h-[24px] items-center ">
-        <p>PromptPay:{accountId}</p>
+        <p>PromptPay: {accountId}</p>
         {!edit && (
           <CopyToClipboard text={accountId} className="ml-[11px]">
             <Copy />
