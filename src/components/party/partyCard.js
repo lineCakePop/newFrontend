@@ -10,6 +10,8 @@ import {
   WAITFORMEMBER,
 } from "../../utils/const";
 
+import { useNavigate } from "react-router-dom";
+
 import { ReactComponent as ArrowHead } from "../../icons/ItemInformation/Vector.svg";
 
 const PartyCard = ({
@@ -22,7 +24,10 @@ const PartyCard = ({
   total,
   variant,
   memberPicture,
+  partyId,
 }) => {
+  const navigate = useNavigate();
+
   // date
   function formatAmPm(date) {
     let hours = date.getHours();
@@ -81,7 +86,7 @@ const PartyCard = ({
   };
 
   const onClickViewDetail = () => {
-    console.log("onClickViewDetail");
+    navigate(`/bill-sharing-party/${partyId}/${false}`);
   };
 
   return (

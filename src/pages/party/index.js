@@ -75,6 +75,7 @@ const Party = () => {
               total={party.total}
               variant={party.variant}
               memberPicture={party.memberPicture}
+              partyId={party.partyId}
             />
           </div>
         );
