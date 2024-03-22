@@ -92,6 +92,8 @@ const BillSharingParty = () => {
         {
           params: {
             id: partyId,
+            uid: idToken,
+            // uid: "eyJraWQiOiJmZTFlOGQ4ODhlYzY2NGNkMmFmZWY0NzljNWRiNzk2OTJjZDAxYWFjZDE0MTQ4M2E1NDMzOTM1MWYzOTVmYTI3IiwidHlwIjoiSldUIiwiYWxnIjoiRVMyNTYifQ.eyJpc3MiOiJodHRwczovL2FjY2Vzcy5saW5lLm1lIiwic3ViIjoiVWRjMGIwMzAzMzY1ZDZhMTVlYjI2NWRiZjVjZTcyNzNlIiwiYXVkIjoiMjAwMzYxOTE2NSIsImV4cCI6MTcxMTEwODE0NCwiaWF0IjoxNzExMTA0NTQ0LCJhbXIiOlsibGluZXNzbyJdLCJuYW1lIjoi4LmE4Lih4LmJ4LmB4LiB4LmI4LiZIiwicGljdHVyZSI6Imh0dHBzOi8vcHJvZmlsZS5saW5lLXNjZG4ubmV0LzBoQW4tUVBfQUZIa0VRS0EyclBnRmhGaXh0RUN4bkJoZ0phRWNGSWpaOEZYWnVTMTFEZmtoVGMyRjRTU1ZvU3d4SEx4MVNJekVwRW5JLSJ9.a87lMGpk52_pKOwQE2X9lmKfEr_vdClUc0QLH3GSx0ThkAeVyESaXpF7wsA9UYheRvhZSQGALZZm7AyKLH1Klw",
           },
         },
       );
@@ -111,7 +113,9 @@ const BillSharingParty = () => {
           you: member.you,
           paidStatus: member.paidStatus,
           slipPicture: member.slipPicture,
+          slipDate: member.slipDate,
           paidDate: member.paidDate,
+          slipId: member.slipId,
         })),
       ]);
     } catch (err) {
@@ -128,7 +132,11 @@ const BillSharingParty = () => {
 
   const onClickDeleteParty = async () => {
     try {
-      console.log("deleteParty");
+      await axios.post(`${process.env.REACT_APP_API_PROXY}/party/deleteParty`, {
+        tokenId: idToken,
+        partyId: partyId,
+      });
+      liff.closeWindow();
     } catch (err) {
       console.log(err);
     }
@@ -136,6 +144,11 @@ const BillSharingParty = () => {
 
   const onClickFinishParty = async () => {
     try {
+      await axios.post(`${process.env.REACT_APP_API_PROXY}/party/finishParty`, {
+        tokenId: idToken,
+        partyId: partyId,
+      });
+      liff.closeWindow();
     } catch (err) {
       console.log(err);
     }
@@ -197,6 +210,7 @@ const BillSharingParty = () => {
         </div>
         {partyMember.map((user) => (
           <BillSharingPartyMemberCard
+            key={user.name}
             name={user.name}
             profile={user.profile}
             owner={user.owner}
@@ -205,12 +219,15 @@ const BillSharingParty = () => {
             paidStatus={user.paidStatus}
             slipPicture={user.slipPicture}
             paidDate={user.paidDate}
+            slipDate={user.slipDate}
+            partyStatus={partyInformation.partyStatus}
+            slipId={user.slipId}
           />
         ))}
       </div>
       {/* footer */}
       {/* owner of party */}
-      {!partyInformation.host.you && (
+      {partyInformation.host.you && (
         <div className="p-[24px] flex flex-col items-center">
           {/* ongoing but someone didnt pay */}
           {checkFinishParty() && partyInformation.partyStatus === ONGOING && (
@@ -235,14 +252,18 @@ const BillSharingParty = () => {
               </div>
             </>
           )}
-          {/* waiting member to join */}
-          {partyInformation.partyStatus === WAITFORMEMBER && (
-            <>
-              <div className="h-[49px] rounded-[5px] border border-[#DFDFDF] w-[100%] flex justify-center items-center">
-                <span className="text-[#DFDFDF] text-[16px] font-bold">
-                  Waiting For Others
-                </span>
-              </div>
+        </div>
+      )}
+      {/* waiting member to join */}
+      {partyInformation.partyStatus === WAITFORMEMBER && (
+        <>
+          <div className="p-[24px] flex flex-col items-center">
+            <div className="h-[49px] rounded-[5px] border border-[#DFDFDF] w-[100%] flex justify-center items-center">
+              <span className="text-[#DFDFDF] text-[16px] font-bold">
+                Waiting For Others
+              </span>
+            </div>
+            {partyInformation.host.you && (
               <div
                 className="mt-[12px] flex gap-[10px] justify-center items-center h-[52px] "
                 onClick={onClickDeleteParty}
@@ -250,9 +271,9 @@ const BillSharingParty = () => {
                 <RedBin />{" "}
                 <span className="text-[14px] text-[#FF334B]">Delete Party</span>
               </div>
-            </>
-          )}
-        </div>
+            )}
+          </div>
+        </>
       )}
     </div>
   );

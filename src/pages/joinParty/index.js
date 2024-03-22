@@ -61,10 +61,10 @@ const JoinParty = () => {
   // ================ useEffect ================
 
   useEffect(() => {
-    if (partyId !== "") {
+    if (partyId !== "" && idToken !== "") {
       getPartyDetail();
     }
-  }, [partyId]);
+  }, [partyId, idToken]);
 
   useEffect(() => {
     if (close) {
@@ -81,6 +81,7 @@ const JoinParty = () => {
         {
           params: {
             id: partyId,
+            uid: idToken,
           },
         },
       );
@@ -91,11 +92,13 @@ const JoinParty = () => {
           name: response.data.host.hostName,
           profile: response.data.host.hostPicture,
           owner: true,
+          you: response.data.host.you,
         },
         ...response.data.member.map((member) => ({
           name: member.memberName,
           profile: member.memberPicture,
           owner: false,
+          you: member.you,
         })),
       ]);
     } catch (err) {
@@ -165,6 +168,7 @@ const JoinParty = () => {
             name={member.name}
             profile={member.profile}
             owner={member.owner}
+            you={member.you}
           />
         ))}
       </div>
@@ -173,7 +177,10 @@ const JoinParty = () => {
         <ButtonCustom
           title="Join"
           onClick={joinParty}
-          disable={partyMember.length === partyInformation.maxMember}
+          disable={
+            partyMember.length === partyInformation.maxMember ||
+            partyMember.some((member) => member.you)
+          }
         />
       </div>
     </div>

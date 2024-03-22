@@ -21,3 +21,26 @@ export const daysToDate = (date) => {
   );
   return dayDiff;
 };
+
+
+export const formatDate = (utcTimestamp) => {
+  if (utcTimestamp) {
+    const date = new Date(utcTimestamp);
+
+    const options = {
+      hour: "numeric",
+      minute: "2-digit",
+      hour12: true, // Use 12-hour clock format
+      year: "numeric",
+      month: "numeric",
+      day: "numeric",
+    };
+
+    const dateArray = new Intl.DateTimeFormat("en-US", options)
+      .format(date)
+      .split(/,|\//);
+
+    return `on ${dateArray[3]} ${dateArray[0]}/${dateArray[1]}`;
+  }
+  return "";
+};
