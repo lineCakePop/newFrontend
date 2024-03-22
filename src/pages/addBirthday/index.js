@@ -288,7 +288,7 @@ const AddBirthday = () => {
 
             <div className="mt-[16px] text-[12px] leading-[15.6px] text-[#555555]">
               If you choose to notify your birthday, we’ll notify your birthday
-              to your friends who also added "Line Birthday" on your birthday.
+              to your friends who also added "LINE BIRTHDAY" on your birthday.
             </div>
           </div>
         </div>
