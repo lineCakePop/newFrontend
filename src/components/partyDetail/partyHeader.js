@@ -17,10 +17,8 @@ const PartyHeader = ({
   partyExpireDate,
   discountPrice,
   haveDiscount,
-  receiverId,
   receiverName,
   receiverPicture,
-  discount,
 }) => {
   const formatDate = (utcTimestamp) => {
     const date = new Date(utcTimestamp);
@@ -38,6 +36,22 @@ const PartyHeader = ({
   };
 
   const formattedDate = formatDate(partyDate).split(/,|\//);
+
+  const dateDiffInDays = (date1) => {
+    let date2 = new Date();
+
+    const oneDay = 1000 * 60 * 60 * 24; // milliseconds in a day
+
+    // Convert both dates to milliseconds
+    const date1Ms = date1.getTime();
+    const date2Ms = date2.getTime();
+
+    // Calculate the difference in milliseconds
+    const differenceMs = date1Ms - date2Ms;
+
+    // Convert the difference back to days and return
+    return Math.round(differenceMs / oneDay);
+  };
 
   return (
     <div>
@@ -58,7 +72,7 @@ const PartyHeader = ({
                 formattedDate[2]}
             </div>
             <div className="text-[#FF334B] h-[16px]">
-              Expire In {daysToDate(partyExpireDate)} days
+              Expire In {dateDiffInDays(new Date(partyExpireDate))} days
             </div>
           </div>
         </div>

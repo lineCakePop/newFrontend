@@ -19,6 +19,7 @@ import Navbar from "./components/navbar";
 import CreateParty from "./pages/createParty";
 import Setting from "./pages/setting";
 import JoinParty from "./pages/joinParty";
+import BillSharingParty from "./pages/billSharingParty";
 
 const LiffId = process.env.REACT_APP_LIFF_ID;
 
@@ -68,6 +69,10 @@ function App() {
             <Route path="calendar" element={<Calendar />} />
             <Route path="setting" element={<Setting />} />
             <Route path="join-party/:partyId" element={<JoinParty />} />
+            <Route
+              path="bill-sharing-party/:partyId"
+              element={<BillSharingParty />}
+            />
             <Route path="*" element={<Loading />} />
           </Routes>
         </div>
