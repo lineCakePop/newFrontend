@@ -100,8 +100,11 @@ const BillSharingParty = () => {
           profile: response.data.host.hostPicture,
           owner: true,
           you: response.data.host.you,
+          paidStatus: VERIFIED,
+          id: response.data.host.hostId,
         },
         ...response.data.member.map((member) => ({
+          id: member.slipId,
           name: member.memberName,
           profile: member.memberPicture,
           owner: false,
@@ -217,7 +220,9 @@ const BillSharingParty = () => {
         </div>
         {partyMember.map((user) => (
           <BillSharingPartyMemberCard
-            key={user.name}
+            key={user.id}
+            id={user.id}
+            setPartyMember={setPartyMember}
             name={user.name}
             profile={user.profile}
             owner={user.owner}

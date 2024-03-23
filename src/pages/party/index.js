@@ -71,7 +71,7 @@ const Party = () => {
   }
 
   return (
-    <div className="flex flex-col grow">
+    <div className="flex flex-col grow overflow-hidden">
       <div className="grow overflow-y-scroll">
         {parties.map((party, index) => {
           return (

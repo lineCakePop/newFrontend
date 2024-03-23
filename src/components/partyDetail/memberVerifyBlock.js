@@ -9,6 +9,8 @@ import axios from "axios";
 import { AuthContext } from "../../context/AuthContext";
 
 const MemberVerifyBlock = ({
+  setPartyMember,
+  id,
   paidStatus,
   slipPicture,
   slipId,
@@ -28,6 +30,12 @@ const MemberVerifyBlock = ({
       );
       setCurrentPaidDate(response.data.paidDate);
       setCurrentPaidStatus(VERIFIED);
+      setPartyMember((member) => {
+        if (member.id === id) {
+          member.paidStatus = VERIFIED;
+        }
+        return member;
+      });
     } catch (err) {
       console.log(err);
     }

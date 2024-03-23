@@ -27,6 +27,8 @@ const BillSharingPartyMemberCard = ({
   partyStatus,
   slipDate,
   slipId,
+  setPartyMember,
+  id,
 }) => {
   const [displayDropdown, setDisplayDropdown] = useState(false);
   const [currentPaidStatus, setCurrentPaidStatus] = useState(paidStatus);
@@ -141,6 +143,8 @@ const BillSharingPartyMemberCard = ({
           </div>
           {displayDropdown && (
             <MemberVerifyBlock
+              setPartyMember={setPartyMember}
+              id={id}
               paidStatus={currentPaidStatus}
               setCurrentPaidStatus={setCurrentPaidStatus}
               slipPicture={slipPicture}
