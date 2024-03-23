@@ -62,13 +62,13 @@ const MyWishlist = () => {
     let todayMidNight = new Date(
       today.getFullYear(),
       today.getMonth(),
-      today.getDate()
+      today.getDate(),
     );
     let userBD = new Date(userWishlist.birthday);
     let userBDMidNight = new Date(
       today.getFullYear(),
       userBD.getMonth(),
-      userBD.getDate()
+      userBD.getDate(),
     );
     userBDMidNight =
       userBDMidNight < todayMidNight
@@ -76,7 +76,7 @@ const MyWishlist = () => {
         : userBDMidNight;
     // console.log(userBDMidNight);
     const dayDiff = Math.floor(
-      (userBDMidNight - todayMidNight) / (1000 * 60 * 60 * 24)
+      (userBDMidNight - todayMidNight) / (1000 * 60 * 60 * 24),
     );
     return dayDiff;
   };
@@ -89,9 +89,10 @@ const MyWishlist = () => {
           params: {
             id: idToken,
           },
-        }
+        },
       );
       setUserWishlist(response.data);
+      console.log(response.data);
       setStatus(SUCCESS);
     } catch (err) {
       console.log(err);
@@ -102,14 +103,14 @@ const MyWishlist = () => {
     try {
       await axios.put(
         `${process.env.REACT_APP_API_PROXY}/wishlist/removeWishlist`,
-        { transactionId: id }
+        { transactionId: id },
       );
 
       // remove that product from wishList
       setUserWishlist((userWishlist) => ({
         ...userWishlist,
         wishlist: userWishlist.wishlist.filter(
-          (product) => product.transactionId !== id
+          (product) => product.transactionId !== id,
         ),
       }));
       // close modal and set to init after delete complete

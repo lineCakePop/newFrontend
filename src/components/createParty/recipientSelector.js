@@ -79,6 +79,13 @@ const RecipientSelector = ({
       setFriendList(response.data);
       setDisplayFriendList(response.data);
       setStatus(SUCCESS);
+      if (defaultReceiver._id === "" && response.data[0]) {
+        setCurrentRecipient({
+          _id: response.data[0]._id,
+          displayName: response.data[0].displayName,
+          pictureUrl: response.data[0].pictureUrl,
+        });
+      }
     } catch (err) {
       console.log(err);
     }
