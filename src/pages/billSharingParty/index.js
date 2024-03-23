@@ -1,6 +1,6 @@
 import axios from "axios";
 import { useContext, useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import { AuthContext } from "../../context/AuthContext";
 import {
   LOADING,
@@ -14,7 +14,6 @@ import loadingGif from "../../icons/cakeGif.gif";
 
 import PartyHeader from "../../components/partyDetail/partyHeader";
 import BillSummary from "../../components/billSummary";
-import JoinPartyCard from "../../components/partyDetail/joinPartyMemberCard";
 import ButtonCustom from "../../components/button";
 
 import { ReactComponent as RedBin } from "../../icons/billSharingParty/redBin.svg";
@@ -25,7 +24,9 @@ import ReceivingAccountCard from "../../components/partyDetail/receivingAccountC
 import BillSharingPartyMemberCard from "../../components/partyDetail/billSharingPartyMemberCard";
 
 const BillSharingParty = () => {
-  const { partyId, showHeader } = useParams();
+  const navigate = useNavigate();
+
+  const { partyId, fromFlex } = useParams();
 
   const { idToken } = useContext(AuthContext);
 
@@ -42,6 +43,7 @@ const BillSharingParty = () => {
     partyDate: "",
     partyId: "",
     partyStatus: "",
+    lastStatusDate: null,
     product: {
       productName: "",
       productPicture: "",
@@ -63,8 +65,6 @@ const BillSharingParty = () => {
 
   const [partyMember, setPartyMember] = useState([]);
 
-  const [close, setClose] = useState(false);
-
   const giftTotal = partyInformation.product.haveDiscount
     ? partyInformation.product.discountPrice
     : partyInformation.product.productPrice;
@@ -72,16 +72,10 @@ const BillSharingParty = () => {
   // ================ useEffect ================
 
   useEffect(() => {
-    if (partyId !== "") {
+    if (partyId !== "" && idToken !== "") {
       getPartyDetail();
     }
-  }, [partyId]);
-
-  useEffect(() => {
-    if (close) {
-      liff.closeWindow();
-    }
-  }, [close]);
+  }, [partyId, idToken]);
 
   // ================ function ================
 
@@ -137,7 +131,11 @@ const BillSharingParty = () => {
         tokenId: idToken,
         partyId: partyId,
       });
-      liff.closeWindow();
+      if (fromFlex === "true") {
+        liff.closeWindow();
+      } else {
+        navigate("/party");
+      }
     } catch (err) {
       console.log(err);
     }
@@ -149,7 +147,11 @@ const BillSharingParty = () => {
         tokenId: idToken,
         partyId: partyId,
       });
-      liff.closeWindow();
+      if (fromFlex === "true") {
+        liff.closeWindow();
+      } else {
+        navigate("/party");
+      }
     } catch (err) {
       console.log(err);
     }
@@ -166,7 +168,10 @@ const BillSharingParty = () => {
     <div className="">
       <PartyHeader
         title="Bill Sharing Party"
-        showHeader={showHeader}
+        fromFlex={fromFlex}
+        joinParty={false}
+        lastStatusDate={partyInformation.lastStatusDate}
+        partyStatus={partyInformation.partyStatus}
         productName={partyInformation.product.productName}
         productPicture={partyInformation.product.productPicture}
         seller={partyInformation.product.seller}

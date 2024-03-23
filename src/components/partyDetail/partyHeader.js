@@ -3,9 +3,14 @@ import ProductDetail from "../productDetail";
 import UserIconCustom from "../userIcon";
 
 import { daysToDate } from "../../utils/function";
+import { EXPIRED, ONGOING, WAITFORMEMBER } from "../../utils/const";
+import StatusTag from "./statusTag";
 
 const PartyHeader = ({
-  showHeader,
+  fromFlex,
+  joinParty,
+  lastStatusDate,
+  partyStatus,
   title,
   productPicture,
   productPrice,
@@ -56,26 +61,36 @@ const PartyHeader = ({
 
   return (
     <div>
-      <div className="px-[24px] py-[16px] h-[106px] border-b border-[#DFDFDF]">
-        <div className="text-[20px] font-bold">{title}</div>
+      <div className="px-[24px] py-[16px]  border-b border-[#DFDFDF]">
+        <div className="text-[20px] leading-[24px] font-bold ">{title}</div>
+        {!joinParty && (
+          <StatusTag
+            partyStatus={partyStatus}
+            date={partyStatus === EXPIRED ? partyExpireDate : lastStatusDate}
+          />
+        )}
         <div className="flex mt-[16px] justify-between">
           <div className="text-[16px] font-medium text-[#949494]">
             Create by <span className="text-[#111111]">{createBy}</span>
           </div>
-          <div className="text-[12px] h-[34px]">
-            <div className="text-[#949494] h-[16px]">
-              {formattedDate[3] +
-                " " +
-                formattedDate[1] +
-                "/" +
-                formattedDate[0] +
-                "/" +
-                formattedDate[2]}
+          {(joinParty ||
+            partyStatus === ONGOING ||
+            partyStatus === WAITFORMEMBER) && (
+            <div className="text-[12px] h-[34px]">
+              <div className="text-[#949494] h-[16px]">
+                {formattedDate[3] +
+                  " " +
+                  formattedDate[1] +
+                  "/" +
+                  formattedDate[0] +
+                  "/" +
+                  formattedDate[2]}
+              </div>
+              <div className="text-[#FF334B] h-[16px]">
+                Expire In {dateDiffInDays(new Date(partyExpireDate))} days
+              </div>
             </div>
-            <div className="text-[#FF334B] h-[16px]">
-              Expire In {dateDiffInDays(new Date(partyExpireDate))} days
-            </div>
-          </div>
+          )}
         </div>
       </div>
       <div className="p-[24px]">

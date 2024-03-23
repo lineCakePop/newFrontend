@@ -48,7 +48,7 @@ const BillSharingPartyMemberCard = ({
                     You
                   </p>
                 ) : currentPaidStatus === WAITFORSLIP &&
-                  partyStatus !== WAITFORSLIP ? (
+                  partyStatus !== WAITFORMEMBER ? (
                   <div
                     className="flex gap-[16px]"
                     onClick={() => {
@@ -61,7 +61,7 @@ const BillSharingPartyMemberCard = ({
                     {displayDropdown ? <Open /> : <Close />}
                   </div>
                 ) : currentPaidStatus === SLIPATTACHED &&
-                  partyStatus !== WAITFORSLIP ? (
+                  partyStatus !== WAITFORMEMBER ? (
                   <>
                     <div
                       className="flex gap-[16px]"
@@ -81,7 +81,7 @@ const BillSharingPartyMemberCard = ({
                     </div>
                   </>
                 ) : currentPaidStatus === VERIFIED &&
-                  partyStatus !== WAITFORSLIP ? (
+                  partyStatus !== WAITFORMEMBER ? (
                   <>
                     <div
                       className="flex gap-[16px]"
@@ -118,7 +118,7 @@ const BillSharingPartyMemberCard = ({
                   </p>
                 )}
 
-                {!owner && !you && partyStatus !== WAITFORSLIP && (
+                {!owner && !you && partyStatus !== WAITFORMEMBER && (
                   <>
                     {paidStatus === VERIFIED ? (
                       <div className="h-[30px]">
@@ -149,7 +149,7 @@ const BillSharingPartyMemberCard = ({
             />
           )}
 
-          {you && !ownerOfParty && partyStatus === ONGOING && (
+          {you && !ownerOfParty && partyStatus !== WAITFORMEMBER && (
             <SlipAttachBlock
               paidStatus={paidStatus}
               paidDate={paidDate}

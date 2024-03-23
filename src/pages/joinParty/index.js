@@ -127,6 +127,7 @@ const JoinParty = () => {
     <div className="">
       <PartyHeader
         title="Let’s join the party!"
+        joinParty={true}
         productName={partyInformation.product.productName}
         productPicture={partyInformation.product.productPicture}
         seller={partyInformation.product.seller}

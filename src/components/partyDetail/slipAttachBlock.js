@@ -26,7 +26,7 @@ const SlipAttachBlock = ({ paidStatus, paidDate, slipPicture, slipDate }) => {
   // ==================== useState ====================
 
   const [selectedImage, setSelectedImage] = useState(null);
-  const [displayImage, setDisplayImage] = useState(null);
+  const [displayImage, setDisplayImage] = useState(slipPicture);
   const [currentPaidstatus, setCurrentPaidStatus] = useState(paidStatus);
   const [currentSlipDate, setCurrentSlipDate] = useState(slipDate);
 
