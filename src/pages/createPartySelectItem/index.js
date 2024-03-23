@@ -11,6 +11,8 @@ import axios from "axios";
 import { ReactComponent as LinkIcon } from "../../icons/createParty/link-solid.svg";
 
 const CreatePartySelectItem = () => {
+  const navigate = useNavigate();
+
   const [receiver, setReceiver] = useState({
     _id: "",
     displayName: "",
@@ -48,6 +50,7 @@ const CreatePartySelectItem = () => {
         haveDiscount: response.data.haveDiscount,
         discountPrice: response.data.discountPrice,
         seller: response.data.seller,
+        productId: response.data.productId,
         sellerPicture: response.data.sellerPicture,
         variant: Object.entries(response.data.variant).map(([key, value]) => ({
           name: key,
@@ -62,8 +65,6 @@ const CreatePartySelectItem = () => {
       console.log(err);
     }
   };
-
-  const navigate = useNavigate();
 
   const handleDisableNextButton = () => {
     if (productDetail.productName !== "" && !productDetail.haveVariant) {
@@ -80,9 +81,13 @@ const CreatePartySelectItem = () => {
   };
 
   const onClickNext = () => {
+    console.log(variantArray.join(" "));
     navigate(`/create-party`, {
       state: {
-        targetWishlist: { ...productDetail, variant: variantArray.join(" ") },
+        targetWishlist: {
+          ...productDetail,
+          variantText: variantArray.join(" "),
+        },
         userWishlist: receiver,
       },
     });
