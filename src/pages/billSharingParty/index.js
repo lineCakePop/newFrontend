@@ -122,7 +122,7 @@ const BillSharingParty = () => {
   };
 
   const checkFinishParty = () => {
-    const allMemberVerify = partyInformation.member.every(
+    const allMemberVerify = partyMember.every(
       (user) => user.paidStatus === VERIFIED,
     );
     return allMemberVerify;

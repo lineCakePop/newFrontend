@@ -30,12 +30,14 @@ const MemberVerifyBlock = ({
       );
       setCurrentPaidDate(response.data.paidDate);
       setCurrentPaidStatus(VERIFIED);
-      setPartyMember((member) => {
-        if (member.id === id) {
-          member.paidStatus = VERIFIED;
-        }
-        return member;
-      });
+      setPartyMember((member) =>
+        member.map((user) => {
+          if (user.id === id) {
+            user.paidStatus = VERIFIED;
+          }
+          return user;
+        }),
+      );
     } catch (err) {
       console.log(err);
     }

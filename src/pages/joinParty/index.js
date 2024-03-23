@@ -54,6 +54,8 @@ const JoinParty = () => {
 
   const [close, setClose] = useState(false);
 
+  const [displayModal, setDisplayModal] = useState(false);
+
   const giftTotal = partyInformation.product.haveDiscount
     ? partyInformation.product.discountPrice
     : partyInformation.product.productPrice;
@@ -112,7 +114,8 @@ const JoinParty = () => {
         userId: idToken,
         partyId: partyId,
       });
-      setClose(true);
+      // setClose(true);
+      setDisplayModal(true);
     } catch (err) {}
   };
 
@@ -124,7 +127,7 @@ const JoinParty = () => {
     );
 
   return (
-    <div className="">
+    <div className="h-[100dvh] relative">
       <PartyHeader
         title="Let’s join the party!"
         joinParty={true}
@@ -176,7 +179,11 @@ const JoinParty = () => {
       {/* footer */}
       <div className="h-[97px] p-[24px] flex justify-center">
         <ButtonCustom
-          title="Join"
+          title={
+            partyMember.some((member) => member.you)
+              ? "You joined the party"
+              : "Join"
+          }
           onClick={joinParty}
           disable={
             partyMember.length === partyInformation.maxMember ||
@@ -184,6 +191,26 @@ const JoinParty = () => {
           }
         />
       </div>
+      {/* modal */}
+      {displayModal && (
+        <div className="w-[100%] absolute top-0 h-[100dvh] bg-[#11111180] flex justify-center items-center">
+          <div className="h-[178px] w-[278px] rounded-[20px] bg-white flex flex-col items-center pt-[32px] pb-[16px]">
+            <p className="font-bold leading-[21px]">You joined the party</p>
+            <p className="text-[14px] mt-[8px] text-[#777777]">
+              Go to Line Birthday for
+            </p>
+            <p className="text-[#777777] text-[14px]">the next step</p>
+            <div
+              className="h-[49px] flex items-center mt-[16px] text-[#06C755] font-semibold"
+              onClick={() => {
+                setDisplayModal(false);
+              }}
+            >
+              OK
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
