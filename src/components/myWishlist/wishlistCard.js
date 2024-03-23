@@ -18,9 +18,20 @@ const WishlistCard = ({ wishlistInformation, onClickDelete }) => {
         <div className="leading-[18.2px] h-[18.2px] font-normal text-[#555555] text-[14px] mt-[4px]">
           {wishlistInformation.variantText}
         </div>
-        <div className="text-[12px] font-semibold mt-[8px] leading-[15.6px]">
-          ฿{wishlistInformation.productPrice.toLocaleString("en-US")}
-        </div>
+        {wishlistInformation.haveDiscount ? (
+          <div className="flex h-[16px] mt-[4px] items-center">
+            <div className="text-[10px]  font-semibold line-through mr-[4px]">
+              ฿{wishlistInformation.productPrice.toLocaleString("en-US")}
+            </div>
+            <div className="text-[12px] font-semibold leading-[15.6px] text-[#FF334B]">
+              ฿{wishlistInformation.discountPrice.toLocaleString("en-US")}
+            </div>
+          </div>
+        ) : (
+          <div className="text-[12px] font-semibold mt-[8px] leading-[15.6px]">
+            ฿{wishlistInformation.productPrice.toLocaleString("en-US")}
+          </div>
+        )}
       </div>
     </div>
   );

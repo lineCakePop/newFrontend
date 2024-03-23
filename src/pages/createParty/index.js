@@ -508,7 +508,7 @@ const CreateParty = () => {
           productPicture={gift.productPicture}
           seller={gift.seller}
           sellerPicture={gift.sellerPicture}
-          variant={gift.variant}
+          variant={gift.variantText}
           productPrice={gift.productPrice}
           discountPrice={gift.discountPrice}
           haveDiscount={gift.haveDiscount}

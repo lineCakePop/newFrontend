@@ -7,7 +7,7 @@ import { ReactComponent as Check } from "../../icons/billSharingParty/check.svg"
 
 import ButtonCustom from "../button";
 
-import { useContext, useState } from "react";
+import { useContext, useRef, useState } from "react";
 
 import axios from "axios";
 
@@ -20,6 +20,8 @@ const SlipAttachBlock = ({ paidStatus, paidDate, slipPicture, slipDate }) => {
   const { idToken } = useContext(AuthContext);
 
   const { partyId } = useParams();
+
+  const inputRef = useRef(null);
 
   // ==================== useState ====================
 
@@ -37,6 +39,7 @@ const SlipAttachBlock = ({ paidStatus, paidDate, slipPicture, slipDate }) => {
       reader.onload = () => {
         setSelectedImage(event.target.files[0]);
         setDisplayImage(reader.result);
+        inputRef.current.value = "";
       };
       reader.readAsDataURL(selectedFile);
     }
@@ -44,24 +47,26 @@ const SlipAttachBlock = ({ paidStatus, paidDate, slipPicture, slipDate }) => {
 
   const onClickConfirm = async () => {
     try {
-      const formData = new FormData();
+      if (displayImage) {
+        const formData = new FormData();
 
-      formData.append("slip", selectedImage);
-      formData.append("partyId", partyId);
-      formData.append("tokenId", idToken);
+        formData.append("slip", selectedImage);
+        formData.append("partyId", partyId);
+        formData.append("tokenId", idToken);
 
-      const response = await axios.post(
-        `${process.env.REACT_APP_API_PROXY}/party/uploadSlip`,
-        formData,
-        {
-          headers: {
-            "Content-Type": "multipart/form-data",
+        const response = await axios.post(
+          `${process.env.REACT_APP_API_PROXY}/party/uploadSlip`,
+          formData,
+          {
+            headers: {
+              "Content-Type": "multipart/form-data",
+            },
           },
-        },
-      );
+        );
 
-      setCurrentPaidStatus(SLIPATTACHED);
-      setCurrentSlipDate(response.data.slipDate);
+        setCurrentPaidStatus(SLIPATTACHED);
+        setCurrentSlipDate(response.data.slipDate);
+      }
     } catch (err) {
       console.log(err);
     }
@@ -71,43 +76,46 @@ const SlipAttachBlock = ({ paidStatus, paidDate, slipPicture, slipDate }) => {
     <div className="border border-[#DFDFDF] rounded p-[16px] h-[168px]">
       {currentPaidstatus === WAITFORSLIP ? (
         <div className="flex flex-col items-center">
-          {displayImage ? (
-            <div className="self-start relative">
-              <div className="h-[72px] w-[72px] flex justify-center items-center overflow-hidden rounded-lg  ">
-                <img src={displayImage} className="h-[72px] w-auto" />
-              </div>
-              <Remove
-                className="absolute top-[-7px] right-[-7px]"
-                onClick={() => {
-                  setSelectedImage(null);
-                  setDisplayImage(null);
-                }}
-              />
-            </div>
-          ) : (
-            <form>
-              <label>
-                <Upload />
-                <input
-                  type="file"
-                  onChange={handleFileChange}
-                  className="hidden"
+          <form className="w-[100%] flex flex-col">
+            {displayImage ? (
+              <div className="self-start relative">
+                <div className="h-[72px] w-[72px] flex justify-center items-center overflow-hidden rounded-lg  ">
+                  <img src={displayImage} className="h-[72px] w-auto" />
+                </div>
+                <Remove
+                  className="absolute top-[-7px] right-[-7px]"
+                  onClick={() => {
+                    setSelectedImage(null);
+                    setDisplayImage(null);
+                  }}
                 />
-              </label>
-            </form>
-          )}
-          <ButtonCustom
-            title="confirm"
-            style="w-[100%] h-[49px] rounded-[5px] mt-[16px] bg-[#06C755]"
-            onClick={onClickConfirm}
-            disable={!selectedImage}
-          />
+              </div>
+            ) : (
+              <>
+                <Upload className="self-center" />
+              </>
+            )}
+            <label className="w-[100%]  ">
+              <input
+                ref={inputRef}
+                disabled={displayImage}
+                type="file"
+                onChange={handleFileChange}
+                className="hidden"
+              />
+              <ButtonCustom
+                title={displayImage ? "confirm" : "Attach Slip"}
+                style="w-[100%] h-[49px] rounded-[5px] mt-[16px] bg-[#06C755]"
+                onClick={onClickConfirm}
+              />
+            </label>
+          </form>
         </div>
       ) : currentPaidstatus === SLIPATTACHED ? (
         <div className="flex flex-col items-center">
           <div className="self-start relative">
             <div className="h-[72px] w-[72px] flex justify-center items-center overflow-hidden rounded-lg  ">
-              <img src={slipPicture} className="h-[72px] w-auto" />
+              <img src={displayImage} className="h-[72px] w-auto" />
             </div>
           </div>
 
@@ -116,7 +124,7 @@ const SlipAttachBlock = ({ paidStatus, paidDate, slipPicture, slipDate }) => {
             <div className="flex">
               <Clock />
               <span className="text-[#949494] font-semibold ml-[4px] text-[14px]">
-                Slip Attached
+                Waiting for verification
               </span>
             </div>
 

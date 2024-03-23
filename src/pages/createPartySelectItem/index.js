@@ -1,13 +1,18 @@
+import { useNavigate, useParams } from "react-router-dom";
 import { useState } from "react";
+
 import RecipientSelector from "../../components/createParty/recipientSelector";
 import ButtonCustom from "../../components/button";
+import ProductImgCustom from "../../components/productImg";
+import UserIconCustom from "../../components/userIcon";
+
+import axios from "axios";
 
 import { ReactComponent as LinkIcon } from "../../icons/createParty/link-solid.svg";
-import axios from "axios";
-import UserIconCustom from "../../components/userIcon";
-import ProductImgCustom from "../../components/productImg";
 
 const CreatePartySelectItem = () => {
+  const navigate = useNavigate();
+
   const [receiver, setReceiver] = useState({
     _id: "",
     displayName: "",
@@ -23,22 +28,29 @@ const CreatePartySelectItem = () => {
     seller: "",
     sellerPicture: "",
     variant: [],
+    discountPrice: "",
+    haveDiscount: false,
   });
 
   const [variantArray, setVariantArray] = useState([]);
   // https://shop.line.me/@junenycandy/product/1002705377?utm_source=Seller_feature&utm_medium=Storefront-Productend&utm_keyword=811cf8ca09d65653504816fe50268ed21710753383316
+  // https://shop.line.me/@nami_center/product/1004036540?utm_source=Seller_feature&utm_medium=Storefront-Productend&utm_keyword=811cf8ca09d65653504816fe50268ed21711125778551
   const getProductFromLink = async () => {
     try {
       const response = await axios.post(
         `${process.env.REACT_APP_API_PROXY}/party/getProductFromLink`,
         { url: lineShoppingUrl },
       );
+      console.log(response.data);
       setProductDetail({
         productName: response.data.productName,
         haveVariant: response.data.haveVariant,
         productPicture: response.data.productPicture,
         productPrice: response.data.productPrice,
+        haveDiscount: response.data.haveDiscount,
+        discountPrice: response.data.discountPrice,
         seller: response.data.seller,
+        productId: response.data.productId,
         sellerPicture: response.data.sellerPicture,
         variant: Object.entries(response.data.variant).map(([key, value]) => ({
           name: key,
@@ -68,7 +80,18 @@ const CreatePartySelectItem = () => {
     return true;
   };
 
-  const onClickNext = () => {};
+  const onClickNext = () => {
+    console.log(variantArray.join(" "));
+    navigate(`/create-party`, {
+      state: {
+        targetWishlist: {
+          ...productDetail,
+          variantText: variantArray.join(" "),
+        },
+        userWishlist: receiver,
+      },
+    });
+  };
 
   return (
     <div className="h-[100dvh] flex flex-col">
@@ -144,10 +167,21 @@ const CreatePartySelectItem = () => {
                 </div>
                 <div className="ml-[12px] text-[16px] font-medium leading-[20.8px] truncate	">
                   {productDetail.productName}
-                  <div className="mt-[4px] font-semibold text-[14px] text-[#555555]">
-                    {" "}
-                    ฿{productDetail.productPrice.toLocaleString("en-US")}
-                  </div>
+
+                  {productDetail.haveDiscount ? (
+                    <div className="flex h-[16px] mt-[4px] items-center">
+                      <div className="text-[12px]  font-semibold line-through mr-[4px]">
+                        ฿{productDetail.productPrice.toLocaleString("en-US")}
+                      </div>
+                      <div className="text-[14px] font-semibold leading-[15.6px] text-[#FF334B]">
+                        ฿{productDetail.discountPrice.toLocaleString("en-US")}
+                      </div>
+                    </div>
+                  ) : (
+                    <div className="text-[14px] font-semibold mt-[8px] leading-[15.6px]">
+                      ฿{productDetail.productPrice.toLocaleString("en-US")}
+                    </div>
+                  )}
                 </div>
               </div>
             </div>
