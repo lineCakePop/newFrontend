@@ -15,6 +15,7 @@ import { LOADING, SUCCESS } from "../../utils/const";
 
 import loadingGif from "../../icons/cakeGif.gif";
 import BottomSheet from "../../components/bottomSheet";
+import EmptyBlockCustom from "../../components/emptyBlock";
 
 const WishlistDetail = () => {
   const { userId } = useParams();
@@ -114,7 +115,7 @@ const WishlistDetail = () => {
   const handleIndividual = () => {};
 
   return (
-    <div className="h-[100dvh] overflow-y-scroll">
+    <div className="h-[100dvh] overflow-y-scroll flex flex-col">
       {status === LOADING ? (
         <div className="h-[100dvh] flex justify-center items-center ">
           <img src={loadingGif} alt="loading" />
@@ -164,21 +165,28 @@ const WishlistDetail = () => {
             </div>
           </div>
           {/* content */}
-          <div className="mt-[36px] flex-col flex gap-[32px] items-center">
-            {userWishlist.wishlist.map((wishlist) => (
-              <WishlistCard
-                key={wishlist.productName}
-                productName={wishlist.productName}
-                productPicture={wishlist.productPicture}
-                productPrice={wishlist.productPrice}
-                variantText={wishlist.variantText}
-                discountPrice={wishlist.discountPrice}
-                haveDiscount={wishlist.haveDiscount}
-                onClickSendGift={onClickSendGift}
-                wishlist={wishlist}
-              />
-            ))}
-          </div>
+          {userWishlist.wishlist.length === 0 ? (
+            <EmptyBlockCustom
+              title="Your friend has no wishlist"
+              showSubTitle={false}
+            />
+          ) : (
+            <div className="mt-[36px] flex-col flex gap-[32px] items-center">
+              {userWishlist.wishlist.map((wishlist) => (
+                <WishlistCard
+                  key={wishlist.productName}
+                  productName={wishlist.productName}
+                  productPicture={wishlist.productPicture}
+                  productPrice={wishlist.productPrice}
+                  variantText={wishlist.variantText}
+                  discountPrice={wishlist.discountPrice}
+                  haveDiscount={wishlist.haveDiscount}
+                  onClickSendGift={onClickSendGift}
+                  wishlist={wishlist}
+                />
+              ))}
+            </div>
+          )}
 
           {displayBottomSheet && (
             <BottomSheet

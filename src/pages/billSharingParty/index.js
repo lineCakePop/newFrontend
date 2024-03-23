@@ -18,10 +18,13 @@ import ButtonCustom from "../../components/button";
 
 import { ReactComponent as RedBin } from "../../icons/billSharingParty/redBin.svg";
 import { ReactComponent as GrayBin } from "../../icons/billSharingParty/grayBin.svg";
+import { ReactComponent as ToastCheck } from "../../icons/billSharingParty/toastCheck.svg";
 
 import liff from "@line/liff";
+
 import ReceivingAccountCard from "../../components/partyDetail/receivingAccountCard";
 import BillSharingPartyMemberCard from "../../components/partyDetail/billSharingPartyMemberCard";
+import ToastCustom from "../../components/toast";
 
 const BillSharingParty = () => {
   const navigate = useNavigate();
@@ -64,6 +67,7 @@ const BillSharingParty = () => {
   const [status, setStatus] = useState(LOADING);
 
   const [partyMember, setPartyMember] = useState([]);
+  const [displayToast, setDisplayToast] = useState(false);
 
   const giftTotal = partyInformation.product.haveDiscount
     ? partyInformation.product.discountPrice
@@ -100,8 +104,11 @@ const BillSharingParty = () => {
           profile: response.data.host.hostPicture,
           owner: true,
           you: response.data.host.you,
+          paidStatus: VERIFIED,
+          id: response.data.host.hostId,
         },
         ...response.data.member.map((member) => ({
+          id: member.slipId,
           name: member.memberName,
           profile: member.memberPicture,
           owner: false,
@@ -119,7 +126,7 @@ const BillSharingParty = () => {
   };
 
   const checkFinishParty = () => {
-    const allMemberVerify = partyInformation.member.every(
+    const allMemberVerify = partyMember.every(
       (user) => user.paidStatus === VERIFIED,
     );
     return allMemberVerify;
@@ -165,7 +172,18 @@ const BillSharingParty = () => {
     );
 
   return (
-    <div className="">
+    <div className="h-[100dvh] relative">
+      {displayToast && (
+        <ToastCustom
+          tittle={
+            <div className="flex flex-col items-center">
+              <div>Accont number</div>
+              copied
+            </div>
+          }
+          icon={<ToastCheck />}
+        />
+      )}
       <PartyHeader
         title="Bill Sharing Party"
         fromFlex={fromFlex}
@@ -201,6 +219,7 @@ const BillSharingParty = () => {
         <ReceivingAccountCard
           accountId={"012-345-6789"}
           name={"Doraemon San"}
+          setDisplayToast={setDisplayToast}
         />
       </div>
       {/* member */}
@@ -217,7 +236,9 @@ const BillSharingParty = () => {
         </div>
         {partyMember.map((user) => (
           <BillSharingPartyMemberCard
-            key={user.name}
+            key={user.id}
+            id={user.id}
+            setPartyMember={setPartyMember}
             name={user.name}
             profile={user.profile}
             owner={user.owner}

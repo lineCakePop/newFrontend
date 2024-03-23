@@ -41,7 +41,7 @@ function InviteFriend() {
 
   return (
     <div className="h-[100dvh] flex justify-center items-center">
-      {status !== LOADING ? (
+      {status === LOADING ? (
         <img src={loadingGif} alt="loading" />
       ) : (
         <Welcome />
