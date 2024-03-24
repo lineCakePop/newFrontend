@@ -18,8 +18,11 @@ import ModalCustom from "../../components/modal";
 import EmptyBlockCustom from "../../components/emptyBlock";
 
 import { ReactComponent as LinkIcon } from "../../icons/createParty/link-solid.svg";
+import { ReactComponent as Check } from "../../icons/myWishlist/check.svg";
+
 import UserIconCustom from "../../components/userIcon";
 import ProductImgCustom from "../../components/productImg";
+import ToastCustom from "../../components/toast";
 
 const MyWishlist = () => {
   const { idToken } = useContext(AuthContext);
@@ -56,6 +59,7 @@ const MyWishlist = () => {
   });
 
   const [variantArray, setVariantArray] = useState([]);
+  const [displayToast, setDisplayToast] = useState(false);
 
   //   ======================== useEffect ========================
 
@@ -224,6 +228,10 @@ const MyWishlist = () => {
         productId: "",
       });
       setVariantArray([]);
+      setDisplayToast(true);
+      setTimeout(() => {
+        setDisplayToast(false);
+      }, 2000);
     } catch (err) {
       console.log(err);
     }
@@ -334,6 +342,21 @@ const MyWishlist = () => {
           </div>
         </div>
       </div>
+
+      {/* toast */}
+      {displayToast && (
+        <ToastCustom
+          icon={<Check />}
+          tittle={
+            <div className="flex flex-col items-center">
+              <p>New item added</p>
+              <p>to wishlist!</p>
+            </div>
+          }
+        />
+      )}
+
+      {/* add wishlist */}
       {displayAddWishlist && (
         <div className="absolute top-0 h-[100dvh]  w-[100%] bg-[#11111180] flex justify-center items-center">
           <div className="w-[294px] px-[24px] pt-[32px] pb-[16px] flex flex-col items-center rounded-[21px] bg-white">
@@ -439,6 +462,7 @@ const MyWishlist = () => {
           </div>
         </div>
       )}
+
       {modalDelete.display && (
         <ModalCustom
           handleCancel={() => {
