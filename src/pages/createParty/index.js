@@ -132,11 +132,22 @@ const CreateParty = () => {
     }
   };
 
+  const postConfirmParty = async (partyId) => {
+    try {
+      await axios.post(
+        `${process.env.REACT_APP_API_PROXY}/party/confirmParty`,
+        {
+          userId: idToken,
+          partyId: partyId,
+        },
+      );
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   // =============== useEffect ===============
   useEffect(() => {
-    console.log("userWishlist", userWishlist);
-    console.log("targetWishlist", targetWishlist);
-
     if (location && userWishlist) {
       setGift(targetWishlist);
       setReceiver({
@@ -470,6 +481,16 @@ const CreateParty = () => {
           isMultiple: true,
         },
       )
+      .then(function (res) {
+        if (res) {
+          // succeeded in sending a message through TargetPicker
+          // console.log(`[${res.status}] Message sent!`);
+          postConfirmParty(partyId);
+        } else {
+          // sending message canceled
+          // console.log("TargetPicker was closed!");
+        }
+      })
       .catch(function (error) {
         console.log("something wrong happen");
       });
