@@ -2,6 +2,7 @@ import React, { useContext, useEffect, useState } from "react";
 
 import { ReactComponent as Birthday } from "../../icons/wishlistDetail/birthDayCake.svg";
 import { ReactComponent as Gift } from "../../icons/wishlistDetail/gift.svg";
+import { ReactComponent as HeartPlus } from "../../icons/myWishlist/heartPlus.svg";
 
 import axios from "axios";
 
@@ -15,6 +16,10 @@ import ButtonCustom from "../../components/button";
 import loadingGif from "../../icons/cakeGif.gif";
 import ModalCustom from "../../components/modal";
 import EmptyBlockCustom from "../../components/emptyBlock";
+
+import { ReactComponent as LinkIcon } from "../../icons/createParty/link-solid.svg";
+import UserIconCustom from "../../components/userIcon";
+import ProductImgCustom from "../../components/productImg";
 
 const MyWishlist = () => {
   const { idToken } = useContext(AuthContext);
@@ -35,6 +40,24 @@ const MyWishlist = () => {
     transactionId: "",
     productName: "",
   });
+  const [displayAddWishlist, setDisplayAddWishlist] = useState(false);
+  const [lineShoppingUrl, setLineShoppingUrl] = useState("");
+  const [productDetail, setProductDetail] = useState({
+    productName: "",
+    haveVariant: false,
+    productPicture: "",
+    productPrice: "",
+    seller: "",
+    sellerPicture: "",
+    variant: [],
+    discountPrice: "",
+    haveDiscount: false,
+    productId: "",
+  });
+
+  const [variantArray, setVariantArray] = useState([]);
+
+  //   ======================== useEffect ========================
 
   useEffect(() => {
     if (idToken !== "") {
@@ -42,7 +65,40 @@ const MyWishlist = () => {
     }
   }, [idToken]);
 
+  useEffect(() => {
+    getProductFromLink();
+  }, [lineShoppingUrl]);
+
   //   ======================== function ========================
+
+  const getProductFromLink = async () => {
+    try {
+      const response = await axios.post(
+        `${process.env.REACT_APP_API_PROXY}/party/getProductFromLink`,
+        { url: lineShoppingUrl },
+      );
+      setProductDetail({
+        productName: response.data.productName,
+        haveVariant: response.data.haveVariant,
+        productPicture: response.data.productPicture,
+        productPrice: response.data.productPrice,
+        haveDiscount: response.data.haveDiscount,
+        discountPrice: response.data.discountPrice,
+        seller: response.data.seller,
+        productId: response.data.productId,
+        sellerPicture: response.data.sellerPicture,
+        variant: Object.entries(response.data.variant).map(([key, value]) => ({
+          name: key,
+          value: value,
+        })),
+      });
+      setVariantArray(
+        new Array(Object.keys(response.data.variant).length).fill(""),
+      );
+    } catch (err) {
+      console.log(err);
+    }
+  };
 
   const dateFormat = () => {
     if (userWishlist.birthday !== "") {
@@ -93,7 +149,6 @@ const MyWishlist = () => {
         },
       );
       setUserWishlist(response.data);
-      console.log(response.data);
       setStatus(SUCCESS);
     } catch (err) {
       console.log(err);
@@ -125,6 +180,69 @@ const MyWishlist = () => {
     }
   };
 
+  const onClickAddWishlist = async () => {
+    try {
+      if (!handleDisableNextButton()) {
+        const response = await axios.post(
+          `${process.env.REACT_APP_API_PROXY}/wishlist/addWishlist`,
+          {
+            userId: idToken,
+            productId: productDetail.productId,
+            variantOption1: variantArray[0] ? variantArray[0] : null,
+            variantOption2: variantArray[1] ? variantArray[1] : null,
+          },
+        );
+        setDisplayAddWishlist(false);
+
+        setUserWishlist((userWishlist) => ({
+          ...userWishlist,
+          wishlist: [
+            ...userWishlist.wishlist,
+            {
+              productId: productDetail.productId,
+              haveDiscount: productDetail.haveDiscount,
+              discountPrice: productDetail.discountPrice,
+              productName: productDetail.productName,
+              productPicture: productDetail.productPicture,
+              productPrice: productDetail.productPrice,
+              transactionId: response.data.transactionId,
+              variantText: response.data.variantText,
+            },
+          ],
+        }));
+      }
+      setProductDetail({
+        productName: "",
+        haveVariant: false,
+        productPicture: "",
+        productPrice: "",
+        seller: "",
+        sellerPicture: "",
+        variant: [],
+        discountPrice: "",
+        haveDiscount: false,
+        productId: "",
+      });
+      setVariantArray([]);
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+  const handleDisableNextButton = () => {
+    if (productDetail.productName !== "" && !productDetail.haveVariant) {
+      return false;
+    } else if (
+      productDetail.productName !== "" &&
+      productDetail.haveVariant &&
+      variantArray.every((item) => item !== "")
+    ) {
+      return false;
+    }
+
+    return true;
+  };
+
   if (status === LOADING)
     return (
       <div className="grow flex justify-center items-center">
@@ -134,7 +252,13 @@ const MyWishlist = () => {
 
   return (
     <>
-      <div className="flex-col flex grow">
+      <style>
+        {`
+      .shadowButton{box-shadow: 0px 4px 16px 0px #0000001A;}
+
+      `}
+      </style>
+      <div className="flex-col flex grow overflow-y-scroll">
         {userWishlist.wishlist.length === 0 ? (
           <EmptyBlockCustom
             title="You have no wishlist"
@@ -192,15 +316,129 @@ const MyWishlist = () => {
             </div>
           </>
         )}
-        <div className=" h-[97px] p-[24px] flex justify-center">
+        <div className=" h-[97px] p-[24px] flex justify-center relative">
           <ButtonCustom
             title="Explore Line Shopping"
             onClick={() => {
               window.location.href = "https://shop.line.me/home/";
             }}
           />
+          {/* add wishlish block */}
+          <div
+            className="absolute right-[24px] top-[-64px] border-[#DFDFDF] h-[64px] w-[64px] border rounded-full shadowButton flex justify-center items-center"
+            onClick={() => {
+              setDisplayAddWishlist(true);
+            }}
+          >
+            <HeartPlus />
+          </div>
         </div>
       </div>
+      {displayAddWishlist && (
+        <div className="absolute top-0 h-[100dvh]  w-[100%] bg-[#11111180] flex justify-center items-center">
+          <div className="w-[294px] px-[24px] pt-[32px] pb-[16px] flex flex-col items-center rounded-[21px] bg-white">
+            <p className="text-[16px] leading-[21px] font-bold">Add wishlist</p>
+            <p className="text-[14px] text-[#777777] mb-[16px]">
+              Insert item link from LINE SHOPPING
+            </p>
+            {/* insert block */}
+            <div className="relative w-[100%]">
+              <input
+                className="bg-[#F5F5F5] text-[12px] text-[#555555] h-[42px] w-[100%] rounded-[5px] pl-[12px] pr-[41px] outline-none placeholder-[#B7B7B7] truncate"
+                value={lineShoppingUrl}
+                onChange={(e) => {
+                  setLineShoppingUrl(e.target.value);
+                }}
+              />
+              <LinkIcon className="absolute top-[9px] right-[9px]" />
+            </div>
+            {productDetail.productName !== "" && (
+              <div className="h-[144px] w-[100%] border-[#DFDFDF] border rounded p-[16px] mt-[16px]">
+                <div className="flex items-center">
+                  <UserIconCustom
+                    img={productDetail.sellerPicture}
+                    width={24}
+                    height={24}
+                  />
+                  <span className="ml-[8px] text-[14px] font-semibold">
+                    {productDetail.seller}
+                  </span>
+                </div>
+                <div className="mt-[16px] flex">
+                  <div className="w-[72px] ">
+                    <ProductImgCustom
+                      width={72}
+                      height={72}
+                      img={productDetail.productPicture}
+                    />
+                  </div>
+                  <div className="ml-[12px] text-[16px] font-medium leading-[20.8px] truncate	">
+                    {productDetail.productName}
+
+                    {productDetail.haveDiscount ? (
+                      <div className="flex h-[16px] mt-[4px] items-center">
+                        <div className="text-[12px]  font-semibold line-through mr-[4px]">
+                          ฿{productDetail.productPrice.toLocaleString("en-US")}
+                        </div>
+                        <div className="text-[14px] font-semibold leading-[15.6px] text-[#FF334B]">
+                          ฿{productDetail.discountPrice.toLocaleString("en-US")}
+                        </div>
+                      </div>
+                    ) : (
+                      <div className="text-[14px] font-semibold mt-[8px] leading-[15.6px]">
+                        ฿{productDetail.productPrice.toLocaleString("en-US")}
+                      </div>
+                    )}
+                  </div>
+                </div>
+              </div>
+            )}
+            {/* variant select*/}
+            {productDetail.haveVariant &&
+              productDetail.variant.map((item, index) => (
+                <div className="mt-[16px]">
+                  <h1 className="text-[14px] leading-[18.2px] font-semibold mb-[12px]">
+                    {item.name}
+                  </h1>
+                  <div className="flex gap-[8px] mt-[12px] flex-wrap mb-[16px]">
+                    {item.value.map((item) => (
+                      <div
+                        className={`${
+                          variantArray[index] === item ? "text-[#06C755]" : ""
+                        } px-[12px] py-[8px] flex justify-center items-center rounded border border-[#DFDFDF] text-[10px] h-[26px] font-semibold`}
+                        onClick={() => {
+                          const updateArray = [...variantArray];
+                          updateArray[index] = item;
+
+                          setVariantArray(updateArray);
+                        }}
+                      >
+                        {item}
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              ))}
+            {/* button */}
+            <div className="h-[49px] flex gap-[8px] ">
+              <div
+                className="h-[49px] w-[119px] flex justify-center items-center font-bold"
+                onClick={() => {
+                  setDisplayAddWishlist(false);
+                }}
+              >
+                Cancel
+              </div>
+              <div
+                className={`h-[49px] w-[119px] flex justify-center items-center font-bold ${!handleDisableNextButton() ? "text-[#06C755]" : "text-[#DFDFDF]"}`}
+                onClick={onClickAddWishlist}
+              >
+                Add
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
       {modalDelete.display && (
         <ModalCustom
           handleCancel={() => {
