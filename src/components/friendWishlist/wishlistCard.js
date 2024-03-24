@@ -1,6 +1,7 @@
 import React from "react";
 
 import { ReactComponent as ArrowHead } from "../../icons/ItemInformation/Vector.svg";
+import { ReactComponent as Empty } from "../../icons/empty.svg";
 
 function WishlistCard({
   displayName,
@@ -53,17 +54,27 @@ function WishlistCard({
         </div>
       </div>
       {/* product */}
-      <div className="mt-[16px] flex gap-[12px]">
-        {wishlist.map((product, index) =>
-          index < 4 ? (
-            <div className="h-[72px] w-[72px] border-[0.5px] border-[#DFDFDF] overflow-hidden flex justify-center items-center rounded">
-              <img src={product.productPicture} className="h-[72px]"></img>
-            </div>
-          ) : (
-            <></>
-          )
-        )}
-      </div>
+
+      {wishlist.length === 0 ? (
+        <div className="mt-[16px] h-[72px] flex justify-center gap-[8px] items-center">
+          <Empty />
+          <span className="font-semibold text-[#949494] text-[14px]">
+            Your friend has no wishlist
+          </span>
+        </div>
+      ) : (
+        <div className="mt-[16px] flex gap-[12px]">
+          {wishlist.map((product, index) =>
+            index < 4 ? (
+              <div className="h-[72px] w-[72px] border-[0.5px] border-[#DFDFDF] overflow-hidden flex justify-center items-center rounded">
+                <img src={product.productPicture} className="h-[72px]"></img>
+              </div>
+            ) : (
+              <></>
+            ),
+          )}
+        </div>
+      )}
     </div>
   );
 }

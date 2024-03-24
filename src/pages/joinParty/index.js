@@ -127,69 +127,71 @@ const JoinParty = () => {
     );
 
   return (
-    <div className="h-[100dvh] relative">
-      <PartyHeader
-        title="Let’s join the party!"
-        joinParty={true}
-        productName={partyInformation.product.productName}
-        productPicture={partyInformation.product.productPicture}
-        seller={partyInformation.product.seller}
-        sellerPicture={partyInformation.product.sellerPicture}
-        variant={partyInformation.product.variant}
-        productPrice={partyInformation.product.productPrice}
-        discountPrice={partyInformation.product.discountPrice}
-        haveDiscount={partyInformation.product.haveDiscount}
-        createBy={partyInformation.host.hostName}
-        partyDate={partyInformation.partyDate}
-        partyExpireDate={partyInformation.partyExpireDate}
-        receiverName={partyInformation.receiver.receiverName}
-        receiverPicture={partyInformation.receiver.receiverPicture}
-      />
-      <div className="bg-[#DFDFDF] h-[8px] " />
-      <div className="p-[24px] border-b border-[#DFDFDF]">
-        <BillSummary
-          giftPrice={giftTotal}
-          shippingPrice={partyInformation.shippingPrice}
-          discount={partyInformation.discount}
-          addCost={partyInformation.addCost}
-          totalMember={partyInformation.maxMember}
+    <>
+      <div className="h-[100dvh] relative overflow-y-scroll">
+        <PartyHeader
+          title="Let’s join the party!"
+          joinParty={true}
+          productName={partyInformation.product.productName}
+          productPicture={partyInformation.product.productPicture}
+          seller={partyInformation.product.seller}
+          sellerPicture={partyInformation.product.sellerPicture}
+          variant={partyInformation.product.variant}
+          productPrice={partyInformation.product.productPrice}
+          discountPrice={partyInformation.product.discountPrice}
+          haveDiscount={partyInformation.product.haveDiscount}
+          createBy={partyInformation.host.hostName}
+          partyDate={partyInformation.partyDate}
+          partyExpireDate={partyInformation.partyExpireDate}
+          receiverName={partyInformation.receiver.receiverName}
+          receiverPicture={partyInformation.receiver.receiverPicture}
         />
-      </div>
-      {/* party member */}
-      <div className="p-[24px]">
-        {/* party header */}
-        <div className="h-[21px] mb-[16px] flex justify-between">
-          <span className="text-[16px] font-bold">Party Members</span>
-          <span className="text-[#06C755] font-bold">
-            {partyMember.length}
-            <span className="text-[#949494]">
-              /{partyInformation.maxMember}
-            </span>
-          </span>
-        </div>
-        {partyMember.map((member) => (
-          <JoinPartyCard
-            name={member.name}
-            profile={member.profile}
-            owner={member.owner}
-            you={member.you}
+        <div className="bg-[#DFDFDF] h-[8px] " />
+        <div className="p-[24px] border-b border-[#DFDFDF]">
+          <BillSummary
+            giftPrice={giftTotal}
+            shippingPrice={partyInformation.shippingPrice}
+            discount={partyInformation.discount}
+            addCost={partyInformation.addCost}
+            totalMember={partyInformation.maxMember}
           />
-        ))}
-      </div>
-      {/* footer */}
-      <div className="h-[97px] p-[24px] flex justify-center">
-        <ButtonCustom
-          title={
-            partyMember.some((member) => member.you)
-              ? "You joined the party"
-              : "Join"
-          }
-          onClick={joinParty}
-          disable={
-            partyMember.length === partyInformation.maxMember ||
-            partyMember.some((member) => member.you)
-          }
-        />
+        </div>
+        {/* party member */}
+        <div className="p-[24px]">
+          {/* party header */}
+          <div className="h-[21px] mb-[16px] flex justify-between">
+            <span className="text-[16px] font-bold">Party Members</span>
+            <span className="text-[#06C755] font-bold">
+              {partyMember.length}
+              <span className="text-[#949494]">
+                /{partyInformation.maxMember}
+              </span>
+            </span>
+          </div>
+          {partyMember.map((member) => (
+            <JoinPartyCard
+              name={member.name}
+              profile={member.profile}
+              owner={member.owner}
+              you={member.you}
+            />
+          ))}
+        </div>
+        {/* footer */}
+        <div className="h-[97px] p-[24px] flex justify-center">
+          <ButtonCustom
+            title={
+              partyMember.some((member) => member.you)
+                ? "You joined the party"
+                : "Join"
+            }
+            onClick={joinParty}
+            disable={
+              partyMember.length === partyInformation.maxMember ||
+              partyMember.some((member) => member.you)
+            }
+          />
+        </div>
       </div>
       {/* modal */}
       {displayModal && (
@@ -211,7 +213,7 @@ const JoinParty = () => {
           </div>
         </div>
       )}
-    </div>
+    </>
   );
 };
 
