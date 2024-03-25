@@ -91,11 +91,12 @@ const Calendar = () => {
   // =============== useEffect ===============
   useEffect(() => {
     createCalendar();
-    handleEventInMonth();
+
     if (current.getMonth() === 11 || current.getMonth() === 5) {
       getEventCalendar();
     }
     setTargetDate();
+    handleEventInMonth();
   }, [current]);
 
   useEffect(() => {
@@ -104,6 +105,10 @@ const Calendar = () => {
       setTargetDate(current);
     }
   }, [idToken]);
+
+  useEffect(() => {
+    handleEventInMonth();
+  }, [hollidays, myBirthday, birthday]);
 
   // =============== Axios ===============
   const getEventCalendar = async () => {
@@ -128,6 +133,8 @@ const Calendar = () => {
       setHollidays(response.data.other);
       setMyBirthday(response.data.myBd);
 
+      handleEventInMonth();
+
       setStatus(SUCCESS);
     } catch (error) {
       console.log(error);
@@ -136,7 +143,7 @@ const Calendar = () => {
 
   // =============== function ===============
   //   create current month event
-  const handleEventInMonth = async () => {
+  const handleEventInMonth = () => {
     const month = current.getMonth() + 1;
 
     const eventMonth = [];
@@ -183,7 +190,6 @@ const Calendar = () => {
     eventMonth.sort((a, b) => a.date - b.date);
 
     setEventCurrentMonth(eventMonth);
-    // console.log("eventMonth", eventMonth);
   };
 
   //   create calendar
@@ -258,90 +264,82 @@ const Calendar = () => {
 
   // =============== renderer ===============
   const renderBirthday = () => {
+    const filteredData = eventCurrentMonth.filter(
+      (item) => item.date === targetDate.getDate() && item.seasonName === null,
+    );
+
     return (
       <>
-        {eventCurrentMonth.map((profile, index) => {
-          if (
-            targetDate &&
-            targetDate.getDate() === profile.date &&
-            profile.birthday
-          ) {
-            const pictureUrl = profile.birthday.pictureUrl;
-            const userId = profile.birthday.userId;
-            const displayName =
-              userId === myBirthday.userId
-                ? "Me"
-                : profile.birthday.displayName;
-            return (
-              <div key={index}>
-                {index === 0 && (
-                  <div className="flex items-end mt-[24px]">
-                    <Birthday />
-                    <div className="text-[14px] ml-[8px] font-semibold leading-[18.2px]">
-                      Birthday
-                    </div>
-                  </div>
-                )}
-                <div
-                  className={`${index === 0 ? "mt-[16px]" : "mt-[12px]"} flex justify-between`}
-                >
-                  <div className="flex gap-[16px] items-center">
-                    <div className=" w-[36px] h-[36px]">
-                      <img
-                        src={pictureUrl}
-                        className="w-[36px] rounded-full"
-                        alt={"profile"}
-                      />
-                    </div>
-                    <div className="text-[12px] leading-[15.6px] font-semibold">
-                      {displayName}
-                    </div>
-                  </div>
+        {filteredData.map((profile, index) => {
+          const pictureUrl = profile.birthday.pictureUrl;
+          const userId = profile.birthday.userId;
+          const displayName =
+            userId === myBirthday.userId ? "Me" : profile.birthday.displayName;
 
-                  {userId !== myBirthday.userId && (
-                    <Wishlist
-                      onClick={() => {
-                        handleWishlist(userId);
-                      }}
-                    />
-                  )}
+          return (
+            <div key={index}>
+              {index === 0 && (
+                <div className="flex items-end mt-[24px]">
+                  <Birthday />
+                  <div className="text-[14px] ml-[8px] font-semibold leading-[18.2px]">
+                    Birthday
+                  </div>
                 </div>
+              )}
+              <div
+                className={`${index === 0 ? "mt-[16px]" : "mt-[12px]"} flex justify-between`}
+              >
+                <div className="flex gap-[16px] items-center">
+                  <div className=" w-[36px] h-[36px]">
+                    <img
+                      src={pictureUrl}
+                      className="w-[36px] rounded-full"
+                      alt={"profile"}
+                    />
+                  </div>
+                  <div className="text-[12px] leading-[15.6px] font-semibold">
+                    {displayName}
+                  </div>
+                </div>
+
+                {userId !== myBirthday.userId && (
+                  <Wishlist
+                    onClick={() => {
+                      handleWishlist(userId);
+                    }}
+                  />
+                )}
               </div>
-            );
-          }
-          return <div key={index}></div>;
+            </div>
+          );
         })}
       </>
     );
   };
 
   const renderHolliday = () => {
+    const filteredData = eventCurrentMonth.filter(
+      (item) => item.date === targetDate.getDate() && item.seasonName !== null,
+    );
     return (
       <>
-        {eventCurrentMonth.map((profile, index) => {
-          if (
-            targetDate &&
-            targetDate.getDate() === profile.date &&
-            profile.seasonName
-          ) {
-            const seasonName = profile.seasonName.replace(/'/g, "’");
+        {filteredData.map((profile, index) => {
+          const seasonName = profile.seasonName.replace(/'/g, "’");
 
-            const icon = hollidayItem.find(
-              (item) => item.name === seasonName,
-            )?.img;
+          const icon = hollidayItem.find(
+            (item) => item.name === seasonName,
+          )?.img;
 
-            return (
-              <div key={index}>
-                <div className="flex items-end mt-[24px]">
-                  {icon}
-                  <div className="text-[14px] ml-[8px] font-semibold leading-[18.2px]">
-                    {seasonName}
-                  </div>
+          return (
+            <div key={index}>
+              <div className="flex items-end mt-[24px]">
+                {icon}
+                <div className="text-[14px] ml-[8px] font-semibold leading-[18.2px]">
+                  {seasonName}
                 </div>
               </div>
-            );
-          }
-          return <div key={index}></div>;
+            </div>
+          );
         })}
       </>
     );
