@@ -486,6 +486,7 @@ const CreateParty = () => {
           // succeeded in sending a message through TargetPicker
           // console.log(`[${res.status}] Message sent!`);
           postConfirmParty(partyId);
+          liff.closeWindow();
         } else {
           // sending message canceled
           // console.log("TargetPicker was closed!");
