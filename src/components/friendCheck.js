@@ -38,7 +38,7 @@ const FriendCheck = ({ children }) => {
     liff.closeWindow();
   };
   const onClickConfirm = () => {
-    window.location.href = "https://lin.ee/sLoenA2h";
+    window.location.href = "https://lin.ee/6J3Hnsr";
   };
 
   return (
