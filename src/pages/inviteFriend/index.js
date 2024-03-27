@@ -9,7 +9,7 @@ import { AuthContext } from "../../context/AuthContext";
 
 import liff from "@line/liff";
 
-import { ReactComponent as Welcome } from "../../icons/welcome.svg";
+import { ReactComponent as Hand } from "../../icons/hand.svg";
 
 import { LOADING, SUCCESS } from "../../utils/const";
 
@@ -19,6 +19,7 @@ function InviteFriend() {
   const { inviteCode } = useParams();
 
   const [status, setStatus] = useState(LOADING);
+  const [friendName, setFriendName] = useState("");
 
   useEffect(() => {
     if (idToken !== "" && inviteCode !== "") {
@@ -28,10 +29,14 @@ function InviteFriend() {
 
   const sendInvite = async () => {
     try {
-      await axios.post(`${process.env.REACT_APP_API_PROXY}/user/inviteFriend`, {
-        inviteCode: inviteCode,
-        tokenId: idToken,
-      });
+      const response = await axios.post(
+        `${process.env.REACT_APP_API_PROXY}/user/inviteFriend`,
+        {
+          inviteCode: inviteCode,
+          tokenId: idToken,
+        },
+      );
+      setFriendName(response.data.friendDisplayName);
       setStatus(SUCCESS);
     } catch (err) {
       console.log(err);
@@ -44,7 +49,14 @@ function InviteFriend() {
       {status === LOADING ? (
         <img src={loadingGif} alt="loading" />
       ) : (
-        <Welcome />
+        <div className="w-[251px] h-[138px] flex flex-col items-center">
+          <Hand />
+          <p className="mt-[32px] text-[18px] font-medium">You’ve become </p>
+          <div className="flex text-[18px] font-medium">
+            <span className="font-bold">{friendName}</span>
+            ’s friend in LINE Birthday
+          </div>
+        </div>
       )}
     </div>
   );
