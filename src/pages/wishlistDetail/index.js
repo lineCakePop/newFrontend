@@ -17,6 +17,8 @@ import loadingGif from "../../icons/cakeGif.gif";
 import BottomSheet from "../../components/bottomSheet";
 import EmptyBlockCustom from "../../components/emptyBlock";
 
+import liff from "@line/liff";
+
 const WishlistDetail = () => {
   const { userId } = useParams();
 
@@ -113,7 +115,9 @@ const WishlistDetail = () => {
   };
 
   const handleIndividual = () => {
-    window.open(targetWishlist.linkToProduct);
+    // window.open(targetWishlist.linkToProduct);
+
+    liff.openWindow({ url: targetWishlist.linkToProduct });
   };
 
   return (
