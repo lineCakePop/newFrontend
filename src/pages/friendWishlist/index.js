@@ -85,7 +85,7 @@ function FriendWishlist() {
         [
           {
             type: "flex",
-            altText: "Line birthday invite",
+            altText: "LINE birthday invite",
             contents: {
               type: "bubble",
               body: {
@@ -133,7 +133,7 @@ function FriendWishlist() {
                         contents: [
                           {
                             type: "text",
-                            text: "Join Line Birthday for",
+                            text: "Join LINE Birthday for",
                             size: "16px",
                             maxLines: 3,
                             color: "#111111",

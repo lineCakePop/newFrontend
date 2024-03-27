@@ -267,46 +267,46 @@ const MyWishlist = () => {
       `}
       </style>
       <div className="flex-col flex grow overflow-y-scroll">
-        {userWishlist.wishlist.length === 0 ? (
-          <EmptyBlockCustom
-            title="You have no wishlist"
-            subTitle="Let’s explore for something good!"
-          />
-        ) : (
-          <>
-            <div className="h-[128px] px-[24px] py-[16px] border-b border-[#DFDFDF]">
-              {/* profile pic and name */}
-              <div className="flex items-center">
-                <div className="h-[32px] w-[32px] flex justify-center items-center overflow-hidden rounded-full mr-[10px]">
-                  <img src={userWishlist.pictureUrl} />
-                </div>
-                <span className="text-[18px] font-medium">Hello, </span>
-                <span className="text-[18px] font-bold">
-                  {userWishlist.displayName}
-                </span>
+        <>
+          <div className="h-[128px] px-[24px] py-[16px] border-b border-[#DFDFDF]">
+            {/* profile pic and name */}
+            <div className="flex items-center">
+              <div className="h-[32px] w-[32px] flex justify-center items-center overflow-hidden rounded-full mr-[10px]">
+                <img src={userWishlist.pictureUrl} />
               </div>
-              {/* birthday &&  total wishlist */}
-              <div className="mt-[24px] justify-between h-[40px] flex">
-                <div className="flex">
-                  <Birthday className="mr-[8px]" />
-                  <div>
-                    <p className="text-[14px] font-semibold">{dateFormat()}</p>
-                    <p className="text-[12px] text-[#777777]">
-                      {daysToDate()} days until birthday
-                    </p>
-                  </div>
+              <span className="text-[18px] font-medium">Hello, </span>
+              <span className="text-[18px] font-bold">
+                {userWishlist.displayName}
+              </span>
+            </div>
+            {/* birthday &&  total wishlist */}
+            <div className="mt-[24px] justify-between h-[40px] flex">
+              <div className="flex">
+                <Birthday className="mr-[8px]" />
+                <div>
+                  <p className="text-[14px] font-semibold">{dateFormat()}</p>
+                  <p className="text-[12px] text-[#777777]">
+                    {daysToDate()} days until birthday
+                  </p>
                 </div>
-                <div className="flex">
-                  <Gift className="mr-[8px]" />
-                  <div>
-                    <p className="text-[14px] font-semibold">
-                      {userWishlist.wishlist.length}
-                    </p>
-                    <p className="text-[12px] text-[#777777]">Wishlists</p>
-                  </div>
+              </div>
+              <div className="flex">
+                <Gift className="mr-[8px]" />
+                <div>
+                  <p className="text-[14px] font-semibold">
+                    {userWishlist.wishlist.length}
+                  </p>
+                  <p className="text-[12px] text-[#777777]">Wishlists</p>
                 </div>
               </div>
             </div>
+          </div>
+          {userWishlist.wishlist.length === 0 ? (
+            <EmptyBlockCustom
+              title="You have no wishlist"
+              subTitle="Let’s explore for something good!"
+            />
+          ) : (
             <div className="pt-[36px] flex flex-col items-center gap-[32px] grow  overflow-y-scroll">
               {userWishlist.wishlist.map((information) => (
                 <WishlistCard
@@ -322,11 +322,12 @@ const MyWishlist = () => {
                 />
               ))}
             </div>
-          </>
-        )}
+          )}
+        </>
+
         <div className=" h-[97px] p-[24px] flex justify-center relative">
           <ButtonCustom
-            title="Explore Line Shopping"
+            title="Explore LINE Shopping"
             onClick={() => {
               window.location.href = "https://shop.line.me/home/";
             }}
