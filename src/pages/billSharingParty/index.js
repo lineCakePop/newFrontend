@@ -172,7 +172,7 @@ const BillSharingParty = () => {
     );
 
   return (
-    <div className="h-[100dvh] relative">
+    <>
       {displayToast && (
         <ToastCustom
           tittle={
@@ -184,126 +184,136 @@ const BillSharingParty = () => {
           icon={<ToastCheck />}
         />
       )}
-      <PartyHeader
-        title="Bill Sharing Party"
-        fromFlex={fromFlex}
-        joinParty={false}
-        lastStatusDate={partyInformation.lastStatusDate}
-        partyStatus={partyInformation.partyStatus}
-        productName={partyInformation.product.productName}
-        productPicture={partyInformation.product.productPicture}
-        seller={partyInformation.product.seller}
-        sellerPicture={partyInformation.product.sellerPicture}
-        variant={partyInformation.product.variant}
-        productPrice={partyInformation.product.productPrice}
-        discountPrice={partyInformation.product.discountPrice}
-        haveDiscount={partyInformation.product.haveDiscount}
-        createBy={partyInformation.host.hostName}
-        partyDate={partyInformation.partyDate}
-        partyExpireDate={partyInformation.partyExpireDate}
-        receiverName={partyInformation.receiver.receiverName}
-        receiverPicture={partyInformation.receiver.receiverPicture}
-      />
-      <div className="bg-[#DFDFDF] h-[8px] " />
-      <div className="p-[24px] border-b border-[#DFDFDF]">
-        <BillSummary
-          giftPrice={giftTotal}
-          shippingPrice={partyInformation.shippingPrice}
-          discount={partyInformation.discount}
-          addCost={partyInformation.addCost}
-          totalMember={partyInformation.maxMember}
+
+      <div className="h-[100dvh] relative overflow-y-scroll">
+        <PartyHeader
+          title="Bill Sharing Party"
+          fromFlex={fromFlex}
+          joinParty={false}
+          lastStatusDate={partyInformation.lastStatusDate}
+          partyStatus={partyInformation.partyStatus}
+          productName={partyInformation.product.productName}
+          productPicture={partyInformation.product.productPicture}
+          seller={partyInformation.product.seller}
+          sellerPicture={partyInformation.product.sellerPicture}
+          variant={partyInformation.product.variant}
+          productPrice={partyInformation.product.productPrice}
+          discountPrice={partyInformation.product.discountPrice}
+          haveDiscount={partyInformation.product.haveDiscount}
+          createBy={partyInformation.host.hostName}
+          partyDate={partyInformation.partyDate}
+          partyExpireDate={partyInformation.partyExpireDate}
+          receiverName={partyInformation.receiver.receiverName}
+          receiverPicture={partyInformation.receiver.receiverPicture}
         />
-        <h3 className="mt-[32px] text-[#555555] text-[14px] mb-[16px]">
-          Receiving Account
-        </h3>
-        <ReceivingAccountCard
-          accountId={"012-345-6789"}
-          name={"Doraemon San"}
-          setDisplayToast={setDisplayToast}
-        />
-      </div>
-      {/* member */}
-      <div className="p-[24px]">
-        {/* party header */}
-        <div className="h-[21px] mb-[16px] flex justify-between">
-          <span className="text-[16px] font-bold">Party Members</span>
-          <span className="text-[#06C755] font-bold">
-            {partyMember.length}
-            <span className="text-[#949494]">
-              /{partyInformation.maxMember}
-            </span>
-          </span>
-        </div>
-        {partyMember.map((user) => (
-          <BillSharingPartyMemberCard
-            key={user.id}
-            id={user.id}
-            setPartyMember={setPartyMember}
-            name={user.name}
-            profile={user.profile}
-            owner={user.owner}
-            you={user.you}
-            ownerOfParty={partyInformation.host.you}
-            paidStatus={user.paidStatus}
-            slipPicture={user.slipPicture}
-            paidDate={user.paidDate}
-            slipDate={user.slipDate}
-            partyStatus={partyInformation.partyStatus}
-            slipId={user.slipId}
+        <div className="bg-[#DFDFDF] h-[8px] " />
+        <div className="p-[24px] border-b border-[#DFDFDF]">
+          <BillSummary
+            giftPrice={giftTotal}
+            shippingPrice={partyInformation.shippingPrice}
+            discount={partyInformation.discount}
+            addCost={partyInformation.addCost}
+            totalMember={partyInformation.maxMember}
           />
-        ))}
-      </div>
-      {/* footer */}
-      {/* owner of party */}
-      {partyInformation.host.you && (
-        <div className="p-[24px] flex flex-col items-center">
-          {/* ongoing but someone didnt pay */}
-          {checkFinishParty() && partyInformation.partyStatus === ONGOING && (
-            <>
-              <ButtonCustom title="Finished" onClick={onClickFinishParty} />
-              <div className="mt-[12px] flex gap-[10px] justify-center items-center h-[52px]">
-                <GrayBin />{" "}
-                <span className="text-[14px] text-[#B7B7B7]">Delete Party</span>
-              </div>
-            </>
-          )}
-          {/* ongoing all member pay */}
-          {partyInformation.partyStatus === ONGOING && !checkFinishParty() && (
-            <>
-              <ButtonCustom title="Unfinished Payment" disable />
-              <div
-                className="mt-[12px] flex gap-[10px] justify-center items-center h-[52px] "
-                onClick={onClickDeleteParty}
-              >
-                <RedBin />{" "}
-                <span className="text-[14px] text-[#FF334B]">Delete Party</span>
-              </div>
-            </>
-          )}
+          <h3 className="mt-[32px] text-[#555555] text-[14px] mb-[16px]">
+            Receiving Account
+          </h3>
+          <ReceivingAccountCard
+            accountId={"012-345-6789"}
+            name={"Doraemon San"}
+            setDisplayToast={setDisplayToast}
+          />
         </div>
-      )}
-      {/* waiting member to join */}
-      {partyInformation.partyStatus === WAITFORMEMBER && (
-        <>
-          <div className="p-[24px] flex flex-col items-center">
-            <div className="h-[49px] rounded-[5px] border border-[#DFDFDF] w-[100%] flex justify-center items-center">
-              <span className="text-[#DFDFDF] text-[16px] font-bold">
-                Waiting For Others
+        {/* member */}
+        <div className="p-[24px]">
+          {/* party header */}
+          <div className="h-[21px] mb-[16px] flex justify-between">
+            <span className="text-[16px] font-bold">Party Members</span>
+            <span className="text-[#06C755] font-bold">
+              {partyMember.length}
+              <span className="text-[#949494]">
+                /{partyInformation.maxMember}
               </span>
-            </div>
-            {partyInformation.host.you && (
-              <div
-                className="mt-[12px] flex gap-[10px] justify-center items-center h-[52px] "
-                onClick={onClickDeleteParty}
-              >
-                <RedBin />{" "}
-                <span className="text-[14px] text-[#FF334B]">Delete Party</span>
-              </div>
-            )}
+            </span>
           </div>
-        </>
-      )}
-    </div>
+          {partyMember.map((user) => (
+            <BillSharingPartyMemberCard
+              key={user.id}
+              id={user.id}
+              setPartyMember={setPartyMember}
+              name={user.name}
+              profile={user.profile}
+              owner={user.owner}
+              you={user.you}
+              ownerOfParty={partyInformation.host.you}
+              paidStatus={user.paidStatus}
+              slipPicture={user.slipPicture}
+              paidDate={user.paidDate}
+              slipDate={user.slipDate}
+              partyStatus={partyInformation.partyStatus}
+              slipId={user.slipId}
+            />
+          ))}
+        </div>
+        {/* footer */}
+        {/* owner of party */}
+        {partyInformation.host.you && (
+          <div className="p-[24px] flex flex-col items-center">
+            {/* ongoing but someone didnt pay */}
+            {checkFinishParty() && partyInformation.partyStatus === ONGOING && (
+              <>
+                <ButtonCustom title="Finished" onClick={onClickFinishParty} />
+                <div className="mt-[12px] flex gap-[10px] justify-center items-center h-[52px]">
+                  <GrayBin />{" "}
+                  <span className="text-[14px] text-[#B7B7B7]">
+                    Delete Party
+                  </span>
+                </div>
+              </>
+            )}
+            {/* ongoing all member pay */}
+            {partyInformation.partyStatus === ONGOING &&
+              !checkFinishParty() && (
+                <>
+                  <ButtonCustom title="Unfinished Payment" disable />
+                  <div
+                    className="mt-[12px] flex gap-[10px] justify-center items-center h-[52px] "
+                    onClick={onClickDeleteParty}
+                  >
+                    <RedBin />{" "}
+                    <span className="text-[14px] text-[#FF334B]">
+                      Delete Party
+                    </span>
+                  </div>
+                </>
+              )}
+          </div>
+        )}
+        {/* waiting member to join */}
+        {partyInformation.partyStatus === WAITFORMEMBER && (
+          <>
+            <div className="p-[24px] flex flex-col items-center">
+              <div className="h-[49px] rounded-[5px] border border-[#DFDFDF] w-[100%] flex justify-center items-center">
+                <span className="text-[#DFDFDF] text-[16px] font-bold">
+                  Waiting For Others
+                </span>
+              </div>
+              {partyInformation.host.you && (
+                <div
+                  className="mt-[12px] flex gap-[10px] justify-center items-center h-[52px] "
+                  onClick={onClickDeleteParty}
+                >
+                  <RedBin />{" "}
+                  <span className="text-[14px] text-[#FF334B]">
+                    Delete Party
+                  </span>
+                </div>
+              )}
+            </div>
+          </>
+        )}
+      </div>
+    </>
   );
 };
 

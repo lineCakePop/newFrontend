@@ -205,7 +205,7 @@ const JoinParty = () => {
             <div
               className="h-[49px] flex items-center mt-[16px] text-[#06C755] font-semibold"
               onClick={() => {
-                setDisplayModal(false);
+                liff.closeWindow();
               }}
             >
               OK
