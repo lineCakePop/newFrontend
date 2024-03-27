@@ -112,7 +112,9 @@ const WishlistDetail = () => {
     navigate(`/create-party`, { state: { targetWishlist, userWishlist } });
   };
 
-  const handleIndividual = () => {};
+  const handleIndividual = () => {
+    window.open(targetWishlist.linkToProduct);
+  };
 
   return (
     <div className="h-[100dvh] overflow-y-scroll flex flex-col">
