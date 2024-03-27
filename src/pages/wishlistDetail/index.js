@@ -115,7 +115,7 @@ const WishlistDetail = () => {
   };
 
   const handleIndividual = () => {
-    window.location.href(targetWishlist.linkToProduct);
+    window.location.href = targetWishlist.linkToProduct;
   };
 
   return (
@@ -187,6 +187,7 @@ const WishlistDetail = () => {
                   haveDiscount={wishlist.haveDiscount}
                   onClickSendGift={onClickSendGift}
                   wishlist={wishlist}
+                  linkToProduct={wishlist.linkToProduct}
                 />
               ))}
             </div>
