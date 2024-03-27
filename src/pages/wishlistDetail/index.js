@@ -115,9 +115,7 @@ const WishlistDetail = () => {
   };
 
   const handleIndividual = () => {
-    // window.open(targetWishlist.linkToProduct);
-
-    liff.openWindow({ url: targetWishlist.linkToProduct });
+    window.location.href(targetWishlist.linkToProduct);
   };
 
   return (
