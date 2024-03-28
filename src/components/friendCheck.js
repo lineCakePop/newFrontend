@@ -5,9 +5,10 @@ import ModalCustom from "./modal";
 import { AuthContext } from "../context/AuthContext";
 
 import liff from "@line/liff";
+import { FAIL, SUCCESS } from "../utils/const";
 
 const FriendCheck = ({ children }) => {
-  const { idToken } = useContext(AuthContext);
+  const { idToken, setAlreadyFriend } = useContext(AuthContext);
 
   // ================= useState =================
 
@@ -28,6 +29,9 @@ const FriendCheck = ({ children }) => {
       const response = await liff.getFriendship();
       if (!response.friendFlag) {
         setDisplayAddFriendModal(true);
+        setAlreadyFriend(FAIL);
+      } else {
+        setAlreadyFriend(SUCCESS);
       }
     } catch (err) {
       console.log(err);

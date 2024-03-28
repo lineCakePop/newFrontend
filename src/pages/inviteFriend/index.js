@@ -14,7 +14,7 @@ import { ReactComponent as Hand } from "../../icons/hand.svg";
 import { LOADING, SUCCESS } from "../../utils/const";
 
 function InviteFriend() {
-  const { idToken } = useContext(AuthContext);
+  const { idToken, alreadyFriend } = useContext(AuthContext);
 
   const { inviteCode } = useParams();
 
@@ -22,10 +22,10 @@ function InviteFriend() {
   const [friendName, setFriendName] = useState("");
 
   useEffect(() => {
-    if (idToken !== "" && inviteCode !== "") {
+    if (idToken !== "" && inviteCode !== "" && alreadyFriend === SUCCESS) {
       sendInvite();
     }
-  }, [idToken, inviteCode]);
+  }, [idToken, inviteCode, alreadyFriend]);
 
   const sendInvite = async () => {
     try {
